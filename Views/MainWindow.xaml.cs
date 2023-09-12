@@ -20,6 +20,7 @@ namespace StoreExam.Views
     {
         public Data.Entity.User User { get; set; }
         public ObservableCollection<Data.Entity.Category>? Categories { get; set; }
+        public Data.Entity.Category? ChoiceCategory { get; set; }
         public ObservableCollection<Data.Entity.Product> Products { get; set; }
         ICollectionView productsListView;
         public bool IsDelAccount;  // флаг, удалил ли пользователь аккаунт
@@ -42,6 +43,23 @@ namespace StoreExam.Views
         {
             // обновляем значения интерфейса, где привязано свойство User
             textBlockUserName.Text = User.Name;
+        }
+
+        private void UpdateUIChoiceProductData()
+        {
+            // обновляем значения интерфейса, где привязано свойство ChoiceCategory
+            textBlockChoiceCategory.Text = ChoiceCategory?.Name;
+            textBlockChoiceCategory.Tag = ChoiceCategory?.Id.ToString();
+        }
+
+        private void UpdateProducts(List<Data.Entity.Product> newListProducts)
+        {
+            // обновляем коллекцию продуктов
+            Products.Clear();
+            foreach (var product in newListProducts)
+            {
+                Products.Add(product);
+            }
         }
 
 
@@ -70,11 +88,9 @@ namespace StoreExam.Views
                     var listProducts = Data.DAL.ProductsDal.GetByCategory(category.Id);
                     if (listProducts is not null)
                     {
-                        Products.Clear();
-                        foreach (var product in listProducts)
-                        {
-                            Products.Add(product);
-                        }
+                        ChoiceCategory = category;  // присваиваем новую выбранную категорию
+                        UpdateUIChoiceProductData();  // обновляем интерфейс
+                        UpdateProducts(listProducts);  // обновляем коллекцию продуктов
                     }
                     else
                     {
@@ -94,6 +110,28 @@ namespace StoreExam.Views
                     dialog.ShowDialog();
                 }
             }
+        }
+
+        private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
+            {
+                List<Data.Entity.Product>? listProducts;
+                if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
+                {
+                    listProducts = Data.DAL.ProductsDal.GetByCategory(idCat);
+                }
+                else
+                {
+                    listProducts = Data.DAL.ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
+                }
+                if (listProducts is not null)  // если продукты нашлись, то выводим
+                {
+                    UpdateProducts(listProducts);
+                }
+                else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void BtnUserAccount_Click(object sender, RoutedEventArgs e)
@@ -131,7 +169,6 @@ namespace StoreExam.Views
                         MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                //MessageBox.Show(User.Id + " - " + User.Name + " - " + User.Surname + " - " + User.Email + " - " + User.NumTel + " - " + User.Password + " - " + User.Salt + " - " + User.DeleteDt);
             }
         }
     }

@@ -153,6 +153,7 @@ namespace StoreExam.Views
                     if (CheckUser.CheckPasswordByString(User, passwordCheck.Password))  // пароль и пароль-подтверждения совпадают
                     {
                         AddUserInDB();  // добавление User в БД
+                        Close();
                     }
                     else MessageBox.Show("Пароли не совпадают!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

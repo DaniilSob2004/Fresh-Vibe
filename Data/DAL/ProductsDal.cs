@@ -22,5 +22,12 @@ namespace StoreExam.Data.DAL
             }
             return null;
         }
+
+        public static List<Entity.Product> FindByName(string name, Guid idCat)
+        {
+            // находим товары определённой категории которые совпадают по названию
+            Entity.Category? category = CategoriesDal.Get(idCat);  // получаем категорию по id
+            return dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToList();
+        }
     }
 }
