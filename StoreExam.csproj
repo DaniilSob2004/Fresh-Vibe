@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+	<LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\account.png" />
+    <None Remove="Views\account_2.png" />
+    <None Remove="Views\beverage.png" />
+    <None Remove="Views\cart.png" />
+    <None Remove="Views\catalog.png" />
+    <None Remove="Views\cheese.png" />
+    <None Remove="Views\exit.png" />
+    <None Remove="Views\find.png" />
+    <None Remove="Views\grocerie.png" />
+    <None Remove="Views\password.png" />
+    <None Remove="Views\settings.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Resources\UserDefault.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\password.png" />
+    <Resource Include="Resources\UserDefault.xaml" />
+    <Resource Include="Images\account.png" />
+    <Resource Include="Images\cart.png" />
+    <Resource Include="Images\exit.png" />
+    <Resource Include="Images\cheese.png" />
+    <Resource Include="Images\beverage.png" />
+    <Resource Include="Images\grocerie.png" />
+    <Resource Include="Images\catalog.png" />
+    <Resource Include="Images\find.png" />
+    <Resource Include="Images\settings.png" />
+  </ItemGroup>
+
+</Project>
