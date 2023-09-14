@@ -28,6 +28,7 @@ namespace StoreExam.Views
 
         private void ClearTextBox()
         {
+            // очищаем поля для ввода
             numTel.Foreground = Brushes.Gray;
             numTel.Text = DefaultNumTel;
             password.Foreground = Brushes.Gray;
@@ -41,9 +42,11 @@ namespace StoreExam.Views
             {
                 if (textBlock.Text == "Sign Up")
                 {
-                    Hide();
+                    Hide();  // скрываем окно авторизации
+                    ClearTextBox();  // очищаем поля для ввода
                     new SignUp().ShowDialog();  // переключаемся на окно регистрации
                     Show();  // отображаем окно авторизации
+                    numTel.Focus();  // ставим фокус на поле для ввода номера тел.
                 }
             }
         }
@@ -68,11 +71,6 @@ namespace StoreExam.Views
         {
             if (password.Password != textBoxShowPassword.Text)
                 GuiBaseManipulation.SetTextBoxPassword(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
-        }
-
-        private void ShowPassword_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            GuiBaseManipulation.TextBoxShowPassword(textBoxShowPassword);
         }
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e)

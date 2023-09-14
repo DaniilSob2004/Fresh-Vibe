@@ -16,7 +16,7 @@ namespace StoreExam.Views
 {
     public partial class SignUp : Window
     {
-        // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах
+        // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах UserDefault.xaml
         public static string DefaultName = Application.Current.TryFindResource("DefName").ToString()!;
         public static string DefaultSurname = Application.Current.TryFindResource("DefSurname").ToString()!;
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
@@ -35,31 +35,32 @@ namespace StoreExam.Views
         {
             if (sender is TextBox textBox && textBox.Tag is not null)
             {
-                // узнаём какое это поле
-                string? tag = textBox.Tag.ToString();
+                string? tag = textBox.Tag.ToString();  // узнаём с помощью тега какое это поле
+                bool isErrorInput = false;  // флаг, ошибочный ли ввод
+
                 if (tag == DefaultName)
                 {
-                    // если в поле строка по умолчанию или данные неверно введены, то красим периметр красным цветом
-                    if (User.Name != DefaultName && !CheckUser.CheckName(User)) textBox.BorderBrush = Brushes.Red;
-                    else textBox.BorderBrush = Brushes.Gray;
+                    // если в поле не строка по умолчанию и данные неверно введены, то красим border красным цветом
+                    if (User.Name != DefaultName && !CheckUser.CheckName(User)) isErrorInput = true;
                 }
                 else if (tag == DefaultSurname)
                 {
-                    if (User.Surname != DefaultSurname && !CheckUser.CheckSurname(User)) textBox.BorderBrush = Brushes.Red;
-                    else textBox.BorderBrush = Brushes.Gray;
+                    if (User.Surname != DefaultSurname && !CheckUser.CheckSurname(User)) isErrorInput = true;
                 }
                 else if (tag == DefaultNumTel)
                 {
-                    if (User.NumTel != DefaultNumTel && !CheckUser.CheckNumTel(User)) textBox.BorderBrush = Brushes.Red;
-                    else textBox.BorderBrush = Brushes.Gray;
+                    if (User.NumTel != DefaultNumTel && !CheckUser.CheckNumTel(User)) isErrorInput = true;
                 }
                 else if (tag == DefaultEmail)
                 {
-                    if (User.Email != DefaultEmail && !CheckUser.CheckEmail(User)) textBox.BorderBrush = Brushes.Red;
-                    else textBox.BorderBrush = Brushes.Gray;
+                    if (User.Email != DefaultEmail && !CheckUser.CheckEmail(User)) isErrorInput = true;
                 }
+
+                if (isErrorInput) textBox.BorderBrush = Brushes.Red;
+                else textBox.BorderBrush = Brushes.Gray;
             }
         }
+
 
         private bool CheckUniqueUserInDB()
         {
@@ -69,7 +70,7 @@ namespace StoreExam.Views
             bool isUnique = !UserDal.IsUniqueNumTel(User.NumTel);  // проверка номера тел. на уникальность
             if (!isUnique) notUniqueFields += "номер тел., ";
 
-            if (User.Email != DefaultEmail)  // если значение email не по-умолчанию(пользователь не указал)
+            if (User.Email != DefaultEmail)  // если значение email не по-умолчанию(пользователь указал)
             {
                 isUnique = !UserDal.IsUniqueEmail(User.Email);  // проверка email на уникальность
                 if (!isUnique) notUniqueFields += "email, ";
@@ -80,15 +81,14 @@ namespace StoreExam.Views
                 MessageBox.Show($"Данный {notUniqueFields}уже используются", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-            else return true;
+            return true;
         }
 
         private void AddUserInDB()
         {
-            CheckUser.CheckAndChangeDefaultEmail(User);  // проверка на email по-умолчанию (чтобы установить в null если стоит по-умолч.)
+            CheckUser.CheckAndChangeDefaultEmail(User);  // проверка на email по-умолчанию (чтобы установить в null если стоит по-умолчанию)
             UserDal.Add(User);  // добавление User в БД
             MessageBox.Show($"Вы успешно зарегистрировались, {User.Name}!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-            MessageBox.Show(User.Name + " - " + User.Surname + " - " + User.NumTel + " - " + User.Email + " - " + User.Password + " - " + User.Salt);
         }
 
 
@@ -131,17 +131,6 @@ namespace StoreExam.Views
                 GuiBaseManipulation.SetTextBoxPassword(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
             if (passwordCheck.Password != textBoxShowPasswordCheck.Text)
                 GuiBaseManipulation.SetTextBoxPassword(textBoxShowPasswordCheck, passwordCheck);  // чтобы значения двух полей для доп.ввода пароля совпадали
-        }
-
-        private void ShowPassword_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Image image)
-            {
-                if (image.Tag.ToString()!.EndsWith("Check"))  // проверка чтобы узнать какое поле пароля показывать
-                    GuiBaseManipulation.TextBoxShowPassword(textBoxShowPasswordCheck);
-                else
-                    GuiBaseManipulation.TextBoxShowPassword(textBoxShowPassword);
-            }
         }
 
         private void SignUpBtn_Click(object sender, RoutedEventArgs e)

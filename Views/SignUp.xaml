@@ -5,64 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        MinWidth="360" MinHeight="390"
-        Title="Store v3.0" Height="430" Width="450" WindowStartupLocation="CenterScreen" Background="SlateGray">
+        Title="Store v3.0" Height="450" Width="400" MinHeight="425" MinWidth="350" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/StartStyle.xaml"/>
+                <ResourceDictionary Source="/UI_Settings/Styles/StartStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="TextBlock" BasedOn="{StaticResource textStyle}">
                 <EventSetter Event="MouseLeftButtonDown" Handler="TextBlock_MouseLeftButtonDown"/>
             </Style>
 
-            <Style x:Key="tBoxEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxStyle}">
+            <Style x:Key="textBoxEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxStyle}">
                 <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
                 <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
             </Style>
 
-            <Style x:Key="pBoxEventStyle" TargetType="PasswordBox" BasedOn="{StaticResource passwordBoxStyle}">
+            <Style x:Key="textBoxPasswordEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxPasswordStyle}">
+                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
+                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
+                <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
+            </Style>
+
+            <Style x:Key="passwordBoxPasswordEventStyle" TargetType="PasswordBox" BasedOn="{StaticResource passwordBoxPasswordStyle}">
                 <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
                 <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="PasswordChanged" Handler="PasswordBox_PasswordChanged"/>
             </Style>
-
-            <Style x:Key="tBoxPasswordStyle" TargetType="TextBox" BasedOn="{StaticResource tBoxEventStyle}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="TextBox">
-                            <Grid>
-                                <Border Background="{TemplateBinding Background}">
-                                    <ScrollViewer x:Name="PART_ContentHost"/>
-                                </Border>
-                                <Image Source="/Images/password.png" MaxHeight="26" MaxWidth="26" HorizontalAlignment="Right" Margin="0,6,6,6" MouseLeftButtonDown="ShowPassword_MouseLeftButtonDown"
-                                       Tag="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="pBoxPasswordStyle" TargetType="PasswordBox" BasedOn="{StaticResource pBoxEventStyle}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="PasswordBox">
-                            <Grid>
-                                <Border Background="{TemplateBinding Background}">
-                                    <ScrollViewer x:Name="PART_ContentHost"/>
-                                </Border>
-                                <Image Source="/Images/password.png" MaxHeight="26" MaxWidth="26" HorizontalAlignment="Right" Margin="0,6,6,6" MouseLeftButtonDown="ShowPassword_MouseLeftButtonDown"
-                                       Tag="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -77,49 +54,45 @@
             <RowDefinition MaxHeight="80"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{StaticResource headerTextStyle}">Store</TextBlock>
+        <TextBlock Style="{StaticResource headerTextBlockStyle}">Store</TextBlock>
+        
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock>Sign In</TextBlock>
-            <TextBlock Foreground="LightGray">Sign Up</TextBlock>
+            <TextBlock Foreground="{StaticResource MainColor}">Sign Up</TextBlock>
         </StackPanel>
 
         <TextBox x:Name="userName" Grid.Row="2" Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefName}" Style="{StaticResource tBoxEventStyle}"/>
+                 Tag="{StaticResource DefName}" Style="{StaticResource textBoxEventStyle}"/>
         <TextBox x:Name="surname" Grid.Row="3" Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefSurname}" Style="{StaticResource tBoxEventStyle}"/>
+                 Tag="{StaticResource DefSurname}" Style="{StaticResource textBoxEventStyle}"/>
         <TextBox x:Name="numTel" Grid.Row="4" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefNumTel}" Style="{StaticResource tBoxEventStyle}"/>
+                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}"/>
         <TextBox x:Name="email" Grid.Row="5" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefEmail}" Style="{StaticResource tBoxEventStyle}"/>
+                 Tag="{StaticResource DefEmail}" Style="{StaticResource textBoxEventStyle}"/>
 
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <PasswordBox x:Name="password" Tag="{StaticResource DefPassword}" Password="Password" Style="{StaticResource pBoxPasswordStyle}"/>
-            <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Visibility="Hidden" Style="{StaticResource tBoxPasswordStyle}"
+            <PasswordBox x:Name="password" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}"
+                         Style="{StaticResource passwordBoxPasswordEventStyle}"/>
+            <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Style="{StaticResource textBoxPasswordEventStyle}"
                      Tag="{StaticResource DefPassword}" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </Grid>
 
         <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <PasswordBox x:Name="passwordCheck" Password="Password" Tag="PasswordCheck" Style="{StaticResource pBoxPasswordStyle}"/>
-            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="Password" Tag="PasswordCheck" Visibility="Hidden" Style="{StaticResource tBoxPasswordStyle}"/>
+            <PasswordBox x:Name="passwordCheck" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPasswordCheck}" Style="{StaticResource passwordBoxPasswordEventStyle}"/>
+            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="Password" Tag="{StaticResource DefPasswordCheck}" Style="{StaticResource textBoxPasswordEventStyle}"/>
         </Grid>
 
-        <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnBaseStyle}" Click="SignUpBtn_Click">
-            <Button.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="15"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnBaseStyle}" Click="SignUpBtn_Click"/>
     </Grid>
-    
+
 </Window>

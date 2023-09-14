@@ -6,4 +6,5 @@
     <sys:String x:Key="DefNumTel">+38(10)</sys:String>
     <sys:String x:Key="DefEmail">Email</sys:String>
     <sys:String x:Key="DefPassword">Password</sys:String>
+    <sys:String x:Key="DefPasswordCheck">PasswordCheck</sys:String>
 </ResourceDictionary>
