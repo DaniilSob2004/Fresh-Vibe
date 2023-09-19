@@ -78,8 +78,8 @@
 
             <PasswordBox x:Name="password" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}"
                          Style="{StaticResource passwordBoxPasswordEventStyle}"/>
-            <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Style="{StaticResource textBoxPasswordEventStyle}"
-                     Tag="{StaticResource DefPassword}" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     Tag="{StaticResource DefPassword}" Style="{StaticResource textBoxPasswordEventStyle}"/>
         </Grid>
 
         <Grid Grid.Row="7">
@@ -88,11 +88,11 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <PasswordBox x:Name="passwordCheck" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPasswordCheck}" Style="{StaticResource passwordBoxPasswordEventStyle}"/>
-            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="Password" Tag="{StaticResource DefPasswordCheck}" Style="{StaticResource textBoxPasswordEventStyle}"/>
+            <PasswordBox x:Name="passwordCheck" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}" Style="{StaticResource passwordBoxPasswordEventStyle}"/>
+            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}" Style="{StaticResource textBoxPasswordEventStyle}"/>
         </Grid>
 
-        <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnBaseStyle}" Click="SignUpBtn_Click"/>
+        <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>
     </Grid>
 
 </Window>

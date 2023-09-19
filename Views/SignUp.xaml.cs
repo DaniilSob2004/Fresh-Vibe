@@ -99,6 +99,7 @@ namespace StoreExam.Views
                 if (textBlock.Text == "Sign In")
                 {
                     Close();  // закрываем окно регистрации
+                    new SignIn().ShowDialog();  // запускаем окно авторизации
                 }
             }
         }
@@ -128,9 +129,9 @@ namespace StoreExam.Views
             CheckCorrectData(sender);
 
             if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetTextBoxPassword(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
+                GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
             if (passwordCheck.Password != textBoxShowPasswordCheck.Text)
-                GuiBaseManipulation.SetTextBoxPassword(textBoxShowPasswordCheck, passwordCheck);  // чтобы значения двух полей для доп.ввода пароля совпадали
+                GuiBaseManipulation.SetTextBox(textBoxShowPasswordCheck, passwordCheck);  // чтобы значения двух полей для доп.ввода пароля совпадали
         }
 
         private void SignUpBtn_Click(object sender, RoutedEventArgs e)
@@ -142,7 +143,7 @@ namespace StoreExam.Views
                     if (CheckUser.CheckPasswordByString(User, passwordCheck.Password))  // пароль и пароль-подтверждения совпадают
                     {
                         AddUserInDB();  // добавление User в БД
-                        Close();
+                        Close();  // закрываем окно регистрации
                     }
                     else MessageBox.Show("Пароли не совпадают!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

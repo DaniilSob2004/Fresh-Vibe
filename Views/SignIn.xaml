@@ -45,9 +45,9 @@
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="60"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition MaxHeight="50"/>
-            <RowDefinition MaxHeight="50"/>
-            <RowDefinition MaxHeight="50"/>
+            <RowDefinition MaxHeight="60"/>
+            <RowDefinition MaxHeight="60"/>
+            <RowDefinition MaxHeight="60"/>
         </Grid.RowDefinitions>
 
         <TextBlock Style="{StaticResource headerTextBlockStyle}">Store</TextBlock>
@@ -71,7 +71,7 @@
                      Tag="{StaticResource DefPassword}" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </Grid>
 
-        <Button Grid.Row="4" Content="SIGN IN" Style="{StaticResource btnBaseStyle}" Click="SignInBtn_Click"/>
+        <Button Grid.Row="4" Content="SIGN IN" Style="{StaticResource btnStyle}" Click="SignInBtn_Click"/>
     </Grid>
     
 </Window>

@@ -42,11 +42,8 @@ namespace StoreExam.Views
             {
                 if (textBlock.Text == "Sign Up")
                 {
-                    Hide();  // скрываем окно авторизации
-                    ClearTextBox();  // очищаем поля для ввода
-                    new SignUp().ShowDialog();  // переключаемся на окно регистрации
-                    Show();  // отображаем окно авторизации
-                    numTel.Focus();  // ставим фокус на поле для ввода номера тел.
+                    Close();  // закрываем окно авторизации
+                    new SignUp().ShowDialog();  // запускаем окно регистрации
                 }
             }
         }
@@ -70,7 +67,7 @@ namespace StoreExam.Views
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetTextBoxPassword(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
+                GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
         }
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e)
@@ -87,10 +84,8 @@ namespace StoreExam.Views
                     else
                     {
                         MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Hide();  // прячем окно авторизации
-                        ClearTextBox();  // очищаем поля для ввода
+                        Close();  // закрываем окно авторизации
                         new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект User
-                        Show();  // показываем окно авторизации
                     }
                 }
                 else

@@ -1,10 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=netstandard">
+    
     <sys:String x:Key="DefName">Username</sys:String>
     <sys:String x:Key="DefSurname">Surname</sys:String>
     <sys:String x:Key="DefNumTel">+38(10)</sys:String>
     <sys:String x:Key="DefEmail">Email</sys:String>
     <sys:String x:Key="DefPassword">Password</sys:String>
-    <sys:String x:Key="DefPasswordCheck">PasswordCheck</sys:String>
+
+    <sys:String x:Key="DefSearch">Поиск...</sys:String>
 </ResourceDictionary>

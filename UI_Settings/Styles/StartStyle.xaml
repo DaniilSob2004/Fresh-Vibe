@@ -17,7 +17,7 @@
     <!-- Стиль для текста TextBlock -->
     <Style x:Key="textStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
         <Setter Property="Margin" Value="10 5 10 2"/>
         <Setter Property="Padding" Value="10 0"/>
         <Style.Triggers>
@@ -32,7 +32,7 @@
     <Style x:Key="textBoxStyle" TargetType="TextBox" BasedOn="{StaticResource baseTextBoxStyle}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Margin" Value="40 8"/>
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
         <Setter Property="Padding" Value="8 0"/>
         <Setter Property="MaxWidth" Value="500"/>
         <Setter Property="MaxHeight" Value="40"/>
@@ -41,11 +41,12 @@
     <!-- Стиль для PasswordBox для ввода пароля -->
     <Style x:Key="passwordBoxStyle" TargetType="PasswordBox" BasedOn="{StaticResource basePasswordBoxStyle}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="40 9 66 9"/>
-        <Setter Property="Foreground" Value="Gray"/>
-        <Setter Property="Padding" Value="8,0"/>
-        <Setter Property="MaxWidth" Value="465"/>
-        <Setter Property="MaxHeight" Value="40"/>
+        <Setter Property="Margin" Value="43 0 66 0"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="8 4"/>
+        <Setter Property="MaxWidth" Value="460"/>
+        <Setter Property="MaxHeight" Value="38"/>
     </Style>
 
     <!-- Шаблон для TextBox для ввода пароля в котором находится Image, в этот Image.Tag передаём ссылку на сам TextBox, и привязываем свой обработчик для клика по Image -->
@@ -54,7 +55,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Grid>
-                        <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource baseCornerRadius}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadius}">
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Border>
                         <Image Source="/Images/password.png" MaxHeight="25" MaxWidth="21" HorizontalAlignment="Right" Margin="0 6 6 6"
@@ -85,7 +87,7 @@
     </Style>
 
     <!-- Стиль для Button -->
-    <Style x:Key="btnBaseStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+    <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
         <Setter Property="Margin" Value="40 8 40 12"/>
         <Setter Property="MaxWidth" Value="500"/>
         <Setter Property="MaxHeight" Value="35"/>

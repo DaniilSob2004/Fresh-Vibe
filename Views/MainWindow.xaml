@@ -5,132 +5,107 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam"
         mc:Ignorable="d"
-        Closing="Window_Closing" MinHeight="300" MinWidth="350"
-        Title="Store 3.0" Height="525" Width="900" Background="WhiteSmoke" WindowStartupLocation="CenterScreen">
+        Closing="Window_Closing"
+        Title="Store 3.0" Height="525" Width="900" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <Style x:Key="textBoxStyle" TargetType="TextBox">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Grid>
-                            <Border Background="{TemplateBinding Background}">
-                                <ScrollViewer x:Name="PART_ContentHost"/>
-                            </Border>
-                            <Image Source="/Images/find.png" Height="18" Width="18" HorizontalAlignment="Right" Margin="0,6,6,6"
-                                   Tag="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}" MouseLeftButtonDown="BtnSearch_MouseLeftButtonDown">
-                                <Image.Resources>
-                                    <Style TargetType="Image">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Cursor" Value="Hand"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Resources>
-                            </Image>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI_Settings/Styles/MainWinStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="ListBoxItem">
+                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItemCategories_MouseLeftDown"/>
+            </Style>
+
+            <Style x:Key="textBoxStyle" TargetType="TextBox" BasedOn="{StaticResource baseTextBoxStyle}">
+                <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="10 10 10 0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid>
+                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="10 0">
+                                    <ScrollViewer x:Name="PART_ContentHost"/>
+                                </Border>
+                                <Image Source="/Images/find.png" Height="18" Width="18" HorizontalAlignment="Right" Margin="6"
+                                       Tag="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}" MouseLeftButtonDown="BtnSearch_MouseLeftButtonDown">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <EventSetter Event="GotFocus" Handler="TextBoxSearch_GotFocus"/>
+                <EventSetter Event="LostFocus" Handler="TextBoxSearch_LostFocus"/>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
+
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*" MinWidth="150"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="3*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border Grid.ColumnSpan="2" BorderBrush="Green" Background="White" BorderThickness="1" CornerRadius="0,0,15,15" Margin="-1,0,-1,0">
+        <Border Grid.ColumnSpan="3" Style="{StaticResource borderHeaderStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Foreground="Green" FontSize="35" FontFamily="Calibri" Margin="30,3,0,5">Store</TextBlock>
-
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" Click="BtnUserAccount_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="25" Height="25" Source="/Images/account.png" Margin="5,0,0,0"/>
-                        <TextBlock x:Name="textBlockUserName" Text="{Binding Path=User.Name}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Grid.Column="3" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0">
-                    <StackPanel Grid.Column="3" Orientation="Horizontal">
-                        <Image Width="25" Height="25" Margin="3,0,0,0" Source="/Images/cart.png"/>
-                        <TextBlock Text="0" FontSize="10" Foreground="Green" VerticalAlignment="Top" FontWeight="Bold"/>
-                        <TextBlock Text="0" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0"/>
-                        <TextBlock Text=" ₴" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,6,0"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Grid.Column="4" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" Click="BtnExit_Click">
-                    <Image Width="20" Height="20" Source="/Images/exit.png"/>
-                </Button>
+                <TextBlock Style="{StaticResource textBlockHeaderStyle}">Store</TextBlock>
+                <Button x:Name="btnUserName" Grid.Column="2" Style="{StaticResource btnUserNameStyle}" Click="BtnUserAccount_Click"/>
+                <Button x:Name="btnUserBasket" Grid.Column="3" Style="{StaticResource btnUserBasketStyle}"/>
+                <Button Grid.Column="4" Style="{StaticResource btnUserExitStyle}" Click="BtnExit_Click"/>
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="Green" Margin="0,10,0,0">
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" Width="1.5" Background="{StaticResource MainColor}" HorizontalAlignment="Center" Margin="0 10 0 0"/>
+
+        <Border Grid.Row="1" Background="{StaticResource MainColor}" Margin="0 10 0 0">
             <StackPanel Orientation="Horizontal">
-                <Image Width="20" Height="20" Source="/Images/catalog.png" Margin="7,0"/>
-                <TextBlock FontSize="20" FontWeight="SemiBold" Foreground="White" FontFamily="Calibri" Margin="15,0,0,2">Каталог</TextBlock>
+                <Image Width="20" Height="20" Source="/Images/catalog.png" Margin="7 0"/>
+                <TextBlock FontSize="20" Margin="8 2 0 2" Style="{StaticResource whiteTextBlockStyle}">Каталог</TextBlock>
             </StackPanel>
         </Border>
 
-        <ListBox Grid.Row="2" Grid.RowSpan="3" Background="WhiteSmoke" ItemsSource="{Binding Categories}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Height="20" Source="{Binding Image}"/>
-                        <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold" Margin="15,0"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+        <ListBox Grid.Row="2" Grid.RowSpan="3" Background="{StaticResource BGWindow}" ItemsSource="{Binding Categories}"/>
 
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItemCategories_MouseLeftDown"/>
-                </Style>
-            </ListBox.Resources>
-        </ListBox>
+        <TextBox x:Name="textBoxSearch" Text="{StaticResource DefSearch}" Tag="{StaticResource DefSearch}" Grid.Column="2" Grid.Row="1" Style="{StaticResource textBoxStyle}"/>
 
-        <TextBox x:Name="textBoxSearch" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" FontSize="14" Margin="10,10,10,0" Style="{StaticResource textBoxStyle}"/>
+        <TextBlock x:Name="textBlockChoiceCategory" Grid.Column="2" Grid.Row="2" Text="{Binding ChoiceCategory.Name}" Tag="{Binding ChoiceCategory.Id}" FontSize="25" Margin="20 10 0 10" Style="{StaticResource blackTextBlockStyle}"/>
 
-        <TextBlock x:Name="textBlockChoiceCategory" Grid.Column="1" Grid.Row="2" Text="{Binding ChoiceCategory.Name}" Tag="{Binding ChoiceCategory.Id}" FontSize="25" FontWeight="SemiBold" Margin="20,10,0,10"/>
-
-        <ScrollViewer Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Products}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+        <ScrollViewer Grid.Row="3" Grid.Column="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Products}" Style="{StaticResource itemsControlProduct}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="170" Height="220" BorderBrush="Green" Margin="10,10,0,5" MouseLeftButtonDown="Border_MouseLeftButtonDown">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="BorderThickness" Value="4"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
+                        <Border Width="170" Height="220" Margin="10 10 0 5" Style="{StaticResource borderProductStyle}" MouseLeftButtonDown="Border_MouseLeftButtonDown">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
@@ -140,14 +115,9 @@
                                 </Grid.RowDefinitions>
 
                                 <Image Source="{Binding Image}" Width="100" Height="100" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Padding="8,3,8,0"/>
-                                <TextBlock Grid.Row="2" Text="{Binding Price, StringFormat='{}{0:C}'}" FontWeight="Bold" Padding="8,8,0,0"/>
-                                <Button Grid.Row="3" Background="Green" Margin="5">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Foreground="White" Margin="0,0,8,0">В корзину</TextBlock>
-                                        <Image Height="20" Width="20" Source="/Images/cart.png"/>
-                                    </StackPanel>
-                                </Button>
+                                <TextBlock Grid.Row="1" Text="{Binding Name}" TextWrapping="Wrap" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
+                                <TextBlock Grid.Row="2" Text="{Binding Price, StringFormat='{}{0} ₴'}" Padding="8 8 0 0" Style="{StaticResource textBlockStyle}"/>
+                                <Button Grid.Row="3" Margin="5" Style="{StaticResource btnProductToBasketStyle}" Click="BtnAddProductToBasket_Click"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

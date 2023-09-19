@@ -42,7 +42,10 @@ namespace StoreExam.Views
         private void UpdateUIUserData()
         {
             // обновляем значения интерфейса, где привязано свойство User
-            textBlockUserName.Text = User.Name;
+            if (btnUserName.Template.FindName("textBlockUserName", btnUserName) is TextBlock textBlock)  // находим TextBlock в элементе Button
+            {
+                textBlock.Text = User.Name;
+            }
         }
 
         private void UpdateUIChoiceProductData()
@@ -77,61 +80,6 @@ namespace StoreExam.Views
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void ListBoxItemCategories_MouseLeftDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is ListBoxItem item)
-            {
-                if (item.Content is Data.Entity.Category category)  // получаем ссылку на объект Entity.Category
-                {
-                    var listProducts = Data.DAL.ProductsDal.GetByCategory(category.Id);
-                    if (listProducts is not null)
-                    {
-                        ChoiceCategory = category;  // присваиваем новую выбранную категорию
-                        UpdateUIChoiceProductData();  // обновляем интерфейс
-                        UpdateProducts(listProducts);  // обновляем коллекцию продуктов
-                    }
-                    else
-                    {
-                        MessageBox.Show("Что-то пошло не так...");
-                    }
-                }
-            }
-        }
-
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Border border)
-            {
-                if (border.DataContext is Data.Entity.Product product)
-                {
-                    var dialog = new ProductInfoWindow(product);  // создаём информационное окно для продукта
-                    dialog.ShowDialog();
-                }
-            }
-        }
-
-        private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
-            {
-                List<Data.Entity.Product>? listProducts;
-                if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
-                {
-                    listProducts = Data.DAL.ProductsDal.GetByCategory(idCat);
-                }
-                else
-                {
-                    listProducts = Data.DAL.ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
-                }
-                if (listProducts is not null)  // если продукты нашлись, то выводим
-                {
-                    UpdateProducts(listProducts);
-                }
-                else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void BtnUserAccount_Click(object sender, RoutedEventArgs e)
@@ -170,6 +118,84 @@ namespace StoreExam.Views
                     }
                 }
             }
+        }
+
+
+        private void ListBoxItemCategories_MouseLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBoxItem item)
+            {
+                if (item.Content is Data.Entity.Category category)  // получаем ссылку на объект Entity.Category
+                {
+                    var listProducts = Data.DAL.ProductsDal.GetByCategory(category.Id);
+                    if (listProducts is not null)
+                    {
+                        ChoiceCategory = category;  // присваиваем новую выбранную категорию
+                        UpdateUIChoiceProductData();  // обновляем интерфейс
+                        UpdateProducts(listProducts);  // обновляем коллекцию продуктов
+                    }
+                    else
+                    {
+                        MessageBox.Show("Что-то пошло не так...");
+                    }
+                }
+            }
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                if (border.DataContext is Data.Entity.Product product)
+                {
+                    var dialog = new ProductInfoWindow(product);  // создаём информационное окно для продукта
+                    dialog.ShowDialog();
+                }
+            }
+        }
+
+        private void BtnAddProductToBasket_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                if (btn.DataContext is Data.Entity.Product product)
+                {
+                    MessageBox.Show($"Добавляем в корзину: {product.Name}");
+                }
+            }
+        }
+
+
+        private void TextBoxSearch_GotFocus(object sender, RoutedEventArgs e)
+        {
+            GuiBaseManipulation.TextBoxGotFocus(sender);
+        }
+
+        private void TextBoxSearch_LostFocus(object sender, RoutedEventArgs e)
+        {
+            GuiBaseManipulation.TextBoxLostFocus(sender);
+        }
+
+        private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
+            {
+                List<Data.Entity.Product>? listProducts;
+                if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
+                {
+                    listProducts = Data.DAL.ProductsDal.GetByCategory(idCat);
+                }
+                else
+                {
+                    listProducts = Data.DAL.ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
+                }
+                if (listProducts is not null)  // если продукты нашлись, то выводим
+                {
+                    UpdateProducts(listProducts);
+                }
+                else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

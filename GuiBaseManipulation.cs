@@ -8,17 +8,13 @@ namespace StoreExam
     // общие операции над интерфейсом, которые дублировались в окнах
     public static class GuiBaseManipulation
     {
-        // значение для пароля по умолчанию, в ресурсах
-        private static string defUserPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
-
         public static void TextBoxGotFocus(object sender)  // при получении фокуса для TextBox и PasswordBox
         {
             string tag;
-
             if (sender is TextBox textBox)
             {
                 tag = textBox.Tag.ToString()!;
-                if (textBox.Text == tag || (tag.EndsWith("Check") && textBox.Text == defUserPassword))  // если тэг и текст textBox-а совпадают
+                if (textBox.Text == tag)  // если тэг и текст textBox-а совпадают
                 {
                     textBox.Clear();
                     textBox.Foreground = Brushes.Black;
@@ -27,7 +23,7 @@ namespace StoreExam
             else if (sender is PasswordBox passwordBox)
             {
                 tag = passwordBox.Tag.ToString()!;
-                if (passwordBox.Password == tag || (tag.EndsWith("Check") && passwordBox.Password == defUserPassword))   // если тэг и текст passwordBox-а совпадают
+                if (passwordBox.Password == tag)   // если тэг и текст passwordBox-а совпадают
                 {
                     passwordBox.Clear();
                     passwordBox.Foreground = Brushes.Black;
@@ -43,10 +39,7 @@ namespace StoreExam
                 {
                     textBox.Foreground = Brushes.Gray;
                     textBox.BorderBrush = Brushes.Gray;
-                    if (textBox.Tag.ToString()!.EndsWith("Check"))  // если это textBox для ввода пароля и оно для доп. ввода пароля
-                        textBox.Text = defUserPassword;
-                    else
-                        textBox.Text = textBox.Tag.ToString();  // если обычный textBox
+                    textBox.Text = textBox.Tag.ToString();
                 }
             }
             else if (sender is PasswordBox passwordBox)
@@ -55,28 +48,19 @@ namespace StoreExam
                 {
                     passwordBox.Foreground = Brushes.Gray;
                     passwordBox.BorderBrush = Brushes.Gray;
-                    if (passwordBox.Tag.ToString()!.EndsWith("Check"))  // если это passwordBox для доп. ввода пароля
-                        passwordBox.Password = defUserPassword;
-                    else
-                        passwordBox.Password = passwordBox.Tag.ToString();  // если обычный passwordBox
+                    passwordBox.Password = passwordBox.Tag.ToString();
                 }
             }
         }
 
-        public static void TextBoxShowPassword(TextBox textBoxShowPassword)  // показать/скрыть TextBox
+        public static void SetPasswordBox(TextBox textBox, PasswordBox passwordBox)
         {
-            if (textBoxShowPassword.Visibility == Visibility.Hidden) textBoxShowPassword.Visibility = Visibility.Visible;
-            else textBoxShowPassword.Visibility = Visibility.Hidden;
+            passwordBox.Password = textBox.Text;
         }
 
-        public static void SetPasswordBox(TextBox textBoxShowPassword, PasswordBox password)
+        public static void SetTextBox(TextBox textBox, PasswordBox passwordBox)
         {
-            password.Password = textBoxShowPassword.Text;
-        }
-
-        public static void SetTextBoxPassword(TextBox textBoxShowPassword, PasswordBox password)
-        {
-            textBoxShowPassword.Text = password.Password;
+            textBox.Text = passwordBox.Password;
         }
     }
 }
