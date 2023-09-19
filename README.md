@@ -10,3 +10,4 @@
 ![ExamStore3](https://github.com/DaniilSob2004/StoreExam/assets/106149184/e641ab61-25ad-41c7-a592-ff7049c97233)
 ![ExamStore4](https://github.com/DaniilSob2004/StoreExam/assets/106149184/5aee896e-2be0-4d5d-9048-9d8f8ff4dc95)
 ![ExamStore5](https://github.com/DaniilSob2004/StoreExam/assets/106149184/8585a0d3-2656-4d5c-b8ba-28b14d559e38)
+![ExamStore6](https://github.com/DaniilSob2004/StoreExam/assets/106149184/01603fa1-018b-4a19-9a7d-c0358f3736b5)
