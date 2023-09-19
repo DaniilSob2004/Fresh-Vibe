@@ -8,5 +8,5 @@
 ![ExamStore2_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/15a45ff8-d760-4f1b-9632-fb0e9dd74c25)
 ![ExamStore1_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/2317ccc1-25ea-404b-89fd-770d6fd29284)
 ![ExamStore3](https://github.com/DaniilSob2004/StoreExam/assets/106149184/e641ab61-25ad-41c7-a592-ff7049c97233)
-![ExamStore4](https://github.com/DaniilSob2004/StoreExam/assets/106149184/2d8aebe5-6c04-4803-89b2-ab03cad9b3cb)
-![ExamStore5](https://github.com/DaniilSob2004/StoreExam/assets/106149184/5347ec7c-5ab8-4b59-9c28-b38f30e86933)
+![ExamStore4](https://github.com/DaniilSob2004/StoreExam/assets/106149184/5aee896e-2be0-4d5d-9048-9d8f8ff4dc95)
+![ExamStore5](https://github.com/DaniilSob2004/StoreExam/assets/106149184/8585a0d3-2656-4d5c-b8ba-28b14d559e38)
