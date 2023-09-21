@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="/UI_Settings/Styles/StartStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="TextBlock" BasedOn="{StaticResource textStyle}">
+            <Style x:Key="textEventStyle" TargetType="TextBlock" BasedOn="{StaticResource textStyle}">
                 <EventSetter Event="MouseLeftButtonDown" Handler="TextBlock_MouseLeftButtonDown"/>
             </Style>
 
@@ -57,8 +57,8 @@
         <TextBlock Style="{StaticResource headerTextBlockStyle}">Store</TextBlock>
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock>Sign In</TextBlock>
-            <TextBlock Foreground="{StaticResource MainColor}">Sign Up</TextBlock>
+            <TextBlock Style="{StaticResource textEventStyle}">Sign In</TextBlock>
+            <TextBlock Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}">Sign Up</TextBlock>
         </StackPanel>
 
         <TextBox x:Name="userName" Grid.Row="2" Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

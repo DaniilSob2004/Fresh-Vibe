@@ -5,38 +5,18 @@
         <ResourceDictionary Source="/UI_Settings/Styles/BaseStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Стиль для заголовка Border -->
-    <Style x:Key="borderHeaderStyle" TargetType="Border" BasedOn="{StaticResource baseBorderHeaderStyle}">
-        <Setter Property="Margin" Value="-2 0"/>
-    </Style>
 
-    <Style x:Key="borderProductStyle" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderThickness" Value="3"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <!-- Стиль для заголовка TextBlock -->
-    <Style x:Key="textBlockHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
-        <Setter Property="FontSize" Value="35"/>
-        <Setter Property="Margin" Value="30 3 0 5"/>
-    </Style>
-
-    <!-- Стиль для большинства TextBlock -->
-    <Style x:Key="textBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
-        <Setter Property="FontSize" Value="13.5"/>
+    <!-- Стиль чёрного small текста TextBlock -->
+    <Style x:Key="textBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource smallBlackTextBlockStyle}">
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- Стиль для кол-ва товаров в корзине TextBlock -->
-    <Style x:Key="textBlockMiniStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
-        <Setter Property="FontSize" Value="12"/>
+    <Style x:Key="textBlockMiniStyle" TargetType="TextBlock" BasedOn="{StaticResource verySmallHeaderTextBlockStyle}">
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
+    
     <!-- Стиль и шаблон для аккаунта пользователя Button -->
     <Style x:Key="btnUserNameStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
         <Setter Property="Template">
@@ -80,29 +60,18 @@
         </Setter>
     </Style>
 
-    <!-- Стиль и шаблон для добавление товара в корзину Button -->
-    <Style x:Key="btnProductToBasketStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Margin="0 0 8 0" Style="{StaticResource whiteTextBlockStyle}">В корзину</TextBlock>
-                        <Image Height="20" Width="20" Source="/Images/cart.png"/>
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
+    
     <!-- Стиль и шаблон для списка категорий ListBox -->
-    <Style TargetType="ListBox">
+    <Style x:Key="listBoxCatStyle" TargetType="ListBox">
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Height="20" Source="{Binding Image}"/>
-                        <TextBlock Text="{Binding Name}" Margin="15 0" Style="{StaticResource textBlockStyle}"/>
-                    </StackPanel>
+                    <Border Style="{StaticResource borderStyle}" Margin="-5 -1">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Height="20" Source="{Binding Image}" Margin="5 3 0 3"/>
+                            <TextBlock Text="{Binding Name}" Margin="15 0" Style="{StaticResource textBlockStyle}"/>
+                        </StackPanel>
+                    </Border>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

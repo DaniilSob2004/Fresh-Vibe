@@ -5,47 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="User account" Height="350" Width="250" MinHeight="250" WindowStartupLocation="CenterScreen">
+        Title="User account" Height="350" Width="250" MinHeight="250" MinWidth="200" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="Green"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="8"/>
-                </Style>
-            </Style.Resources>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI_Settings/Styles/BaseStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Button" BasedOn="{StaticResource baseButtonImageTextStyle}">
+                <Setter Property="Margin" Value="8 15 8 0"/>
+                <Setter Property="MaxWidth" Value="500"/>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
+
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <Image Width="40" Height="40" Margin="0,12,0,8" Source="/Images/account.png"/>
-            <TextBlock x:Name="textBlockUserName" Text="{Binding User.Name}" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <Image Width="40" Height="40" Margin="0 12 0 8" Source="/Images/account.png"/>
+            <TextBlock x:Name="textBlockUserName" Text="{Binding User.Name}" HorizontalAlignment="Center" Style="{StaticResource mediumBlackTextBlockStyle}"/>
         </StackPanel>
 
-        <Button Grid.Row="1" Margin="8,15,8,0" MaxWidth="500" Click="BtnSettings_Click">
-            <StackPanel Orientation="Horizontal">
-                <Image Width="20" Height="20" Margin="8,5,0,5" Source="/Images/settings.png"/>
-                <TextBlock Text="Настройки" VerticalAlignment="Center" Margin="8,0,0,0"/>
-            </StackPanel>
-        </Button>
-
-        <Button Grid.Row="2" Margin="8,15,8,0" MaxWidth="500" Click="BtnExit_Click">
-            <StackPanel Orientation="Horizontal">
-                <Image Width="20" Height="20" Margin="8,5,0,5" Source="/Images/exit.png"/>
-                <TextBlock Text="Выйти" VerticalAlignment="Center" Margin="8,0,0,0"/>
-            </StackPanel>
-        </Button>
+        <!-- Content передаётся в шаблоне в TextBlock, а Tag это путь к картинке, передаётся в Image -->
+        <Button Grid.Row="1" Content="Настройки" Tag="/Images/settings.png" Click="BtnSettings_Click"/>
+        <Button Grid.Row="2" Content="Выйти" Tag="/Images/exit.png" Click="BtnExit_Click"/>
     </Grid>
     
 </Window>

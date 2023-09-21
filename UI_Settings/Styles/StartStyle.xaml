@@ -8,16 +8,13 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Стиль для заголовка TextBlock -->
-    <Style x:Key="headerTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
-        <Setter Property="FontSize" Value="22"/>
+    <Style x:Key="headerTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource mediumBigHeaderTextBlockStyle}">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- Стиль для текста TextBlock -->
-    <Style x:Key="textStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
+    <Style x:Key="textStyle" TargetType="TextBlock" BasedOn="{StaticResource mediumGrayTextBlockStyle}">
         <Setter Property="Margin" Value="10 5 10 2"/>
         <Setter Property="Padding" Value="10 0"/>
         <Style.Triggers>
@@ -28,9 +25,9 @@
         </Style.Triggers>
     </Style>
 
+    
     <!-- Стиль для TextBox для полей ввода -->
     <Style x:Key="textBoxStyle" TargetType="TextBox" BasedOn="{StaticResource baseTextBoxStyle}">
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Margin" Value="40 8"/>
         <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
         <Setter Property="Padding" Value="8 0"/>
@@ -40,7 +37,6 @@
 
     <!-- Стиль для PasswordBox для ввода пароля -->
     <Style x:Key="passwordBoxStyle" TargetType="PasswordBox" BasedOn="{StaticResource basePasswordBoxStyle}">
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Margin" Value="43 0 66 0"/>
         <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -61,6 +57,7 @@
                         </Border>
                         <Image Source="/Images/password.png" MaxHeight="25" MaxWidth="21" HorizontalAlignment="Right" Margin="0 6 6 6"
                                Tag="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                            <!-- будет вызвано поведение(класс MouseLeftButtonDownBehavior) при нажатии на изображение -->
                             <b:Interaction.Behaviors>
                                 <myBehaviors:MouseLeftButtonDownBehavior/>
                             </b:Interaction.Behaviors>
@@ -86,6 +83,7 @@
         </Setter>
     </Style>
 
+    
     <!-- Стиль для Button -->
     <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
         <Setter Property="Margin" Value="40 8 40 12"/>

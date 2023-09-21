@@ -1,9 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
-    <!-- Базовые цвета приложения -->
+    <!-- Базовые цвета -->
     <SolidColorBrush x:Key="BGWindow" Color="WhiteSmoke"/>
     <SolidColorBrush x:Key="MainColor" Color="Green"/>
+    <SolidColorBrush x:Key="DeleteColor" Color="IndianRed"/>
     <SolidColorBrush x:Key="TextColorBlack" Color="Black"/>
     <SolidColorBrush x:Key="TextColorWhite" Color="White"/>
     <SolidColorBrush x:Key="TextColorGray" Color="Gray"/>
@@ -12,24 +14,84 @@
     <!-- Базовый шрифт -->
     <FontFamily x:Key="MainFont">Calibri</FontFamily>
 
+    <!-- Базовые размеры -->
+    <system:Double x:Key="VeryBig">35</system:Double>
+    <system:Double x:Key="MediumBig">23</system:Double>
+    <system:Double x:Key="Big">20</system:Double>
+    <system:Double x:Key="Medium_2">16</system:Double>
+    <system:Double x:Key="Medium_1">15</system:Double>
+    <system:Double x:Key="Small">13.5</system:Double>
+    <system:Double x:Key="VerySmall">12</system:Double>
+
     <!-- Базовое значение для закгругления элементов -->
     <CornerRadius x:Key="baseCornerRadius" TopLeft="5" TopRight="5" BottomRight="5" BottomLeft="5"/>
     <CornerRadius x:Key="baseCornerRadiusButton" TopLeft="12" TopRight="12" BottomRight="12" BottomLeft="12"/>
 
-    <!-- Базовый стиль для заголовков(текста который нужно выделить) TextBlock -->
+    
+    <!-- Базовые стили для текста TextBlock -->
+    <!-- Зелёный TextBlock -->
     <Style x:Key="baseHeaderTextBlockStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource MainColor}"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="veryBigHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource VeryBig}"/>
+    </Style>
+
+    <Style x:Key="mediumBigHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumBig}"/>
+    </Style>
+
+    <Style x:Key="verySmallHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource VerySmall}"/>
+    </Style>
+
+    <!-- Белый TextBlock -->
+    <Style x:Key="whiteTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource TextColorWhite}"/>
+    </Style>
+    
+    <Style x:Key="bigWhiteTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource whiteTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Big}"/>
+    </Style>
+
+    <!-- Серый TextBlock -->
+    <Style x:Key="grayTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource TextColorGray}"/>
+    </Style>
+
+    <Style x:Key="mediumGrayTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource grayTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Medium_1}"/>
+    </Style>
+
+    <!-- Чёрный TextBlock -->
     <Style x:Key="blackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
         <Setter Property="Foreground" Value="{StaticResource TextColorBlack}"/>
     </Style>
 
-    <Style x:Key="whiteTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
-        <Setter Property="Foreground" Value="{StaticResource TextColorWhite}"/>
+    <Style x:Key="mediumBigBlackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumBig}"/>
     </Style>
+
+    <Style x:Key="bigBlackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Big}"/>
+    </Style>
+
+    <Style x:Key="mediumBlackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Medium_2}"/>
+    </Style>
+
+    <Style x:Key="smallBlackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Small}"/>
+    </Style>
+
+    <Style x:Key="verySmallBlackTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource blackTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource VerySmall}"/>
+    </Style>
+
 
     <!-- Базовый стиль для TextBox -->
     <Style x:Key="baseTextBoxStyle" TargetType="TextBox">
@@ -37,6 +99,7 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         <Setter Property="BorderBrush" Value="{StaticResource TextColorGray}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Style.Resources>
             <Style TargetType="Border">
                 <Setter Property="CornerRadius" Value="{StaticResource baseCornerRadius}"/>
@@ -50,13 +113,10 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Style.Resources>
-            <Style TargetType="Border">
-                <Setter Property="CornerRadius" Value="{StaticResource baseCornerRadius}"/>
-            </Style>
-        </Style.Resources>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
+    
     <!-- Базовый стиль для Button -->
     <Style x:Key="baseButtonStyle" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource TextColorWhite}"/>
@@ -69,7 +129,7 @@
                     <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadiusButton}"
                             Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -81,6 +141,40 @@
         </Setter>
     </Style>
 
+    <!-- Базовый стиль для кнопок, изображение с левой стороны, текст с правой Button -->
+    <Style x:Key="baseButtonImageTextStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="10 4">
+                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
+                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" Style="{StaticResource whiteTextBlockStyle}"
+                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для кнопок, текст с левой стороны, изображение с правой Button -->
+    <Style x:Key="btnProductToBasketStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
+                        <TextBlock VerticalAlignment="Center" Margin="0 0 8 0" Style="{StaticResource whiteTextBlockStyle}"
+                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для кнопок с изображением Button -->
     <Style x:Key="baseButtonImageStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
@@ -91,6 +185,7 @@
         </Style.Triggers>
     </Style>
 
+
     <!-- Базовый стиль для обычного Border -->
     <Style x:Key="baseBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource TextColorWhite}"/>
@@ -98,10 +193,20 @@
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="CornerRadius" Value="{StaticResource baseCornerRadius}"/>
     </Style>
-    
-    <!-- Базовый стиль для Border заголока -->
+
+    <!-- Базовый стиль для заголока Border -->
     <Style x:Key="baseBorderHeaderStyle" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
         <Setter Property="CornerRadius" Value="0 0 15 15"/>
+    </Style>
+
+    <!-- Стиль и поведение при навидение курсора для Border -->
+    <Style x:Key="borderStyle" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderThickness" Value="3"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
