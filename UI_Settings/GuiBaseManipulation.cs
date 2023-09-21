@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StoreExam
+namespace StoreExam.UI_Settings
 {
     // общие операции над интерфейсом, которые дублировались в окнах
     public static class GuiBaseManipulation

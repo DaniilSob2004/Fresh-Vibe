@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
+using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
 {

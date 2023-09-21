@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using StoreExam.CheckData;
+using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
 {
