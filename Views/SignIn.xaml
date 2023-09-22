@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d" 
         Title="Store v3.0" Height="250" Width="450" MinHeight="250" MinWidth="350" WindowStartupLocation="CenterScreen">
@@ -18,20 +20,14 @@
             </Style>
 
             <Style x:Key="textBoxEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
             </Style>
 
             <Style x:Key="textBoxPasswordEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxPasswordStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
             </Style>
 
             <Style x:Key="passwordBoxPasswordEventStyle" TargetType="PasswordBox" BasedOn="{StaticResource passwordBoxPasswordStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="PasswordChanged" Handler="PasswordBox_PasswordChanged"/>
             </Style>
         </ResourceDictionary>
@@ -57,8 +53,12 @@
         </StackPanel>
 
         <TextBox x:Name="numTel" Grid.Row="2" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}"/>
-        
+                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
+
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -66,9 +66,18 @@
             </Grid.ColumnDefinitions>
 
             <PasswordBox x:Name="password" Panel.ZIndex="1" Tag="{StaticResource DefPassword}" Password="{StaticResource DefPassword}"
-                         Style="{StaticResource passwordBoxPasswordEventStyle}"/>
+                         Style="{StaticResource passwordBoxPasswordEventStyle}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusPasswordBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </PasswordBox>
+            
             <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Style="{StaticResource textBoxPasswordEventStyle}"
-                     Tag="{StaticResource DefPassword}" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                     Tag="{StaticResource DefPassword}" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusTextBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </TextBox>
         </Grid>
 
         <Button Grid.Row="4" Content="SIGN IN" Style="{StaticResource btnStyle}" Click="SignInBtn_Click"/>

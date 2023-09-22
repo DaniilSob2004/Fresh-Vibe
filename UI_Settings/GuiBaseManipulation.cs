@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StoreExam.CheckData;
+using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -7,6 +9,47 @@ namespace StoreExam.UI_Settings
     // общие операции над интерфейсом, которые дублировались в окнах
     public static class GuiBaseManipulation
     {
+        public static string DefaultName = Application.Current.TryFindResource("DefName").ToString()!;
+        public static string DefaultSurname = Application.Current.TryFindResource("DefSurname").ToString()!;
+        public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
+        public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
+        public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+
+
+        public static void TextBoxCheckCorrectUserData(object sender, Data.Entity.User user)
+        {
+            if (sender is TextBox textBox && textBox.Tag is not null)
+            {
+                string? tag = textBox.Tag.ToString();  // узнаём с помощью тега какое это поле
+                bool isErrorInput = false;  // флаг, ошибочный ли ввод
+
+                if (tag == DefaultName)
+                {
+                    // если в поле не строка по умолчанию и данные неверно введены, то красим border красным цветом
+                    if (user.Name != DefaultName && !CheckUser.CheckName(user)) isErrorInput = true;
+                }
+                else if (tag == DefaultSurname)
+                {
+                    if (user.Surname != DefaultSurname && !CheckUser.CheckSurname(user)) isErrorInput = true;
+                }
+                else if (tag == DefaultNumTel)
+                {
+                    if (user.NumTel != DefaultNumTel && !CheckUser.CheckNumTel(user)) isErrorInput = true;
+                }
+                else if (tag == DefaultEmail)
+                {
+                    if (user.Email != DefaultEmail && !CheckUser.CheckEmail(user)) isErrorInput = true;
+                }
+                else if (tag == DefaultPassword)
+                {
+                    if (textBox.Text != DefaultPassword && !CheckUser.CheckPassword(textBox.Text)) isErrorInput = true;
+                }
+
+                if (isErrorInput) textBox.BorderBrush = Brushes.Red;
+                else textBox.BorderBrush = Brushes.Gray;
+            }
+        }
+
         public static void TextBoxGotFocus(object sender)  // при получении фокуса для TextBox и PasswordBox
         {
             string tag;

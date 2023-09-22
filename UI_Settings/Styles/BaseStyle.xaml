@@ -27,7 +27,6 @@
     <CornerRadius x:Key="baseCornerRadius" TopLeft="5" TopRight="5" BottomRight="5" BottomLeft="5"/>
     <CornerRadius x:Key="baseCornerRadiusButton" TopLeft="12" TopRight="12" BottomRight="12" BottomLeft="12"/>
 
-    
     <!-- Базовые стили для текста TextBlock -->
     <!-- Зелёный TextBlock -->
     <Style x:Key="baseHeaderTextBlockStyle" TargetType="TextBlock">

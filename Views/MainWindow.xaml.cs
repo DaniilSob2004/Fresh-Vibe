@@ -8,12 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
 {
@@ -24,7 +19,7 @@ namespace StoreExam.Views
         public Data.Entity.Category? ChoiceCategory { get; set; }
         public ObservableCollection<Data.Entity.Product> Products { get; set; }
         ICollectionView productsListView;
-        public bool IsDelAccount;  // флаг, удалил ли пользователь аккаунт
+        public StateData stateUserData;  // состояние
 
         public MainWindow(Data.Entity.User user)
         {
@@ -35,7 +30,6 @@ namespace StoreExam.Views
             Products = new ObservableCollection<Data.Entity.Product>();
             productsListView = CollectionViewSource.GetDefaultView(Products);
 
-            IsDelAccount = false;
             this.DataContext = this;
         }
 
@@ -69,7 +63,7 @@ namespace StoreExam.Views
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (!IsDelAccount)  // если удаление аккаунта не было, то выводим пользователю вопрос
+            if (stateUserData != StateData.Delete)  // если удаление аккаунта не было, то выводим пользователю вопрос
             {
                 if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
@@ -86,38 +80,36 @@ namespace StoreExam.Views
         private void BtnUserAccount_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new UserAccountWindow(User);  // в конструктор передаём ссылку User
-            bool? dialogRes = dialog.ShowDialog();  // отображаем окно аккаунта пользователя
-            if (dialogRes ?? false)  // если вернулось true, то закрываем окно (выходим из аккаунта)
-            {
-                if (dialog.isDelAccount)  // если пользователь удалил аккаунт
-                {
-                    if (Data.DAL.UserDal.Delete(User))  // если User-а успешно удалили
-                    {
-                        IsDelAccount = true;  // устанавливаем флаг удаления
-                    }
-                    else
-                    {
-                        MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                Close();
-            }
-            else  // сохранение свойств user-а
-            {
-                if (dialog.isSaveData)  // если User сохранил изменения
-                {
-                    User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
-                    UpdateUIUserData();  // обновляем значения интерфейса
+            dialog.ShowDialog();  // отображаем окно аккаунта пользователя
+            stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
 
-                    if (Data.DAL.UserDal.Update(User))  // обновляем данные в таблице
-                    {
-                        MessageBox.Show("Изменения сохранены!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+            if (stateUserData == StateData.Save)
+            {
+                User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
+                UpdateUIUserData();  // обновляем значения интерфейса
+                if (Data.DAL.UserDal.Update(User))  // обновляем данные в таблице
+                {
+                    MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+                else
+                {
+                    MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (stateUserData == StateData.Delete)
+            {
+                if (Data.DAL.UserDal.Delete(User))  // если User-а успешно удалили
+                {
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (stateUserData == StateData.Exit)
+            {
+                Close();
             }
         }
 
@@ -137,17 +129,17 @@ namespace StoreExam.Views
                     }
                     else
                     {
-                        MessageBox.Show("Что-то пошло не так...");
+                        MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
             }
         }
 
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void BorderProduct_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border border)
             {
-                if (border.DataContext is Data.Entity.Product product)
+                if (border.DataContext is Data.Entity.Product product)  // получаем объект Entity.Product
                 {
                     var dialog = new ProductInfoWindow(product);  // создаём информационное окно для продукта
                     dialog.ShowDialog();
@@ -159,23 +151,13 @@ namespace StoreExam.Views
         {
             if (sender is Button btn)
             {
-                if (btn.DataContext is Data.Entity.Product product)
+                if (btn.DataContext is Data.Entity.Product product)  // получаем объект Entity.Product
                 {
                     MessageBox.Show($"Добавляем в корзину: {product.Name}");
                 }
             }
         }
 
-
-        private void TextBoxSearch_GotFocus(object sender, RoutedEventArgs e)
-        {
-            GuiBaseManipulation.TextBoxGotFocus(sender);
-        }
-
-        private void TextBoxSearch_LostFocus(object sender, RoutedEventArgs e)
-        {
-            GuiBaseManipulation.TextBoxLostFocus(sender);
-        }
 
         private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

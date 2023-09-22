@@ -42,6 +42,10 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

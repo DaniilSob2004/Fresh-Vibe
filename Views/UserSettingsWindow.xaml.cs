@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using StoreExam.CheckData;
 
 namespace StoreExam.Views
@@ -19,16 +16,14 @@ namespace StoreExam.Views
     {
         public Data.Entity.User User { get; set; }  // копия user-a
         public Data.Entity.User origUser;  // объект user, до модификации
-        public bool isDelAccount;  // флаг, удалил ли пользователь аккаунт
-        public bool isSaveData;  // флаг, изменил ли пользователь свои данные
+        public StateData stateUserData;  // состояние данных пользователя
 
         public UserSettingsWindow(Data.Entity.User user)
         {
             InitializeComponent();
             User = user;
             origUser = CheckUser.GetClone(user);
-            isDelAccount = false;
-            isSaveData = false;
+            stateUserData = StateData.Cancel;
             this.DataContext = this;
         }
 
@@ -122,13 +117,13 @@ namespace StoreExam.Views
                 {
                     if (IsChangePassword())  // если пароль был изменён, значит user его поменял
                     {
-                        if (Data.DAL.UserDal.CheckPassword(origUser, textBoxOldPassword.Text))  // если пароль введён верный
+                        if (CheckUser.PasswordEntryVerification(origUser, textBoxOldPassword.Text))  // если пароль введён верный
                         {
                             if (CheckNewPassword())  // проверка двух полей для нового пароля
                             {
                                 User.Password = PasswordHasher.HashPassword(User.Password, origUser.Salt);  // хэшируем новый пароль, на основе старой соли
-                                isSaveData = true;  // флаг сохранения
-                                DialogResult = false;  // сохранение свойств user-а
+                                stateUserData = StateData.Save;  // сохраняем состояние работы окна
+                                DialogResult = true;  // закрываем окно
                             }
                             else MessageBox.Show("Новые пароли не совпадают!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
@@ -136,8 +131,8 @@ namespace StoreExam.Views
                     }
                     else
                     {
-                        isSaveData = true;  // флаг сохранения
-                        DialogResult = false;  // сохранение свойств user-а
+                        stateUserData = StateData.Save;  // сохраняем состояние работы окна
+                        DialogResult = true;  // закрываем окно
                     }
                 }
             }
@@ -146,15 +141,16 @@ namespace StoreExam.Views
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;  // выход из аккаунта
+            stateUserData = StateData.Exit;  // сохраняем состояние работы окна
+            DialogResult = true;  // закрываем окно
         }
 
         private void BtnDelAccount_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Вы действительно хотите удалить аккаунт?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                isDelAccount = true;  // указываем что пользователь удалил аккаунт
-                DialogResult = true;  // выход из аккаунта
+                stateUserData = StateData.Delete;  // сохраняем состояние работы окна
+                DialogResult = true;  // закрываем окно
             }
         }
     }

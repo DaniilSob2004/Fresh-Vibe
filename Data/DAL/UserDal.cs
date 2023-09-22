@@ -61,11 +61,6 @@ namespace StoreExam.Data.DAL
             return false;
         }
 
-        public static bool CheckPassword(User user, string password)
-        {
-            return PasswordHasher.VerifyPassword(password, user.Salt, user.Password);
-        }
-
         public static bool IsUniqueNumTel(string numTel)
         {
             return dataContext.Users.Any(u => u.NumTel == numTel);

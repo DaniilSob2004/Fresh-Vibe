@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using StoreExam.CheckData;
 using StoreExam.UI_Settings;
 
@@ -23,22 +21,13 @@ namespace StoreExam.Views
         public SignIn()
         {
             InitializeComponent();
-            ClearTextBox();
             DataContext = this;
-        }
-
-        private void ClearTextBox()
-        {
-            // очищаем поля для ввода
-            numTel.Foreground = Brushes.Gray;
-            numTel.Text = DefaultNumTel;
-            password.Foreground = Brushes.Gray;
-            password.Password = DefaultPassword;
         }
 
 
         private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // переключение на окно регистрации
             if (sender is TextBlock textBlock)
             {
                 if (textBlock.Text == "Sign Up")
@@ -49,54 +38,45 @@ namespace StoreExam.Views
             }
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            GuiBaseManipulation.TextBoxGotFocus(sender);
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            GuiBaseManipulation.TextBoxLostFocus(sender);
-        }
-
         private void TextBox_TextChanged(object sender, RoutedEventArgs e)
         {
             if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetPasswordBox(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
+                GuiBaseManipulation.SetPasswordBox(textBoxShowPassword, password);  // при изменение TextBox, присваиваем значение в PasswordBox
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // чтобы значения двух полей для пароля совпадали
+                GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // при изменение PasswordBox, присваиваем значение в TextBox
         }
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e)
         {
-            Data.Entity.User? user = Data.DAL.UserDal.GetUser(User.NumTel);
-            if (user is not null)  // если такой user есть
+            try
             {
-                if (Data.DAL.UserDal.CheckPassword(user, User.Password))  // если пароль введён верный
+                Data.Entity.User? user = Data.DAL.UserDal.GetUser(User.NumTel);  // находим user по номер тел.
+                if (user is not null)  // если такой user есть
                 {
-                    if (CheckUser.CheckIsDeletedUser(user))  // если аккаунт user-а удалён
+                    if (CheckUser.PasswordEntryVerification(user, User.Password))  // если пароль введён верный
                     {
-                        MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        if (CheckUser.CheckIsDeletedUser(user))  // если аккаунт user-а удалён
+                        {
+                            MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+                            Close();  // закрываем окно авторизации
+                            new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект user
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Close();  // закрываем окно авторизации
-                        new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект User
-                    }
+                    else MessageBox.Show("Неверный пароль!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                else
-                {
-                    MessageBox.Show("Неверный пароль!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                else MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            else
+            catch (Exception)
             {
-                MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

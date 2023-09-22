@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Title="Store v3.0" Height="450" Width="400" MinHeight="425" MinWidth="350" WindowStartupLocation="CenterScreen">
@@ -18,20 +20,14 @@
             </Style>
 
             <Style x:Key="textBoxEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
             </Style>
 
             <Style x:Key="textBoxPasswordEventStyle" TargetType="TextBox" BasedOn="{StaticResource textBoxPasswordStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="TextChanged" Handler="TextBox_TextChanged"/>
             </Style>
 
             <Style x:Key="passwordBoxPasswordEventStyle" TargetType="PasswordBox" BasedOn="{StaticResource passwordBoxPasswordStyle}">
-                <EventSetter Event="GotFocus" Handler="TextBox_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
                 <EventSetter Event="PasswordChanged" Handler="PasswordBox_PasswordChanged"/>
             </Style>
         </ResourceDictionary>
@@ -62,13 +58,29 @@
         </StackPanel>
 
         <TextBox x:Name="userName" Grid.Row="2" Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefName}" Style="{StaticResource textBoxEventStyle}"/>
+                 Tag="{StaticResource DefName}" Style="{StaticResource textBoxEventStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
         <TextBox x:Name="surname" Grid.Row="3" Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefSurname}" Style="{StaticResource textBoxEventStyle}"/>
+                 Tag="{StaticResource DefSurname}" Style="{StaticResource textBoxEventStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
         <TextBox x:Name="numTel" Grid.Row="4" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}"/>
+                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
         <TextBox x:Name="email" Grid.Row="5" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefEmail}" Style="{StaticResource textBoxEventStyle}"/>
+                 Tag="{StaticResource DefEmail}" Style="{StaticResource textBoxEventStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
 
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
@@ -77,9 +89,17 @@
             </Grid.ColumnDefinitions>
 
             <PasswordBox x:Name="password" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}"
-                         Style="{StaticResource passwordBoxPasswordEventStyle}"/>
+                         Style="{StaticResource passwordBoxPasswordEventStyle}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusPasswordBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </PasswordBox>
             <TextBox x:Name="textBoxShowPassword" Grid.Row="1" Text="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                     Tag="{StaticResource DefPassword}" Style="{StaticResource textBoxPasswordEventStyle}"/>
+                     Tag="{StaticResource DefPassword}" Style="{StaticResource textBoxPasswordEventStyle}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusTextBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </TextBox>
         </Grid>
 
         <Grid Grid.Row="7">
@@ -88,8 +108,18 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <PasswordBox x:Name="passwordCheck" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}" Style="{StaticResource passwordBoxPasswordEventStyle}"/>
-            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}" Style="{StaticResource textBoxPasswordEventStyle}"/>
+            <PasswordBox x:Name="passwordCheck" Panel.ZIndex="1" Password="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}"
+                         Style="{StaticResource passwordBoxPasswordEventStyle}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusPasswordBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </PasswordBox>
+            <TextBox x:Name="textBoxShowPasswordCheck" Grid.Row="1" Text="{StaticResource DefPassword}" Tag="{StaticResource DefPassword}"
+                     Style="{StaticResource textBoxPasswordEventStyle}">
+                <b:Interaction.Behaviors>
+                    <myBehaviors:GotLostFocusTextBoxBehavior/>
+                </b:Interaction.Behaviors>
+            </TextBox>
         </Grid>
 
         <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>

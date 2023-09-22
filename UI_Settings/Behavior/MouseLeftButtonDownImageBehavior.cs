@@ -9,7 +9,7 @@ namespace StoreExam.UI_Settings.Behavior
 
     // Данный класс нужен для обработки события клика по Image, т.к. сам Image определён в шаблоне TextBox, и Image ссылается на данный класс
     // Сам шаблон определён в StartStyle.xamls
-    public class MouseLeftButtonDownBehavior : Behavior<Image>
+    public class MouseLeftButtonDownImageBehavior : Behavior<Image>
     {
         protected override void OnAttached()
         {

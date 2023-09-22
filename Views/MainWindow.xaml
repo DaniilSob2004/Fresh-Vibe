@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam"
         mc:Ignorable="d"
         Closing="Window_Closing"
@@ -47,8 +49,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <EventSetter Event="GotFocus" Handler="TextBoxSearch_GotFocus"/>
-                <EventSetter Event="LostFocus" Handler="TextBoxSearch_LostFocus"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -99,7 +99,12 @@
 
         <ListBox Grid.Row="2" Grid.RowSpan="3" ItemsSource="{Binding Categories}" Style="{StaticResource listBoxCatStyle}" ItemContainerStyle="{StaticResource itemListBoxCatStyle}"/>
 
-        <TextBox x:Name="textBoxSearch" Text="{StaticResource DefSearch}" Tag="{StaticResource DefSearch}" Grid.Column="2" Grid.Row="1" Style="{StaticResource textBoxStyle}"/>
+        <TextBox x:Name="textBoxSearch" Text="{StaticResource DefSearch}" Tag="{StaticResource DefSearch}" Grid.Column="2" Grid.Row="1"
+                 Style="{StaticResource textBoxStyle}">
+            <b:Interaction.Behaviors>
+                <myBehaviors:GotLostFocusTextBoxBehavior/>
+            </b:Interaction.Behaviors>
+        </TextBox>
 
         <TextBlock x:Name="textBlockChoiceCategory" Grid.Column="2" Grid.Row="2" Text="{Binding ChoiceCategory.Name}" Tag="{Binding ChoiceCategory.Id}" Margin="20 10 0 10"
                    Style="{StaticResource mediumBigBlackTextBlockStyle}"/>
@@ -108,7 +113,7 @@
             <ItemsControl ItemsSource="{Binding Products}" Style="{StaticResource itemsControlProduct}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="170" Height="220" Margin="10 10 0 5" Style="{StaticResource borderStyle}" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+                        <Border Width="170" Height="220" Margin="10 10 0 5" Style="{StaticResource borderStyle}" MouseLeftButtonDown="BorderProduct_MouseLeftButtonDown">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>

@@ -6,15 +6,18 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using StoreExam.Data.Entity;
 
 namespace StoreExam.CheckData
 {
     public static class CheckUser
     {
-        public enum RegistrationCheck { MinNameSurname = 3, MinPassword = 8 };
+        public static int MinNameSurname = Convert.ToInt32(Application.Current.FindResource("MinLenNameSurname"));
+        public static int MinPassword = Convert.ToInt32(Application.Current.FindResource("MinLenPassword"));
+        public static string DefaultEmail = Application.Current.FindResource("DefEmail").ToString()!;
         private static Match result = null!;
 
-        public static Data.Entity.User GetClone(Data.Entity.User user)
+        public static User GetClone(User user)
         {
             return new Data.Entity.User
             {
@@ -30,37 +33,59 @@ namespace StoreExam.CheckData
             };
         }
 
-        public static void CheckAndChangeDefaultEmail(Data.Entity.User user)
+
+        public static void CheckAndChangeDefaultEmail(User user)
         {
+            // если email пользователя совпадает со значением по умолчанию, значит пользователь его не указал
             if (user.Email == Application.Current.TryFindResource("DefEmail").ToString()!)
             {
                 user.Email = null;
             }
         }
 
-        public static bool CheckIsDeletedUser(Data.Entity.User user)
+        public static bool CheckIsDeletedUser(User user)
         {
-            return user.DeleteDt is not null;
+            return user.DeleteDt is not null;  // удалён ли аккаунт пользователь
         }
 
-        public static bool CheckName(Data.Entity.User user)
+        public static bool PasswordEntryVerification(User user, string password)
         {
-            return user.Name.Length >= (int)RegistrationCheck.MinNameSurname;
+            return PasswordHasher.VerifyPassword(password, user.Salt, user.Password);
         }
 
-        public static bool CheckSurname(Data.Entity.User user)
+        public static bool CheckUniqueUserInDB(User user, ref string? notUniqueFields)
         {
-            return user.Surname.Length >= (int)RegistrationCheck.MinNameSurname;
+            // проверяем в таблице User поле(которое должно быть уникальным), и если такое значение уже есть, то не уникально
+            bool isUnique = !Data.DAL.UserDal.IsUniqueNumTel(user.NumTel);  // проверка номера тел. на уникальность
+            if (!isUnique) notUniqueFields += "номер тел., ";
+
+            if (user.Email != DefaultEmail)  // если значение email не по-умолчанию(значит пользователь его указал)
+            {
+                isUnique = !Data.DAL.UserDal.IsUniqueEmail(user.Email);  // проверка email на уникальность
+                if (!isUnique) notUniqueFields += "email, ";
+            }
+            return String.IsNullOrEmpty(notUniqueFields);  // true, если все значения уникальны
         }
 
-        public static bool CheckNumTel(Data.Entity.User user)
+
+        public static bool CheckName(User user)
+        {
+            return user.Name.Length >= MinNameSurname;
+        }
+
+        public static bool CheckSurname(User user)
+        {
+            return user.Surname.Length >= MinNameSurname;
+        }
+
+        public static bool CheckNumTel(User user)
         {
             Regex reg = new Regex(@"^(\+38)?\d{10}$");
             result = reg.Match(user.NumTel);
             return result.Success;
         }
 
-        public static bool CheckEmail(Data.Entity.User user)
+        public static bool CheckEmail(User user)
         {
             if (user.Email is not null)
             {
@@ -80,15 +105,15 @@ namespace StoreExam.CheckData
 
         public static bool CheckPassword(string password)
         {
-            return String.IsNullOrEmpty(password) || password.Length >= (int)RegistrationCheck.MinPassword;
+            return String.IsNullOrEmpty(password) || password.Length >= MinPassword;
         }
 
-        public static bool CheckAllData(Data.Entity.User user)
+        public static bool CheckAllData(User user)
         {
             return CheckName(user) && CheckSurname(user) && CheckNumTel(user) && CheckEmail(user) && CheckPassword(user.Password);
         }
 
-        public static bool CheckPasswordByString(Data.Entity.User user, string password)
+        public static bool CheckPasswordByString(User user, string password)
         {
             return user.Password == password;
         }

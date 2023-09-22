@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using StoreExam.CheckData;
 
 namespace StoreExam.Views
@@ -18,15 +13,13 @@ namespace StoreExam.Views
     public partial class UserAccountWindow : Window
     {
         public Data.Entity.User User { get; set; }  // ссылка на объект User
-        public bool isDelAccount;  // флаг, удалил ли пользователь аккаунт
-        public bool isSaveData;  // флаг, изменил ли пользователь свои данные
+        public StateData stateUserData;  // состояние данных пользователя
 
         public UserAccountWindow(Data.Entity.User user)
         {
             InitializeComponent();
             User = user;
-            isDelAccount = false;
-            isSaveData = false;
+            stateUserData = StateData.Cancel;
             this.DataContext = this;
         }
 
@@ -34,29 +27,23 @@ namespace StoreExam.Views
         {
             Data.Entity.User copyUser = CheckUser.GetClone(User);
             var dialog = new UserSettingsWindow(copyUser);  // в конструктор передаём копию User
-            bool? dialogRes = dialog.ShowDialog();  // отображаем окно настройки пользователя и передаём копию объекта User
-            if (dialogRes ?? false)  // если вернулось true, то выход из аккаунта
+            dialog.ShowDialog();  // отображаем окно настройки пользователя и передаём копию объекта User
+
+            stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
+            if (stateUserData != StateData.Cancel)
             {
-                if (dialog.isDelAccount)  // если аккаунт удалён
+                if (stateUserData == StateData.Save)
                 {
-                    isDelAccount = true;  // указываем что пользователь удалил аккаунт
+                    User = copyUser;  // сохраняем измененного user-а
                 }
-                DialogResult = true;  // выход из аккаунта
-            }
-            else  // сохранение свойств user-а
-            {
-                if (dialog.isSaveData)  // если изменения сохранены
-                {
-                    User = copyUser;  // присваиваем user-у изменённую копию
-                    isSaveData = true;  // указываем что пользователь сохранил изменения
-                    DialogResult = false;  // сохранение свойств user-а
-                }
+                DialogResult = true;  // закрываем окно
             }
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;  // выход из аккаунта
+            stateUserData = StateData.Exit;  // сохраняем состояние работы окна
+            DialogResult = true;  // закрываем окно
         }
     }
 }
