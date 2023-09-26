@@ -55,11 +55,17 @@ namespace StoreExam.CheckData
 
         public static bool CheckUniqueUserInDB(User user, ref string? notUniqueFields)
         {
-            // проверяем в таблице User поле(которое должно быть уникальным), и если такое значение уже есть, то не уникально
-            bool isUnique = !Data.DAL.UserDal.IsUniqueNumTel(user.NumTel);  // проверка номера тел. на уникальность
-            if (!isUnique) notUniqueFields += "номер тел., ";
+            User? userFromDb = Data.DAL.UserDal.GetUser(user.Id);
 
-            if (user.Email != DefaultEmail)  // если значение email не по-умолчанию(значит пользователь его указал)
+            // проверяем в таблице User поле(которое должно быть уникальным), и если такое значение уже есть, то не уникально
+            bool isUnique;  
+            if (userFromDb?.NumTel != user.NumTel)  // если номер телефона изменил
+            {
+                isUnique = !Data.DAL.UserDal.IsUniqueNumTel(user.NumTel);  // проверка номера тел. на уникальность
+                if (!isUnique) notUniqueFields += "номер тел., ";
+            }
+
+            if (user.Email != DefaultEmail && userFromDb?.Email != user.Email)  // если значение email не по-умолчанию(значит пользователь его указал) и если email изменил
             {
                 isUnique = !Data.DAL.UserDal.IsUniqueEmail(user.Email);  // проверка email на уникальность
                 if (!isUnique) notUniqueFields += "email, ";

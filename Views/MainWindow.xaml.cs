@@ -19,7 +19,7 @@ namespace StoreExam.Views
         public Data.Entity.Category? ChoiceCategory { get; set; }
         public ObservableCollection<Data.Entity.Product> Products { get; set; }
         ICollectionView productsListView;
-        public StateData stateUserData;  // состояние
+        public StateData stateUserData;  // состояние данных пользователя
 
         public MainWindow(Data.Entity.User user)
         {
@@ -65,7 +65,7 @@ namespace StoreExam.Views
         {
             if (stateUserData != StateData.Delete)  // если удаление аккаунта не было, то выводим пользователю вопрос
             {
-                if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
                     e.Cancel = true;  // отменяем событие закрытия
                 }
@@ -79,37 +79,44 @@ namespace StoreExam.Views
 
         private void BtnUserAccount_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new UserAccountWindow(User);  // в конструктор передаём ссылку User
-            dialog.ShowDialog();  // отображаем окно аккаунта пользователя
-            stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
+            try
+            {
+                var dialog = new UserAccountWindow(User);  // в конструктор передаём ссылку User
+                dialog.ShowDialog();  // отображаем окно аккаунта пользователя
+                stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
 
-            if (stateUserData == StateData.Save)
-            {
-                User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
-                UpdateUIUserData();  // обновляем значения интерфейса
-                if (Data.DAL.UserDal.Update(User))  // обновляем данные в таблице
+                if (stateUserData == StateData.Save)
                 {
-                    MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
+                    UpdateUIUserData();  // обновляем значения интерфейса
+                    if (Data.DAL.UserDal.Update(User))  // обновляем данные в таблице
+                    {
+                        MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
-                else
+                else if (stateUserData == StateData.Delete)
                 {
-                    MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    if (Data.DAL.UserDal.Delete(User))  // если User-а успешно удалили
+                    {
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
-            }
-            else if (stateUserData == StateData.Delete)
-            {
-                if (Data.DAL.UserDal.Delete(User))  // если User-а успешно удалили
+                else if (stateUserData == StateData.Exit)
                 {
                     Close();
                 }
-                else
-                {
-                    MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
             }
-            else if (stateUserData == StateData.Exit)
+            catch (Exception)
             {
-                Close();
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -161,24 +168,31 @@ namespace StoreExam.Views
 
         private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
+            try
             {
-                List<Data.Entity.Product>? listProducts;
-                if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
+                if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
                 {
-                    listProducts = Data.DAL.ProductsDal.GetByCategory(idCat);
+                    List<Data.Entity.Product>? listProducts;
+                    if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
+                    {
+                        listProducts = Data.DAL.ProductsDal.GetByCategory(idCat);
+                    }
+                    else
+                    {
+                        listProducts = Data.DAL.ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
+                    }
+                    if (listProducts is not null)  // если продукты нашлись, то выводим
+                    {
+                        UpdateProducts(listProducts);
+                    }
+                    else MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                else
-                {
-                    listProducts = Data.DAL.ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
-                }
-                if (listProducts is not null)  // если продукты нашлись, то выводим
-                {
-                    UpdateProducts(listProducts);
-                }
-                else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                else MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            else MessageBox.Show("Что-то пошло не так!\nПопробуйте чуть похже.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            catch (Exception)
+            {
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }
