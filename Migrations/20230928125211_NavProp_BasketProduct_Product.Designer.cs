@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreExam.Data;
 
@@ -11,9 +12,11 @@ using StoreExam.Data;
 namespace StoreExam.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230928125211_NavProp_BasketProduct_Product")]
+    partial class NavProp_BasketProduct_Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,8 +43,6 @@ namespace StoreExam.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("BasketProducts");
                 });
@@ -154,12 +155,6 @@ namespace StoreExam.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StoreExam.Data.Entity.User", null)
-                        .WithMany("BasketProducts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
                 });
 
@@ -177,11 +172,6 @@ namespace StoreExam.Migrations
             modelBuilder.Entity("StoreExam.Data.Entity.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("StoreExam.Data.Entity.User", b =>
-                {
-                    b.Navigation("BasketProducts");
                 });
 #pragma warning restore 612, 618
         }

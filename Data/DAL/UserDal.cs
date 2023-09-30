@@ -10,7 +10,7 @@ namespace StoreExam.Data.DAL
 {
     public static class UserDal
     {
-        private static DataContext dataContext = new();
+        private static DataContext dataContext = ((App)Application.Current).dataContext;
 
         public static User? GetUser(string numTel)
         {

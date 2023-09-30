@@ -1,4 +1,4 @@
-﻿namespace StoreExam
+﻿namespace StoreExam.Enums
 {
     public enum StateData
     {

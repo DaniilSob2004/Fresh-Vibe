@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreExam.Data;
 
@@ -11,9 +12,11 @@ using StoreExam.Data;
 namespace StoreExam.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230927154058_AddCountProduct")]
+    partial class AddCountProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,30 +24,6 @@ namespace StoreExam.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("StoreExam.Data.Entity.BasketProduct", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Amounts")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BasketProducts");
-                });
 
             modelBuilder.Entity("StoreExam.Data.Entity.Category", b =>
                 {
@@ -70,7 +49,7 @@ namespace StoreExam.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Count")
+                    b.Property<int?>("Count")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDt")
@@ -146,23 +125,6 @@ namespace StoreExam.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("StoreExam.Data.Entity.BasketProduct", b =>
-                {
-                    b.HasOne("StoreExam.Data.Entity.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StoreExam.Data.Entity.User", null)
-                        .WithMany("BasketProducts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("StoreExam.Data.Entity.Product", b =>
                 {
                     b.HasOne("StoreExam.Data.Entity.Category", "Category")
@@ -177,11 +139,6 @@ namespace StoreExam.Migrations
             modelBuilder.Entity("StoreExam.Data.Entity.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("StoreExam.Data.Entity.User", b =>
-                {
-                    b.Navigation("BasketProducts");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,6 +9,7 @@ namespace StoreExam.Data.Entity
         public string Description { get; set; } = null!;
         public Guid IdCat { get; set; }
         public float Price { get; set; }
+        public int Count { get; set; }
         public string? Image { get; set; }
         public DateTime CreateDt { get; set; }
         public DateTime? DeleteDt { get; set; }

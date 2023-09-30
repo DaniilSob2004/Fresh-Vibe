@@ -158,7 +158,7 @@
     </Style>
 
     <!-- Базовый стиль для кнопок, текст с левой стороны, изображение с правой Button -->
-    <Style x:Key="btnProductToBasketStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+    <Style x:Key="baseButtonTextImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -184,6 +184,21 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Базовый стиль для кнопок с одним только изображением Button -->
+    <Style x:Key="btnOneImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}"
+                                Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                        <!-- путь к изображению получаем из самого Button, для которого этот шаблон предназначен -->
+                        <Image Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Margin="{TemplateBinding Margin}"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"-->
 
     <!-- Базовый стиль для обычного Border -->
     <Style x:Key="baseBorderStyle" TargetType="Border">

@@ -1,8 +1,8 @@
-﻿using StoreExam.CheckData;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using StoreExam.CheckData;
 
 namespace StoreExam.UI_Settings
 {
@@ -16,6 +16,63 @@ namespace StoreExam.UI_Settings
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
 
 
+        // Работа с TextBlock который отвечает за кол-во товара
+        public static TextBlock? FindTextBlockAmountsProductBtnPlMi(object sender)
+        {
+            // находим TextBlock который отвечает за кол-во выбранного товара (для кнопок +/-)
+            DependencyObject parent = VisualTreeHelper.GetParent((UIElement)sender);  // находим родителя
+            if (parent is StackPanel stack)  // если это StackPanel (наш TextBlock находится в StackPanel)
+            {
+                if (stack.FindName("textBlockAmountProducts") is TextBlock textBlockAmount)  // если нашли TextBlock
+                {
+                    return textBlockAmount;
+                }
+            }
+            return null;
+        }
+
+        public static TextBlock? FindTextBlockAmountsProductBtnBasket(object sender)
+        {
+            // находим TextBlock который отвечает за кол-во выбранного товара (для кнопок В КОРЗИНУ)
+            DependencyObject parent = VisualTreeHelper.GetParent((UIElement)sender);  // находим родителя
+            if (parent is Grid grid)  // если это Grid (наш TextBlock находится в Grid)
+            {
+                if (grid.FindName("textBlockAmountProducts") is TextBlock textBlockAmount)  // если нашли TextBlock
+                {
+                    return textBlockAmount;
+                }
+            }
+            return null;
+        }
+
+        public static void TextBlockAmountProductChangeValue(object sender, Data.Entity.Product product, bool shouldIncrease)
+        {
+            TextBlock? textBlockAmount = FindTextBlockAmountsProductBtnPlMi(sender);  // находим TextBlock
+            if (textBlockAmount is not null)
+            {
+                int amountProduct;
+                if (int.TryParse(textBlockAmount.Text, out amountProduct))  // преобразовываем в int
+                {
+                    if (shouldIncrease)  // если true, значит увеличиваем
+                    {
+                        if (CheckProduct.CheckMaxValue(product, amountProduct))  // проверка перед тем как увеличить
+                        {
+                            textBlockAmount.Text = (++amountProduct).ToString();
+                        }
+                    }
+                    else  // иначе уменьшаем
+                    {
+                        if (CheckProduct.CheckMinValue(product, amountProduct))  // проверка перед тем как уменьшить
+                        {
+                            textBlockAmount.Text = (--amountProduct).ToString();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Работа с TextBox и PasswordBox
         public static void TextBoxCheckCorrectUserData(object sender, Data.Entity.User user)
         {
             if (sender is TextBox textBox && textBox.Tag is not null)

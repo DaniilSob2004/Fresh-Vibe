@@ -38,14 +38,15 @@
                 <ControlTemplate TargetType="Button">
                     <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
                         <Image Width="25" Height="25" Source="/Images/cart.png" Margin="10 0 0 0"/>
-                        <TextBlock Text="0" Margin="0 10 0 0" Style="{StaticResource textBlockMiniStyle}"/>
-                        <TextBlock Text="0" Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
+                        <TextBlock Text="{Binding BasketProducts.Count}" Margin="0 10 0 0" Style="{StaticResource textBlockMiniStyle}"/>
+                        <TextBlock Text="{Binding ViewModel.TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}" Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
                         <TextBlock Text=" ₴" Margin="0 0 10 0" Style="{StaticResource textBlockStyle}"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+    <!--Text="{Binding TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"-->
 
     <!-- Стиль и шаблон для выхода пользователя Button -->
     <Style x:Key="btnUserExitStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
@@ -53,7 +54,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
-                        <Image Width="21" Height="21" Source="/Images/exit.png" Margin="10 0 10 0"/>
+                        <Image Width="21" Height="21" Source="/Images/exit.png" Margin="10 0"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>

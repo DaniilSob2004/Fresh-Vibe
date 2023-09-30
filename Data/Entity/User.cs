@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StoreExam.Data.Entity
 {
@@ -13,5 +14,8 @@ namespace StoreExam.Data.Entity
         public string Password { get; set; } = null!;
         public DateTime CreateDt { get; set; }
         public DateTime? DeleteDt { get; set; }
+
+        // -------------- Навигационные свойства --------------
+        public List<BasketProduct> BasketProducts { get; set; } = null!;
     }
 }

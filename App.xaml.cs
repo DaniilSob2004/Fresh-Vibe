@@ -8,10 +8,14 @@ using System.Windows;
 
 namespace StoreExam
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        public Data.DataContext dataContext { get; private set; } = null!;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            dataContext = new();
+        }
     }
 }
