@@ -46,7 +46,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--Text="{Binding TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"-->
 
     <!-- Стиль и шаблон для выхода пользователя Button -->
     <Style x:Key="btnUserExitStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">

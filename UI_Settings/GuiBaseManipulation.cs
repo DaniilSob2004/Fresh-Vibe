@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,6 +16,37 @@ namespace StoreExam.UI_Settings
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+
+
+        // Работа с Button для отображения загрузки и для возвращения в исходное состояние
+        public static async void ShowLoadingButton(Button button, CancellationToken token)
+        {
+            // отображаем кнопку закрузки
+            button.IsEnabled = false;
+            button.Content = "Loading";
+
+            int countDots = 4, i = 0;
+            while (!token.IsCancellationRequested)
+            {
+                if (i == countDots)
+                {
+                    button.Content = "Loading";
+                    i = 0;
+                }
+                else
+                {
+                    button.Content += ".";
+                }
+                i++;
+                await Task.Delay(200);
+            }
+        }
+
+        public static void CancelLoadingButton(Button button, string btnContent)
+        {
+            button.IsEnabled = true;
+            button.Content = btnContent;
+        }
 
 
         // Работа с TextBlock который отвечает за кол-во товара

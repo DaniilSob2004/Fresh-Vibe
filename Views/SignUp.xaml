@@ -122,7 +122,7 @@
             </TextBox>
         </Grid>
 
-        <Button Grid.Row="8" Content="SIGN UP" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>
+        <Button Grid.Row="8" x:Name="btnSignUp" Content="SIGN UP" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>
     </Grid>
 
 </Window>

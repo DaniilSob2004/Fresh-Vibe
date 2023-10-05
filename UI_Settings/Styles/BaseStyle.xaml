@@ -44,6 +44,10 @@
         <Setter Property="FontSize" Value="{StaticResource MediumBig}"/>
     </Style>
 
+    <Style x:Key="mediumHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Medium_1}"/>
+    </Style>
+
     <Style x:Key="verySmallHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
         <Setter Property="FontSize" Value="{StaticResource VerySmall}"/>
     </Style>
@@ -221,6 +225,21 @@
                 <Setter Property="BorderThickness" Value="3"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!-- Базовый стиль для CheckBox -->
+    <Style x:Key="baseCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Background" Value="{StaticResource BGWindow}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource MainColor}"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource mediumHeaderTextBlockStyle}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

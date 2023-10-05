@@ -13,20 +13,26 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public static ObservableCollection<Entity.Category>? GetCategories()
+        public async static Task LoadData()
+        {
+            await dataContext.Categories.LoadAsync();  // загружаем записи из таблицы в память
+        }
+
+        public async static Task<ObservableCollection<Entity.Category>?> GetCategories()
         {
             try
             {
-                dataContext.Categories.Load();  // загружаем записи из таблицы в память
-                return dataContext.Categories.Local.ToObservableCollection();  // преобразовываем коллекцию Entity в ObservableCollection
+                // преобразовываем коллекцию Entity в ObservableCollection
+                var categories = await dataContext.Categories.ToListAsync();
+                return new ObservableCollection<Entity.Category>(categories);
             }
             catch (Exception) { return null; }
         }
 
-        public static Entity.Category? Get(Guid id)
+        public async static Task<Entity.Category?> Get(Guid id)
         {
             // получаем категорию по Id
-            return dataContext.Categories.Include(c => c.Products).FirstOrDefault(c => c.Id == id);
+            return await dataContext.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }

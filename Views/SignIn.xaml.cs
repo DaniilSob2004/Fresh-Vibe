@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,15 +14,45 @@ namespace StoreExam.Views
 {
     public partial class SignIn : Window
     {
-        // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах
+        // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах UserDefault.xaml
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
-        public Data.Entity.User User { get; set; } = new() { NumTel = DefaultNumTel, Password = DefaultPassword };
+        public Data.Entity.User User { get; set; }
+        private CancellationTokenSource cts = null!;  // источник токенов
 
         public SignIn()
         {
             InitializeComponent();
             DataContext = this;
+            User = new() { NumTel = DefaultNumTel, Password = DefaultPassword };
+        }
+
+
+        private async Task OpenMainWindow(Data.Entity.User user)
+        {
+            Task loadProductTask = Data.DAL.ProductsDal.LoadData();  // запускаем выполнение загрузки продуктов
+            Task loadCatTask = Data.DAL.CategoriesDal.LoadData();  // запускаем выполнение загрузки продуктов
+
+            CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное
+            MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+            Close();  // закрываем окно авторизации
+
+            await loadProductTask;  // получаем результат
+            await loadCatTask;  // получаем результат
+            //await Data.DAL.CategoriesDal.LoadData();  // загружаем категории
+
+            new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект user
+        }
+
+        private void CancelLoadingSignInBtn()
+        {
+            cts?.Cancel();  // для отмены работы ассинхроного метода
+            GuiBaseManipulation.CancelLoadingButton(btnSignIn, "SIGN IN");  // возвращаем исходное состояние
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 
@@ -50,34 +81,34 @@ namespace StoreExam.Views
                 GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // при изменение PasswordBox, присваиваем значение в TextBox
         }
 
-        private void SignInBtn_Click(object sender, RoutedEventArgs e)
+        private async void SignInBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                Data.Entity.User? user = Data.DAL.UserDal.GetUser(User.NumTel);  // находим user по номер тел.
+                cts = new CancellationTokenSource();  // создаём новый источник токенов
+                GuiBaseManipulation.ShowLoadingButton(btnSignIn, cts.Token);  // делаем кнопку загрузочной
+                await Task.Delay(1000);  // для проверки
+
+                Data.Entity.User? user = await Data.DAL.UserDal.GetUser(User.NumTel);  // находим user по номер тел.
                 if (user is not null)  // если такой user есть
                 {
                     if (CheckUser.PasswordEntryVerification(user, User.Password))  // если пароль введён верный
                     {
                         if (CheckUser.CheckIsDeletedUser(user))  // если аккаунт user-а удалён
                         {
-                            MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            ShowErrorMessage("Неверный номер телефона!");
                         }
                         else
                         {
-                            MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
-                            Close();  // закрываем окно авторизации
-                            new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект user
+                            await OpenMainWindow(user);  // запускаем главное окно
                         }
                     }
-                    else MessageBox.Show("Неверный пароль!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    else ShowErrorMessage("Неверный пароль!");
                 }
-                else MessageBox.Show("Неверный номер телефона!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                else ShowErrorMessage("Неверный номер телефона!");
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
+            finally { CancelLoadingSignInBtn(); }   // возвращаем состояние кнопки в исходное состояние
         }
     }
 }

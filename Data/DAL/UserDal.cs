@@ -1,4 +1,5 @@
-﻿using StoreExam.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using StoreExam.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,40 +13,40 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public static User? GetUser(string numTel)
+        public async static Task<User?> GetUser(string numTel)
         {
-            return dataContext.Users.FirstOrDefault(u => u.NumTel == numTel);
+            return await dataContext.Users.FirstOrDefaultAsync(u => u.NumTel == numTel);
         }
 
-        public static User? GetUser(Guid id)
+        public async static Task<User?> GetUser(Guid id)
         {
-            return dataContext.Users.FirstOrDefault(u => u.Id == id);
+            return await dataContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public static void Add(User user)
+        public async static Task Add(User user)
         {
             user.CreateDt = DateTime.Now;  // текущая дата
             user.Salt = SaltGenerator.GenerateSalt();  // генерируем соль
             user.Password = PasswordHasher.HashPassword(user.Password, user.Salt);  // генерация хеша, передаём пароль и соль
-            dataContext.Users.Add(user);
-            dataContext.SaveChanges();
+            await dataContext.Users.AddAsync(user);
+            await dataContext.SaveChangesAsync();
         }
 
-        public static bool Delete(User delUser)
+        public async static Task<bool> Delete(User delUser)
         {
-            User? user = GetUser(delUser.NumTel);  // находим пользователя по email
+            User? user = await GetUser(delUser.NumTel);  // находим пользователя по email
             if (user is not null)
             {
                 user.DeleteDt = DateTime.Now;  // дата удаления пользователя
-                dataContext.SaveChanges();
+                await dataContext.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        public static bool Update(User updateUser)
+        public async static Task<bool> Update(User updateUser)
         {
-            User? user = GetUser(updateUser.Id);  // находим пользователя по Id
+            User? user = await GetUser(updateUser.Id);  // находим пользователя по Id
             if (user is not null)
             {
                 // если значения полей различны, то обновляем
@@ -55,20 +56,20 @@ namespace StoreExam.Data.DAL
                 if (user.Email != updateUser.Email) user.Email = updateUser.Email;
                 if (user.Password != updateUser.Password) user.Password = updateUser.Password;
 
-                dataContext.SaveChanges();
+                await dataContext.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        public static bool IsUniqueNumTel(string numTel)
+        public async static Task<bool> IsUniqueNumTel(string numTel)
         {
-            return dataContext.Users.Any(u => u.NumTel == numTel);
+            return await dataContext.Users.AnyAsync(u => u.NumTel == numTel);
         }
 
-        public static bool IsUniqueEmail(string? email)
+        public async static Task<bool> IsUniqueEmail(string? email)
         {
-            return dataContext.Users.Any(u => u.Email == email);
+            return await dataContext.Users.AnyAsync(u => u.Email == email);
         }
     }
 }

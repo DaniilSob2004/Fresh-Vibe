@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 using StoreExam.Enums;
@@ -23,27 +24,35 @@ namespace StoreExam.Views
         public Data.Entity.Category? ChoiceCategory { get; set; }
         public ObservableCollection<Data.Entity.Product> Products { get; set; }
         ICollectionView productsListView;
-        public ObservableCollection<Data.Entity.BasketProduct> BasketProducts { get; set; }
-        public MainWindowModel ViewModel { get; set; }  // ViewModel окна
+        public ObservableCollection<Data.Entity.BasketProduct> BasketProducts { get; set; } = null!;
+        public MainWindowModel ViewModel { get; set; } = null!;  // ViewModel окна
         public StateData stateUserData;  // состояние данных пользователя
 
         public MainWindow(Data.Entity.User user)
         {
             InitializeComponent();
-            this.DataContext = this;
-
-            ProductsDal.LoadData();  // загружаем
+            DataContext = this;
 
             User = user;
-            Categories = CategoriesDal.GetCategories();  // получаем ObservableCollection 'Категорий' из БД
+
+            // запускаем асинхронно методы по работе с БД для инициализации коллекций
+            Task? pbPriceTask = null;
+            Task.Run(async () =>
+                {
+                    Categories = await CategoriesDal.GetCategories();
+
+                    var bs = await BasketProductsDal.GetBasketProductsByUser(User);
+                    BasketProducts = bs is null ? new() : bs;
+
+                    ViewModel = new MainWindowModel();
+                    pbPriceTask = UpdateTotalBasketProductsPrice();  // запускаем обновление суммы в корзине, через ViewModel окна
+                }
+            ).Wait();  // ждём выполнение
+
             Products = new();
             productsListView = CollectionViewSource.GetDefaultView(Products);
 
-            var bs = BasketProductsDal.GetBasketProductsByUser(User);
-            BasketProducts = bs is null ? new() : bs;
-
-            ViewModel = new();
-            UpdateTotalBasketProductsPrice();
+            pbPriceTask?.Wait();  // получаем результат
         }
 
 
@@ -98,19 +107,29 @@ namespace StoreExam.Views
             }
         }
 
-        private void UpdateTotalBasketProductsPrice()
+        private void UpdateBasketProducts(List<Data.Entity.BasketProduct> newListBasketProducts)
         {
-            ViewModel.TotalBasketProductsPrice = BasketProducts.Sum(bp => bp.Product.Price * bp.Amounts);
+            // обновляем коллекцию корзины продуктов
+            BasketProducts.Clear();
+            foreach (var product in newListBasketProducts)
+            {
+                BasketProducts.Add(product);
+            }
+        }
+
+        private async Task UpdateTotalBasketProductsPrice()
+        {
+            await Task.Run(() => ViewModel.TotalBasketProductsPrice = BasketProducts.Sum(bp => bp.Product.Price * bp.Amounts));
         }
 
 
-        private void AddProductInBasket(Data.Entity.Product product, int amount)
+        private async void AddProductInBasket(Data.Entity.Product product, int amount)
         {
-            Data.Entity.BasketProduct? basketProduct = BasketProductsDal.GetBasketProduct(User.Id, product.Id);  // находим объект
+            Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.GetBasketProduct(User.Id, product.Id);  // находим объект
             if (basketProduct is not null)  // если товар уже в корзине, то просто добавляем кол-во
             {
                 basketProduct.Amounts += amount;  // прибавляем кол-во
-                BasketProductsDal.Update(basketProduct);  // обновляем данные в БД
+                await BasketProductsDal.Update(basketProduct);  // обновляем данные в БД
             }
             else
             {
@@ -122,10 +141,11 @@ namespace StoreExam.Views
                     Amounts = amount
                 };
                 BasketProducts.Add(basketProduct);  // добавляем в коллекцию
-                BasketProductsDal.Add(basketProduct);  // добавляем в БД
+                await BasketProductsDal.Add(basketProduct);  // добавляем в БД
             }
-            UpdateTotalBasketProductsPrice();  // обновляем сумму в корзине, через ViewModel окна
+            Task pbPriceTask = UpdateTotalBasketProductsPrice();  // запускаем обновление суммы в корзине, через ViewModel окна
             MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            await pbPriceTask;  // получаем результат
         }
 
 
@@ -145,7 +165,7 @@ namespace StoreExam.Views
             Close();
         }
 
-        private void BtnUserAccount_Click(object sender, RoutedEventArgs e)
+        private async void BtnUserAccount_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -157,7 +177,7 @@ namespace StoreExam.Views
                 {
                     User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
                     UpdateUIUserData();  // обновляем значения интерфейса
-                    if (UserDal.Update(User))  // обновляем данные в таблице
+                    if (await UserDal.Update(User))  // обновляем данные в таблице
                     {
                         MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -168,7 +188,7 @@ namespace StoreExam.Views
                 }
                 else if (stateUserData == StateData.Delete)
                 {
-                    if (UserDal.Delete(User))  // если User-а успешно удалили
+                    if (await UserDal.Delete(User))  // если User-а успешно удалили
                     {
                         Close();
                     }
@@ -190,17 +210,32 @@ namespace StoreExam.Views
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show($"Кол-во товаров: {BasketProducts.Count}.\nСумма: {ViewModel.TotalBasketProductsPrice}");
+            //MessageBox.Show(BasketProducts.Count + "");
+
+            Hide();
+            var dialog = new BasketProductWindow(BasketProducts, ViewModel);
+            dialog.ShowDialog();
+            Show();
+
+            // обновляем коллекцию
+            //UpdateBasketProducts(dialog.BasketProductsView.ToList());
+            BasketProducts.Clear();
+            foreach (var bp in dialog.BasketProductsView)
+            {
+                BasketProducts.Add(bp.BasketProduct);
+            }
+
+            //MessageBox.Show(BasketProducts.Count + "");
         }
 
 
-        private void ListBoxItemCategories_MouseLeftDown(object sender, MouseButtonEventArgs e)
+        private async void ListBoxItemCategories_MouseLeftDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is ListBoxItem item)
             {
                 if (item.Content is Data.Entity.Category category)  // получаем ссылку на объект Entity.Category
                 {
-                    var listProducts = ProductsDal.GetByCategory(category.Id);
+                    var listProducts = await ProductsDal.GetByCategory(category.Id);
                     if (listProducts is not null)
                     {
                         ChoiceCategory = category;  // присваиваем новую выбранную категорию
@@ -282,7 +317,7 @@ namespace StoreExam.Views
         }
 
 
-        private void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -291,11 +326,11 @@ namespace StoreExam.Views
                     List<Data.Entity.Product>? listProducts;
                     if (String.IsNullOrEmpty(textBoxSearch.Text))  // если поисковая строка пустая, то получаем все продукты категории
                     {
-                        listProducts = ProductsDal.GetByCategory(idCat);
+                        listProducts = await ProductsDal.GetByCategory(idCat);
                     }
                     else
                     {
-                        listProducts = ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
+                        listProducts = await ProductsDal.FindByName(textBoxSearch.Text, idCat);  // получаем продукты с учётом выбранной категории
                     }
                     if (listProducts is not null)  // если продукты нашлись, то выводим
                     {

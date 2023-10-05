@@ -13,9 +13,9 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public static void LoadData()
+        public async static Task LoadData()
         {
-            dataContext.Products.Load();
+            await dataContext.Products.LoadAsync();  // загружаем записи из таблицы в память
         }
 
         public static Entity.Product? Get(Guid id)
@@ -23,9 +23,9 @@ namespace StoreExam.Data.DAL
             return dataContext.Products.FirstOrDefault(p => p.Id == id);
         }
 
-        public static List<Entity.Product>? GetByCategory(Guid idCat)
+        public async static Task<List<Entity.Product>?> GetByCategory(Guid idCat)
         {
-            Entity.Category? category = CategoriesDal.Get(idCat);  // получаем категорию по id
+            Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
             if (category is not null)
             {
                 return category.Products;
@@ -33,21 +33,11 @@ namespace StoreExam.Data.DAL
             return null;
         }
 
-        public static List<Entity.Product> FindByName(string name, Guid idCat)
+        public async static Task<List<Entity.Product>> FindByName(string name, Guid idCat)
         {
             // находим товары определённой категории которые совпадают по названию
-            Entity.Category? category = CategoriesDal.Get(idCat);  // получаем категорию по id
+            Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
             return dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToList();
-        }
-
-        public static int GetCount(Guid id)
-        {
-            Entity.Product? product = dataContext.Products.FirstOrDefault(p => p.Id == id);  // находим продукт по id
-            if (product is not null)
-            {
-                return product.Count;  // возвращаем кол-во
-            }
-            return -1;
         }
     }
 }

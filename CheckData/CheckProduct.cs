@@ -9,22 +9,12 @@ namespace StoreExam.CheckData
     {
         public static bool CheckMaxValue(Data.Entity.Product product, int value)
         {
-            int amounts = ProductsDal.GetCount(product.Id);  // получаем кол-во продукта
-            if (amounts != -1)
-            {
-                return value < amounts;
-            }
-            return false;
+            return value < product.Count;
         }
 
         public static bool CheckMinValue(Data.Entity.Product product, int value)
         {
-            int amounts = ProductsDal.GetCount(product.Id);  // получаем кол-во продукта
-            if (amounts != -1)
-            {
-                return value > 1 && amounts > 1;
-            }
-            return false;
+            return value > 1 && product.Count > 1;
         }
     }
 }

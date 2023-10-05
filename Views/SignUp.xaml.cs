@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,20 +22,33 @@ namespace StoreExam.Views
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
-        public Data.Entity.User User { get; set; } = new() { Name = DefaultName, Surname = DefaultSurname, NumTel = DefaultNumTel, Email = DefaultEmail, Password = DefaultPassword };
+        public Data.Entity.User User { get; set; }
+        private CancellationTokenSource cts = null!;  // источник токенов
 
         public SignUp()
         {
             InitializeComponent();
             DataContext = this;
+            User = new() { Name = DefaultName, Surname = DefaultSurname, NumTel = DefaultNumTel, Email = DefaultEmail, Password = DefaultPassword };
         }
 
 
-        private void AddUserInDB()
+        private async Task AddUserInDB()
         {
             CheckUser.CheckAndChangeDefaultEmail(User);  // проверка на email по-умолчанию (чтобы установить в null если стоит по-умолчанию)
-            UserDal.Add(User);  // добавление User в БД
+            await UserDal.Add(User);  // добавление User в БД
             MessageBox.Show($"Вы успешно зарегистрировались, {User.Name}!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void CancelLoadingSignUpBtn()
+        {
+            cts?.Cancel();  // для отмены работы ассинхроного метода
+            GuiBaseManipulation.CancelLoadingButton(btnSignUp, "SIGN UP");  // возвращаем исходное состояние
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 
@@ -71,30 +85,33 @@ namespace StoreExam.Views
                 GuiBaseManipulation.SetTextBox(textBoxShowPasswordCheck, passwordCheck);
         }
 
-        private void SignUpBtn_Click(object sender, RoutedEventArgs e)
+        private async void SignUpBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                cts = new CancellationTokenSource();  // создаём новый источник токенов
+                GuiBaseManipulation.ShowLoadingButton(btnSignUp, cts.Token);  // делаем кнопку загрузочной
+                await Task.Delay(1000);  // для проверки
+
                 if (CheckUser.CheckAllData(User))  // данные корректны
                 {
-                    string? notUniqueFields = null;  // передаём ссылку в метод
-                    if (CheckUser.CheckUniqueUserInDB(User, ref notUniqueFields))  // данные уникальны
+                    string? notUniqueFields = await CheckUser.CheckUniqueUserInDB(User);  // получаем названия полей, которые не уникальны
+                    if (notUniqueFields is null)  // данные уникальны
                     {
                         if (CheckUser.CheckPasswordByString(User, passwordCheck.Password))  // пароль и пароль-подтверждения совпадают
                         {
-                            AddUserInDB();  // добавление User в БД
+                            await AddUserInDB();  // добавление User в БД
+                            CancelLoadingSignUpBtn();  // возвращаем состояние кнопки в исходное
                             Close();  // закрываем окно регистрации (возвращаемся в главное окно входа)
                         }
-                        else MessageBox.Show("Пароли не совпадают!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        else ShowErrorMessage("Пароли не совпадают!");
                     }
-                    else MessageBox.Show($"Данный {notUniqueFields}уже используются", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    else ShowErrorMessage($"Не все поля заполнены!\n(Пароль не менее {CheckUser.MinPassword} символов)");
                 }
-                else MessageBox.Show($"Не все поля заполнены!\n(Пароль не менее {CheckUser.MinPassword} символов)", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                else ShowErrorMessage($"Не все поля заполнены!\n(Пароль не менее {CheckUser.MinPassword} символов)");
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
+            finally { CancelLoadingSignUpBtn(); }  // возвращаем состояние кнопки в исходное
         }
     }
 }

@@ -14,35 +14,35 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public static BasketProduct? GetBasketProduct(Guid userId, Guid productId)
+        public async static Task<BasketProduct?> GetBasketProduct(Guid userId, Guid productId)
         {
-            return dataContext.BasketProducts.FirstOrDefault(bp => bp.UserId == userId && bp.ProductId == productId);
+            return await dataContext.BasketProducts.FirstOrDefaultAsync(bp => bp.UserId == userId && bp.ProductId == productId);
         }
 
-        public static BasketProduct? GetBasketProduct(Guid id)
+        public async static Task<BasketProduct?> GetBasketProduct(Guid id)
         {
-            return dataContext.BasketProducts.FirstOrDefault(bp => bp.Id == id);
+            return await dataContext.BasketProducts.FirstOrDefaultAsync(bp => bp.Id == id);
         }
 
-        public static ObservableCollection<BasketProduct>? GetBasketProductsByUser(User user)
+        public async static Task<ObservableCollection<BasketProduct>?> GetBasketProductsByUser(User user)
         {
             try
             {
-                dataContext.BasketProducts.Load();  // загружаем записи из таблицы в память
+                await dataContext.BasketProducts.LoadAsync();  // загружаем записи из таблицы в память
                 return new(user.BasketProducts);  // создаём ObservableCollection и возвращем коллекцию товаров в корзине
             }
             catch (Exception) { return null; }
         }
 
-        public static void Add(BasketProduct basketProduct)
+        public async static Task Add(BasketProduct basketProduct)
         {
-            dataContext.BasketProducts.Add(basketProduct);
-            dataContext.SaveChanges();
+            await dataContext.BasketProducts.AddAsync(basketProduct);
+            await dataContext.SaveChangesAsync();
         }
 
-        public static bool Update(BasketProduct updateBasketProduct)
+        public async static Task<bool> Update(BasketProduct updateBasketProduct)
         {
-            BasketProduct? basketProduct = GetBasketProduct(updateBasketProduct.Id);  // находим объект корзины по Id
+            BasketProduct? basketProduct = await GetBasketProduct(updateBasketProduct.Id);  // находим объект корзины по Id
             if (basketProduct is not null)
             {
                 // если значения полей различны, то обновляем
@@ -50,7 +50,7 @@ namespace StoreExam.Data.DAL
                 {
                     basketProduct.Amounts = updateBasketProduct.Amounts;
                 }
-                dataContext.SaveChanges();
+                await dataContext.SaveChangesAsync();
                 return true;
             }
             return false;

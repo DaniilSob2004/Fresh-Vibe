@@ -19,16 +19,16 @@ namespace StoreExam.Views
         public UserAccountWindow(Data.Entity.User user)
         {
             InitializeComponent();
+            DataContext = this;
             User = user;
             stateUserData = StateData.Cancel;
-            this.DataContext = this;
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
             Data.Entity.User copyUser = CheckUser.GetClone(User);
             var dialog = new UserSettingsWindow(copyUser);  // в конструктор передаём копию User
-            dialog.ShowDialog();  // отображаем окно настройки пользователя и передаём копию объекта User
+            dialog.ShowDialog();  // отображаем окно настройки пользователя
 
             stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
             if (stateUserData != StateData.Cancel)

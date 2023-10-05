@@ -19,7 +19,7 @@ namespace StoreExam.CheckData
 
         public static User GetClone(User user)
         {
-            return new Data.Entity.User
+            return new User
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -37,7 +37,7 @@ namespace StoreExam.CheckData
         public static void CheckAndChangeDefaultEmail(User user)
         {
             // если email пользователя совпадает со значением по умолчанию, значит пользователь его не указал
-            if (user.Email == Application.Current.TryFindResource("DefEmail").ToString()!)
+            if (user.Email == DefaultEmail)
             {
                 user.Email = null;
             }
@@ -53,24 +53,25 @@ namespace StoreExam.CheckData
             return PasswordHasher.VerifyPassword(password, user.Salt, user.Password);
         }
 
-        public static bool CheckUniqueUserInDB(User user, ref string? notUniqueFields)
+        public async static Task<string?> CheckUniqueUserInDB(User user)
         {
-            User? userFromDb = Data.DAL.UserDal.GetUser(user.Id);
+            string? notUniqueFields = null;
+            User? userFromDb = await Data.DAL.UserDal.GetUser(user.Id);
 
             // проверяем в таблице User поле(которое должно быть уникальным), и если такое значение уже есть, то не уникально
             bool isUnique;  
             if (userFromDb?.NumTel != user.NumTel)  // если номер телефона изменил
             {
-                isUnique = !Data.DAL.UserDal.IsUniqueNumTel(user.NumTel);  // проверка номера тел. на уникальность
+                isUnique = !await Data.DAL.UserDal.IsUniqueNumTel(user.NumTel);  // проверка номера тел. на уникальность
                 if (!isUnique) notUniqueFields += "номер тел., ";
             }
 
             if (user.Email != DefaultEmail && userFromDb?.Email != user.Email)  // если значение email не по-умолчанию(значит пользователь его указал) и если email изменил
             {
-                isUnique = !Data.DAL.UserDal.IsUniqueEmail(user.Email);  // проверка email на уникальность
+                isUnique = !await Data.DAL.UserDal.IsUniqueEmail(user.Email);  // проверка email на уникальность
                 if (!isUnique) notUniqueFields += "email, ";
             }
-            return String.IsNullOrEmpty(notUniqueFields);  // true, если все значения уникальны
+            return notUniqueFields;  // возвращаем строку, которая содержит поля, которые не уникальны
         }
 
 
@@ -95,7 +96,7 @@ namespace StoreExam.CheckData
         {
             if (user.Email is not null)
             {
-                if (user.Email == Application.Current.TryFindResource("DefEmail").ToString() || String.IsNullOrEmpty(user.Email))  // если это значение по умолчанию, то это не ошибка
+                if (user.Email == DefaultEmail || String.IsNullOrEmpty(user.Email))  // если это значение по умолчанию, то это не ошибка
                 {
                     return true;
                 }

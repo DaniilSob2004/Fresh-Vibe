@@ -99,7 +99,7 @@
                     </StackPanel>
                 </Border>
 
-                <Button Style="{StaticResource btnStyle}" Click="BtnSave_Click">Сохранить</Button>
+                <Button x:Name="btnSave" Style="{StaticResource btnStyle}" Click="BtnSave_Click">Сохранить</Button>
                 <Button Style="{StaticResource btnStyle}" Click="BtnExit_Click">Выйти</Button>
                 <Button Background="{StaticResource DeleteColor}" Style="{StaticResource btnStyle}" Click="BtnDelAccount_Click">Удалить аккаунт</Button>
             </StackPanel>

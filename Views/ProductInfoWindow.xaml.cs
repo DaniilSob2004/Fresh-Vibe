@@ -20,9 +20,9 @@ namespace StoreExam.Views
         public ProductInfoWindow(Data.Entity.Product product)
         {
             InitializeComponent();
+            DataContext = this;
             Product = product;
             AddAmount = 0;
-            this.DataContext = this;
         }
 
         private void BtnAddAmountProduct_Click(object sender, RoutedEventArgs e)
