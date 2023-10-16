@@ -78,7 +78,7 @@ namespace StoreExam.UI_Settings
             return null;
         }
 
-        public static void TextBlockAmountProductChangeValue(object sender, Data.Entity.Product product, bool shouldIncrease)
+        public static bool TextBlockAmountProductChangeValue(object sender, Data.Entity.Product product, bool shouldIncrease)
         {
             TextBlock? textBlockAmount = FindTextBlockAmountsProductBtnPlMi(sender);  // находим TextBlock
             if (textBlockAmount is not null)
@@ -91,6 +91,7 @@ namespace StoreExam.UI_Settings
                         if (CheckProduct.CheckMaxValue(product, amountProduct))  // проверка перед тем как увеличить
                         {
                             textBlockAmount.Text = (++amountProduct).ToString();
+                            return true;
                         }
                     }
                     else  // иначе уменьшаем
@@ -98,10 +99,12 @@ namespace StoreExam.UI_Settings
                         if (CheckProduct.CheckMinValue(product, amountProduct))  // проверка перед тем как уменьшить
                         {
                             textBlockAmount.Text = (--amountProduct).ToString();
+                            return true;
                         }
                     }
                 }
             }
+            return false;
         }
 
 

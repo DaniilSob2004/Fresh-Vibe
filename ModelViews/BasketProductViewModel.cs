@@ -28,7 +28,7 @@ namespace StoreExam.ModelViews
         public BasketProductViewModel(Data.Entity.BasketProduct basketProduct)
         {
             BasketProduct = basketProduct;
-            IsSelected = false;
+            IsSelected = true;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

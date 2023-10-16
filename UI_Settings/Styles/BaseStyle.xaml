@@ -27,6 +27,8 @@
     <CornerRadius x:Key="baseCornerRadius" TopLeft="5" TopRight="5" BottomRight="5" BottomLeft="5"/>
     <CornerRadius x:Key="baseCornerRadiusButton" TopLeft="12" TopRight="12" BottomRight="12" BottomLeft="12"/>
 
+    <Thickness x:Key="baseThicknessMouseBorder" Left="2" Top="2" Right="2" Bottom="2"/>
+
     <!-- Базовые стили для текста TextBlock -->
     <!-- Зелёный TextBlock -->
     <Style x:Key="baseHeaderTextBlockStyle" TargetType="TextBlock">
@@ -219,10 +221,9 @@
 
     <!-- Стиль и поведение при навидение курсора для Border -->
     <Style x:Key="borderStyle" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
-        <Setter Property="BorderThickness" Value="1"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderThickness" Value="3"/>
+                <Setter Property="BorderThickness" Value="{StaticResource baseThicknessMouseBorder}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

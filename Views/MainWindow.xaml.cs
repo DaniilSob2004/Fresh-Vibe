@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 using StoreExam.Enums;
 using StoreExam.ModelViews;
@@ -19,40 +16,26 @@ namespace StoreExam.Views
 {
     public partial class MainWindow : Window
     {
-        public Data.Entity.User User { get; set; }
-        public ObservableCollection<Data.Entity.Category>? Categories { get; set; }
-        public Data.Entity.Category? ChoiceCategory { get; set; }
-        public ObservableCollection<Data.Entity.Product> Products { get; set; }
-        ICollectionView productsListView;
-        public ObservableCollection<Data.Entity.BasketProduct> BasketProducts { get; set; } = null!;
+        private Window mainLoginWindow;  // ссылка на главное окно входа (MainLoginWindow)
         public MainWindowModel ViewModel { get; set; } = null!;  // ViewModel окна
         public StateData stateUserData;  // состояние данных пользователя
 
-        public MainWindow(Data.Entity.User user)
+        public MainWindow(Data.Entity.User user, Window mainLoginWindow)
         {
             InitializeComponent();
-            DataContext = this;
 
-            User = user;
+            this.mainLoginWindow = mainLoginWindow;
 
-            // запускаем асинхронно методы по работе с БД для инициализации коллекций
-            Task? pbPriceTask = null;
+            // запускаем асинхронно методы по работе с БД и коллекций
             Task.Run(async () =>
                 {
-                    Categories = await CategoriesDal.GetCategories();
-
-                    var bs = await BasketProductsDal.GetBasketProductsByUser(User);
-                    BasketProducts = bs is null ? new() : bs;
-
-                    ViewModel = new MainWindowModel();
-                    pbPriceTask = UpdateTotalBasketProductsPrice();  // запускаем обновление суммы в корзине, через ViewModel окна
+                    ViewModel = new MainWindowModel(user);  // создаём ViewModel окна и передаём user
+                    await ViewModel.LoadBasketProduct();  // загружаем корзину товаров
+                    await ViewModel.UpdateTotalBasketProductsPrice();  // обновление суммы в корзине
                 }
             ).Wait();  // ждём выполнение
 
-            Products = new();
-            productsListView = CollectionViewSource.GetDefaultView(Products);
-
-            pbPriceTask?.Wait();  // получаем результат
+            DataContext = ViewModel;
         }
 
 
@@ -81,74 +64,6 @@ namespace StoreExam.Views
         }
 
 
-        private void UpdateUIUserData()
-        {
-            // обновляем значения интерфейса, где привязано свойство User
-            if (btnUserName.Template.FindName("textBlockUserName", btnUserName) is TextBlock textBlock)  // находим TextBlock в элементе Button
-            {
-                textBlock.Text = User.Name;
-            }
-        }
-
-        private void UpdateUIChoiceProductData()
-        {
-            // обновляем значения интерфейса, где привязано свойство ChoiceCategory
-            textBlockChoiceCategory.Text = ChoiceCategory?.Name;
-            textBlockChoiceCategory.Tag = ChoiceCategory?.Id.ToString();
-        }
-
-        private void UpdateProducts(List<Data.Entity.Product> newListProducts)
-        {
-            // обновляем коллекцию продуктов
-            Products.Clear();
-            foreach (var product in newListProducts)
-            {
-                Products.Add(product);
-            }
-        }
-
-        private void UpdateBasketProducts(List<Data.Entity.BasketProduct> newListBasketProducts)
-        {
-            // обновляем коллекцию корзины продуктов
-            BasketProducts.Clear();
-            foreach (var product in newListBasketProducts)
-            {
-                BasketProducts.Add(product);
-            }
-        }
-
-        private async Task UpdateTotalBasketProductsPrice()
-        {
-            await Task.Run(() => ViewModel.TotalBasketProductsPrice = BasketProducts.Sum(bp => bp.Product.Price * bp.Amounts));
-        }
-
-
-        private async void AddProductInBasket(Data.Entity.Product product, int amount)
-        {
-            Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.GetBasketProduct(User.Id, product.Id);  // находим объект
-            if (basketProduct is not null)  // если товар уже в корзине, то просто добавляем кол-во
-            {
-                basketProduct.Amounts += amount;  // прибавляем кол-во
-                await BasketProductsDal.Update(basketProduct);  // обновляем данные в БД
-            }
-            else
-            {
-                basketProduct = new()  // создаём новый объект для добавления продукта в корзину
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = User.Id,
-                    ProductId = product.Id,
-                    Amounts = amount
-                };
-                BasketProducts.Add(basketProduct);  // добавляем в коллекцию
-                await BasketProductsDal.Add(basketProduct);  // добавляем в БД
-            }
-            Task pbPriceTask = UpdateTotalBasketProductsPrice();  // запускаем обновление суммы в корзине, через ViewModel окна
-            MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-            await pbPriceTask;  // получаем результат
-        }
-
-
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (stateUserData != StateData.Delete)  // если удаление аккаунта не было, то выводим пользователю вопрос
@@ -156,8 +71,10 @@ namespace StoreExam.Views
                 if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
                     e.Cancel = true;  // отменяем событие закрытия
+                    return;
                 }
             }
+            mainLoginWindow.Show();  // снова показываем главное окно входа
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -169,15 +86,14 @@ namespace StoreExam.Views
         {
             try
             {
-                var dialog = new UserAccountWindow(User);  // в конструктор передаём ссылку User
+                var dialog = new UserAccountWindow(ViewModel.User);  // в конструктор передаём ссылку User
                 dialog.ShowDialog();  // отображаем окно аккаунта пользователя
                 stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
 
                 if (stateUserData == StateData.Save)
                 {
-                    User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
-                    UpdateUIUserData();  // обновляем значения интерфейса
-                    if (await UserDal.Update(User))  // обновляем данные в таблице
+                    ViewModel.User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
+                    if (await UserDal.Update(ViewModel.User))  // обновляем данные в таблице
                     {
                         MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -188,7 +104,7 @@ namespace StoreExam.Views
                 }
                 else if (stateUserData == StateData.Delete)
                 {
-                    if (await UserDal.Delete(User))  // если User-а успешно удалили
+                    if (await UserDal.Delete(ViewModel.User))  // если User-а успешно удалили
                     {
                         Close();
                     }
@@ -210,22 +126,10 @@ namespace StoreExam.Views
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show(BasketProducts.Count + "");
-
             Hide();
-            var dialog = new BasketProductWindow(BasketProducts, ViewModel);
+            var dialog = new BasketProductWindow(ViewModel);  // запускаем окно корзины
             dialog.ShowDialog();
             Show();
-
-            // обновляем коллекцию
-            //UpdateBasketProducts(dialog.BasketProductsView.ToList());
-            BasketProducts.Clear();
-            foreach (var bp in dialog.BasketProductsView)
-            {
-                BasketProducts.Add(bp.BasketProduct);
-            }
-
-            //MessageBox.Show(BasketProducts.Count + "");
         }
 
 
@@ -238,9 +142,8 @@ namespace StoreExam.Views
                     var listProducts = await ProductsDal.GetByCategory(category.Id);
                     if (listProducts is not null)
                     {
-                        ChoiceCategory = category;  // присваиваем новую выбранную категорию
-                        UpdateUIChoiceProductData();  // обновляем интерфейс
-                        UpdateProducts(listProducts);  // обновляем коллекцию продуктов
+                        ViewModel.ChoiceCategory = category;  // присваиваем новую выбранную категорию через ViewModel окна
+                        ViewModel.UpdateProducts(listProducts);  // обновляем коллекцию продуктов
                     }
                     else
                     {
@@ -250,7 +153,7 @@ namespace StoreExam.Views
             }
         }
 
-        private void BorderProduct_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void BorderProduct_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -258,9 +161,10 @@ namespace StoreExam.Views
                 if (product is not null)
                 {
                     var dialog = new ProductInfoWindow(product);  // создаём информационное окно для продукта
-                    if (dialog.ShowDialog() == true)  // если true, значит успешно
+                    if (dialog.ShowDialog() != true) { return; }  // если не true, значит не добавили в корзину
+                    if (await ViewModel.AddProductInBasket(product, dialog.AddAmount))  // добавляем продукт в корзину
                     {
-                        AddProductInBasket(product, dialog.AddAmount);  // добавляем продукт в корзину
+                        MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
@@ -270,7 +174,7 @@ namespace StoreExam.Views
             }
         }
 
-        private void BtnAddProductToBasket_Click(object sender, RoutedEventArgs e)
+        private async void BtnAddProductToBasket_Click(object sender, RoutedEventArgs e)
         {
             bool isBadMessage = true;
             try
@@ -282,8 +186,10 @@ namespace StoreExam.Views
                     int amount;
                     if (textBlockAmount is not null && int.TryParse(textBlockAmount.Text, out amount))  // преобразовываем в int
                     {
-                        AddProductInBasket(product, amount);  // добавляем продукт в корзину
-                        isBadMessage = false;
+                        if (await ViewModel.AddProductInBasket(product, amount))  // добавляем продукт в корзину
+                        {
+                            isBadMessage = false;
+                        }
                     }
                 }
             }
@@ -293,6 +199,10 @@ namespace StoreExam.Views
                 if (isBadMessage)
                 {
                     MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
@@ -319,6 +229,7 @@ namespace StoreExam.Views
 
         private async void BtnSearch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            bool isBadMessage = true;
             try
             {
                 if (Guid.TryParse(textBlockChoiceCategory.Tag.ToString(), out Guid idCat))  // преобразовываем string в Id(категории)
@@ -334,15 +245,18 @@ namespace StoreExam.Views
                     }
                     if (listProducts is not null)  // если продукты нашлись, то выводим
                     {
-                        UpdateProducts(listProducts);
+                        ViewModel.UpdateProducts(listProducts);  // обновляем коллекцию продуктов
+                        isBadMessage = false;
                     }
-                    else MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                else MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            catch (Exception)
+            catch (Exception) { }
+            finally
             {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (isBadMessage)
+                {
+                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
     }

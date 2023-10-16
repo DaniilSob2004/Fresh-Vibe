@@ -123,7 +123,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Image Source="{Binding Image}" Width="100" Height="100" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="{Binding Name}" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding Name}" MaxHeight="40" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
 
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="8 8 0 0">
                                     <TextBlock Text="{Binding Price, StringFormat='{}{0} ₴'}" Style="{StaticResource textBlockStyle}"/>

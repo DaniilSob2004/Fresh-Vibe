@@ -22,6 +22,8 @@ namespace StoreExam.Views
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+
+        public static Window? mainLoginWindow;  // ссылка на окно родителя (MainLoginWindow)
         public Data.Entity.User User { get; set; }
         private CancellationTokenSource cts = null!;  // источник токенов
 

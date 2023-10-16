@@ -19,13 +19,16 @@ namespace StoreExam.Views
         public MainLoginWindow()
         {
             InitializeComponent();
+
+            // инициализируем статические поля, для доступа к главному окну входа
+            SignIn.mainLoginWindow = this;
+            SignUp.mainLoginWindow = this;
         }
 
         private void BtnSignIn_Click(object sender, RoutedEventArgs e)
         {
             Hide();  // скрываем окно
             new SignIn().ShowDialog();  // запускаем окно авторизации
-            Show();  // показываем окно
         }
 
         private void BtnSignUp_Click(object sender, RoutedEventArgs e)

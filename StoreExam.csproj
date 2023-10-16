@@ -22,6 +22,7 @@
     <None Remove="Views\password.png" />
     <None Remove="Views\plus.png" />
     <None Remove="Views\settings.png" />
+    <None Remove="Views\trash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,7 @@
     <Resource Include="Images\settings.png" />
     <Resource Include="Images\plus.png" />
     <Resource Include="Images\minus.png" />
+    <Resource Include="Images\trash.png" />
   </ItemGroup>
 
 </Project>

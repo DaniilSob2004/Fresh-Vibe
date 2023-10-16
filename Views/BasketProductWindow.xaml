@@ -26,17 +26,32 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 0" Style="{StaticResource baseCheckBoxStyle}"/>
-                                <Image Width="60" Height="60" Source="{Binding BasketProduct.Product.Image}" Margin="0 0 0 0" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                <TextBlock Text="{Binding BasketProduct.Product.Name}" Margin="0 0 0 0" Style="{StaticResource textBlockStyle}"/>
-                            </StackPanel>
+                            <Border Style="{StaticResource borderStyle}" Margin="-5 -0.7">
+                                <DockPanel LastChildFill="False" Margin="7 3">
+                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}"/>
+                                    <Image Width="60" Height="60" Source="{Binding BasketProduct.Product.Image}" Margin="8 0 0 0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    <TextBlock Text="{Binding BasketProduct.Product.Name}" MaxWidth="320" MaxHeight="20" TextTrimming="CharacterEllipsis" Margin="8 0 0 0" Style="{StaticResource textBlockStyle}"/>
+                                    <Button DockPanel.Dock="Right" Tag="/Images/trash.png" Height="25" Width="25" Margin="0 0 10 0" Style="{StaticResource btnOneImageStyle}" Click="BtnDelProduct_Click"/>
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0 0 10 0">
+                                        <Button Tag="/Images/plus.png" Width="24" Height="24" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnAddAmountProduct_Click"/>
+                                        <TextBlock x:Name="textBlockAmountProducts" Text="{Binding BasketProduct.Amounts}" Style="{StaticResource textBlockStyle}"/>
+                                        <Button Tag="/Images/minus.png" Width="24" Height="24" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnReduceAmountProduct_Click"/>
+                                    </StackPanel>
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0 0 15 0">
+                                        <TextBlock Text="x1" Margin="0 0 5 0" VerticalAlignment="Center" Style="{StaticResource verySmallBlackTextBlockStyle}"/>
+                                        <TextBlock x:Name="textBlockProductPrice" Text="{Binding BasketProduct.Product.Price, StringFormat='{}{0} ₴'}" VerticalAlignment="Center"
+                                                   Style="{StaticResource mediumHeaderTextBlockStyle}"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
 
             <Style x:Key="itemListBS_Style" TargetType="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItemBPViewModel_PreviewMouseLeftButtonDown"/>
             </Style>
         </ResourceDictionary>
@@ -48,10 +63,10 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -59,7 +74,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <CheckBox x:Name="checkBoxChoiceAll" Content="Выбрать всё" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}" Click="CheckBox_Click"/>
+        <CheckBox x:Name="checkBoxChoiceAll" Content="Выбрать всё" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}" Click="CheckBoxChoiseAll_Click"/>
         
         <Button Grid.Column="1" Content="Удалить выбранные" Style="{StaticResource btnDeleteStyle}" Click="BtnChoiceDelete_Click"/>
         <Button Grid.Column="2" Content="Удалить всё" Style="{StaticResource btnDeleteStyle}" Click="BtnAllDelete_Click"/>
@@ -73,7 +88,7 @@
 
         <ListBox Grid.Row="1" Grid.ColumnSpan="4" x:Name="listBoxProducts" ItemsSource="{Binding BasketProductsView}" Style="{StaticResource listBoxBS_Style}" ItemContainerStyle="{StaticResource itemListBS_Style}"/>
 
-        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="Купить" Style="{StaticResource btnStyle}"/>
+        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="Купить" Style="{StaticResource btnStyle}" Click="BtnBuy_Click"/>
     </Grid>
     
 </Window>

@@ -39,7 +39,7 @@
                     <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
                         <Image Width="25" Height="25" Source="/Images/cart.png" Margin="10 0 0 0"/>
                         <TextBlock Text="{Binding BasketProducts.Count}" Margin="0 10 0 0" Style="{StaticResource textBlockMiniStyle}"/>
-                        <TextBlock Text="{Binding ViewModel.TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}" Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
+                        <TextBlock Text="{Binding TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}" Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
                         <TextBlock Text=" ₴" Margin="0 0 10 0" Style="{StaticResource textBlockStyle}"/>
                     </StackPanel>
                 </ControlTemplate>

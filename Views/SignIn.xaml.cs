@@ -17,6 +17,8 @@ namespace StoreExam.Views
         // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах UserDefault.xaml
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+
+        public static Window? mainLoginWindow;  // ссылка на окно родителя (MainLoginWindow)
         public Data.Entity.User User { get; set; }
         private CancellationTokenSource cts = null!;  // источник токенов
 
@@ -28,20 +30,12 @@ namespace StoreExam.Views
         }
 
 
-        private async Task OpenMainWindow(Data.Entity.User user)
+        private void OpenMainWindow(Data.Entity.User user)
         {
-            Task loadProductTask = Data.DAL.ProductsDal.LoadData();  // запускаем выполнение загрузки продуктов
-            Task loadCatTask = Data.DAL.CategoriesDal.LoadData();  // запускаем выполнение загрузки продуктов
-
             CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное
             MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
             Close();  // закрываем окно авторизации
-
-            await loadProductTask;  // получаем результат
-            await loadCatTask;  // получаем результат
-            //await Data.DAL.CategoriesDal.LoadData();  // загружаем категории
-
-            new MainWindow(user).ShowDialog();  // запускаем основное окно и передаём объект user
+            new MainWindow(user, mainLoginWindow!).ShowDialog();  // запускаем основное окно и передаём объект user
         }
 
         private void CancelLoadingSignInBtn()
@@ -100,7 +94,11 @@ namespace StoreExam.Views
                         }
                         else
                         {
-                            await OpenMainWindow(user);  // запускаем главное окно
+                            // запускаем выполнение загрузки категорий и продуктов
+                            await Data.DAL.CategoriesDal.LoadData()
+                                .ContinueWith(task => Data.DAL.ProductsDal.LoadData());
+
+                            OpenMainWindow(user);  // запускаем главное окно
                         }
                     }
                     else ShowErrorMessage("Неверный пароль!");

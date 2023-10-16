@@ -55,5 +55,45 @@ namespace StoreExam.Data.DAL
             }
             return false;
         }
+
+        public static async Task<bool> Del(Guid id)
+        {
+            try
+            {
+                BasketProduct? bp = await GetBasketProduct(id);
+                if (bp is not null)
+                {
+                    dataContext.Remove(bp);
+                    await dataContext.SaveChangesAsync();
+                    return true;
+                }
+                else { return false; }
+            }
+            catch (Exception) { return false; }
+        }
+
+        public async static Task<bool> DeleteAll()
+        {
+            try
+            {
+                var allItems = await dataContext.BasketProducts.ToListAsync();
+                return await DeleteRange(allItems);
+            }
+            catch (Exception) { return false; }
+        }
+
+        public async static Task<bool> DeleteRange(List<BasketProduct> basketProducts)
+        {
+            try
+            {
+                if (basketProducts.Count > 0)
+                {
+                    dataContext.BasketProducts.RemoveRange(basketProducts);  // удаляем элементы из списка
+                    await dataContext.SaveChangesAsync();
+                }
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
     }
 }
