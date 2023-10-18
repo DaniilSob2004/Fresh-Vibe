@@ -23,18 +23,11 @@ namespace StoreExam.Views
         public MainWindow(Data.Entity.User user, Window mainLoginWindow)
         {
             InitializeComponent();
-
             this.mainLoginWindow = mainLoginWindow;
 
-            // запускаем асинхронно методы по работе с БД и коллекций
-            Task.Run(async () =>
-                {
-                    ViewModel = new MainWindowModel(user);  // создаём ViewModel окна и передаём user
-                    await ViewModel.LoadBasketProduct();  // загружаем корзину товаров
-                    await ViewModel.UpdateTotalBasketProductsPrice();  // обновление суммы в корзине
-                }
-            ).Wait();  // ждём выполнение
-
+            // запускаем задачу, и ждём, т.к. внутри конструктора выполняются ассинхронные методы и др. задачи
+            Task.Run(() => ViewModel = new MainWindowModel(user)).Wait();  // создаём ViewModel окна и передаём user
+            
             DataContext = ViewModel;
         }
 
@@ -68,13 +61,13 @@ namespace StoreExam.Views
         {
             if (stateUserData != StateData.Delete)  // если удаление аккаунта не было, то выводим пользователю вопрос
             {
-                if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    e.Cancel = true;  // отменяем событие закрытия
+                    mainLoginWindow.Show();  // снова показываем главное окно входа
                     return;
                 }
             }
-            mainLoginWindow.Show();  // снова показываем главное окно входа
+            e.Cancel = true;  // отменяем событие закрытия
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -92,8 +85,7 @@ namespace StoreExam.Views
 
                 if (stateUserData == StateData.Save)
                 {
-                    ViewModel.User = dialog.User;  // сохраняем объект User из окна аккаунта пользователя
-                    if (await UserDal.Update(ViewModel.User))  // обновляем данные в таблице
+                    if (await ViewModel.UpdateUser(dialog.User))  // сохраняем изменения, передаём объект User из окна аккаунта пользователя
                     {
                         MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -118,16 +110,13 @@ namespace StoreExam.Views
                     Close();
                 }
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
         }
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            var dialog = new BasketProductWindow(ViewModel);  // запускаем окно корзины
+            var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
             dialog.ShowDialog();
             Show();
         }
@@ -142,7 +131,7 @@ namespace StoreExam.Views
                     var listProducts = await ProductsDal.GetByCategory(category.Id);
                     if (listProducts is not null)
                     {
-                        ViewModel.ChoiceCategory = category;  // присваиваем новую выбранную категорию через ViewModel окна
+                        ViewModel.ChoiceCategory = category;  // присваиваем новую выбранную категорию
                         ViewModel.UpdateProducts(listProducts);  // обновляем коллекцию продуктов
                     }
                     else
@@ -168,10 +157,7 @@ namespace StoreExam.Views
                     }
                 }
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
         }
 
         private async void BtnAddProductToBasket_Click(object sender, RoutedEventArgs e)
@@ -184,7 +170,7 @@ namespace StoreExam.Views
                 {
                     TextBlock? textBlockAmount = GuiBaseManipulation.FindTextBlockAmountsProductBtnBasket(sender);  // получаем TextBlock
                     int amount;
-                    if (textBlockAmount is not null && int.TryParse(textBlockAmount.Text, out amount))  // преобразовываем в int
+                    if (textBlockAmount is not null && int.TryParse(textBlockAmount.Text, out amount))  // преобразовываем кол-во в int
                     {
                         if (await ViewModel.AddProductInBasket(product, amount))  // добавляем продукт в корзину
                         {

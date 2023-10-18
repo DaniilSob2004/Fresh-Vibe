@@ -29,12 +29,20 @@ namespace StoreExam.Views
             User = new() { NumTel = DefaultNumTel, Password = DefaultPassword };
         }
 
+        private void Window_Clossing(object sender, EventArgs e)
+        {
+            if ((bool)mainLoginWindow!.Tag)  // если true, значит показываем окно
+            {
+                mainLoginWindow?.Show();  // показываем главное окно входа
+            }
+        }
+
 
         private void OpenMainWindow(Data.Entity.User user)
         {
             CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное
             MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
-            Close();  // закрываем окно авторизации
+            GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
             new MainWindow(user, mainLoginWindow!).ShowDialog();  // запускаем основное окно и передаём объект user
         }
 
@@ -57,7 +65,7 @@ namespace StoreExam.Views
             {
                 if (textBlock.Text == "Sign Up")
                 {
-                    Close();  // закрываем окно авторизации
+                    GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
                     new SignUp().ShowDialog();  // запускаем окно регистрации
                 }
             }

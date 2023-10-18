@@ -34,6 +34,14 @@ namespace StoreExam.Views
             User = new() { Name = DefaultName, Surname = DefaultSurname, NumTel = DefaultNumTel, Email = DefaultEmail, Password = DefaultPassword };
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if ((bool)mainLoginWindow!.Tag)  // если true, значит показываем окно
+            {
+                mainLoginWindow?.Show();  // показываем главное окно входа
+            }
+        }
+
 
         private async Task AddUserInDB()
         {
@@ -61,7 +69,7 @@ namespace StoreExam.Views
             {
                 if (textBlock.Text == "Sign In")
                 {
-                    Close();  // закрываем окно регистрации
+                    GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
                     new SignIn().ShowDialog();  // запускаем окно авторизации
                 }
             }

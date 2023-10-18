@@ -197,5 +197,15 @@ namespace StoreExam.UI_Settings
         {
             textBox.Text = passwordBox.Password;
         }
+
+
+        // Работа с окнами
+        public static void CloseWindow(Window closeWindow, Window settingWindow)
+        {
+            // закрытие окна без показа главного окна входа
+            settingWindow!.Tag = false;  // не нужно показывать главное окно входа (MainLoginWindow)
+            closeWindow.Close();  // закрываем окно (SignIn / SignUp)
+            settingWindow!.Tag = true;  // выставляем по умолчанию (MainLoginWindow)
+        }
     }
 }

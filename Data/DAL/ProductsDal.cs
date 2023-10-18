@@ -33,11 +33,15 @@ namespace StoreExam.Data.DAL
             return null;
         }
 
-        public async static Task<List<Entity.Product>> FindByName(string name, Guid idCat)
+        public async static Task<List<Entity.Product>?> FindByName(string name, Guid idCat)
         {
             // находим товары определённой категории которые совпадают по названию
             Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
-            return dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToList();
+            if (category is not null)
+            {
+                return dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToList();
+            }
+            return null;
         }
     }
 }

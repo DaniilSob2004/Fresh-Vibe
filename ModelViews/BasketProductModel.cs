@@ -7,8 +7,15 @@ using System.ComponentModel;
 
 namespace StoreExam.ModelViews
 {
-    public class BasketProductViewModel : INotifyPropertyChanged
+    public class BasketProductModel : INotifyPropertyChanged
     {
+        public BasketProductModel(Data.Entity.BasketProduct basketProduct)
+        {
+            BasketProduct = basketProduct;
+            IsSelected = true;
+        }
+
+
         private bool? isSelected;
         public bool? IsSelected
         {
@@ -23,13 +30,9 @@ namespace StoreExam.ModelViews
             }
         }
 
+
         public Data.Entity.BasketProduct BasketProduct { get; set; } = null!;
 
-        public BasketProductViewModel(Data.Entity.BasketProduct basketProduct)
-        {
-            BasketProduct = basketProduct;
-            IsSelected = true;
-        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(PropertyChangedEventArgs e)

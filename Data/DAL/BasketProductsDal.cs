@@ -24,12 +24,12 @@ namespace StoreExam.Data.DAL
             return await dataContext.BasketProducts.FirstOrDefaultAsync(bp => bp.Id == id);
         }
 
-        public async static Task<ObservableCollection<BasketProduct>?> GetBasketProductsByUser(User user)
+        public async static Task<List<BasketProduct>?> GetBasketProductsByUser(User user)
         {
             try
             {
                 await dataContext.BasketProducts.LoadAsync();  // загружаем записи из таблицы в память
-                return new(user.BasketProducts);  // создаём ObservableCollection и возвращем коллекцию товаров в корзине
+                return user.BasketProducts;  // возвращем коллекцию товаров в корзине
             }
             catch (Exception) { return null; }
         }

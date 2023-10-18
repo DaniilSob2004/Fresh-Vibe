@@ -7,6 +7,7 @@
         xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         Title="Store v3.0" Height="450" Width="400" MinHeight="425" MinWidth="350" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>

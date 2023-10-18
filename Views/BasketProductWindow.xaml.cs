@@ -17,44 +17,46 @@ namespace StoreExam.Views
 {
     public partial class BasketProductWindow : Window
     {
-        public ObservableCollection<BasketProductViewModel> BasketProductsView { get; set; }  // ViewModel для BasketProduct (в котором есть IsSelected)
-        public MainWindowModel ViewModel { get; set; }  // ссылка на ViewModel окна MainWindow
+        public BasketProductsViewModel BPViewModel { get; set; }  // ViewModel для BasketProduct (в котором есть IsSelected и другие методы)
+        private bool flag = true;
 
-        public BasketProductWindow(MainWindowModel mainWindowModel)
+        public BasketProductWindow(BasketProductsViewModel bPViewModel)
         {
             InitializeComponent();
-            DataContext = this;
-
-            BasketProductsView = new();
-            foreach (var product in mainWindowModel.BasketProducts)  // создаём коллекцию ViewModel для BasketProduct с чекбоксом
-            {
-                BasketProductsView.Add(new BasketProductViewModel(product));
-            }
-            ViewModel = mainWindowModel;
+            BPViewModel = bPViewModel;
+            DataContext = BPViewModel;
+            Task.Run(() => BPViewModel.UpdateTotalBasketProductsPrice()).Wait();  // обновляем цену товаров в корзине
         }
 
 
-        private BasketProductViewModel? GetBasketProductsViewFromButton(object sender)
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            BPViewModel.SetCheckBoxAllProduct(true);  // после закрытия, устанавливаем все чекбоксы вкл.
+        }
+
+
+        private BasketProductModel? GetBasketProductModelFromButton(object sender)
         {
             if (sender is Button btn)  // если это кнопка
             {
-                if (btn.DataContext is BasketProductViewModel bpViewModel)  // получаем объект BasketProductViewModel
+                if (btn.DataContext is BasketProductModel bpModel)  // получаем объект BasketProductModel
                 {
-                    return bpViewModel;
+                    return bpModel;
                 }
             }
             return null;
         }
 
-
-        private async Task<bool> UpdateAmountProduct(BasketProductViewModel bpModel, bool isIncrease)
+        private async Task<bool> ChangeOneValueAmount(object sender, bool isIncrease)
         {
-            Data.Entity.BasketProduct? bp = await BasketProductsDal.GetBasketProduct(bpModel.BasketProduct.Id);  // находим BasketProduct
-            if (bp is not null)
+            // меняем кол-во продукта, в зависимости от isIncrease (увеличиваем/уменьшаем)
+            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+            if (bpModel is not null)
             {
-                bp.Amounts = isIncrease ? bp.Amounts + 1 : bp.Amounts - 1;  // меняем значение
-                await ViewModel.UpdateTotalBasketProductsPrice();  // обновляем цену товаров
-                return await BasketProductsDal.Update(bp);  // обновляем данные в БД
+                if (GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, bpModel.BasketProduct.Product, isIncrease))  // меняем значение, передаём Product для дальнейшей проверки
+                {
+                    return await BPViewModel.UpdateAmountProduct(bpModel.BasketProduct, 1, isIncrease);  // обновляем значение кол-ва продукта
+                }
             }
             return false;
         }
@@ -64,13 +66,7 @@ namespace StoreExam.Views
         {
             if (MessageBox.Show("Вы действительно хотите удалить все товары из корзины?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                if (await BasketProductsDal.DeleteAll())  // удаление из БД
-                {
-                    BasketProductsView.Clear();  // удаляем из коллекции UI
-                    ViewModel.BasketProducts.Clear();  // обновляем коллекцию BasketProducts
-                    await ViewModel.UpdateTotalBasketProductsPrice();  // обновляем цену товаров
-                }
-                else
+                if (!await BPViewModel.DeleteAllProduct())  // удаляем все товары из корзины
                 {
                     MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
@@ -81,24 +77,7 @@ namespace StoreExam.Views
         {
             if (MessageBox.Show("Вы действительно хотите удалить выбранные товары из корзины?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                List<Data.Entity.BasketProduct> delBasketProducts = new();  // буфферная коллекция (для дальнейшего удаления из БД)
-                foreach (var bpView in BasketProductsView)
-                {
-                    if (bpView.IsSelected ?? false)  // если выбран
-                    {
-                        delBasketProducts.Add(bpView.BasketProduct);  // добавляем в буфферную коллекцию
-                    }
-                }
-                if (await BasketProductsDal.DeleteRange(delBasketProducts))  // удаление из БД
-                {
-                    foreach (var delBp in delBasketProducts)
-                    {
-                        BasketProductsView.Remove(BasketProductsView.FirstOrDefault(bp => bp.BasketProduct == delBp)!);  // удаляем из коллекции UI
-                        ViewModel.BasketProducts.Remove(delBp);  // удаляем из коллекции BasketProducts
-                    }
-                    await ViewModel.UpdateTotalBasketProductsPrice();  // обновляем цену товаров
-                }
-                else
+                if (!await BPViewModel.DeleteChoiseProduct())  // удаляем выбранные товары из корзины
                 {
                     MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
@@ -107,79 +86,53 @@ namespace StoreExam.Views
 
         private void CheckBoxChoiseAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in listBoxProducts.Items)  // перебираем каждый элемент
-            {
-                if (item is BasketProductViewModel bpViewModel)
-                {
-                    bpViewModel.IsSelected = checkBoxChoiceAll.IsChecked;  // устанавливаем новое значение чекбоксу
-                }
-            }
+            BPViewModel.SetCheckBoxAllProduct(checkBoxChoiceAll.IsChecked);  // устанавливаем новые значения всем чекбоксам
         }
-
 
         private void ListBoxItemBPViewModel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is not Border) return;  // если была нажата кнопка или др. элемент кроме border, то выходим
+            if (e.OriginalSource is not Border && e.OriginalSource is not TextBlock) return;  // если не был нажат border или TextBlock, то выходим
             if (sender is ListBoxItem item)
             {
-                if (item.Content is BasketProductViewModel bpViewModel)
+                if (item.Content is BasketProductModel bpModel)
                 {
-                    bpViewModel.IsSelected = !bpViewModel.IsSelected;  // меняем состояние чекбокса
+                    BPViewModel.SetCheckBoxProduct(bpModel);  // меняем состояние чекбокса
+                    flag = false;
                 }
             }
         }
 
+
         private async void BtnAddAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            BasketProductViewModel? bpModel = GetBasketProductsViewFromButton(sender);  // получаем объект BasketProductViewModel
-            if (bpModel is not null)
+            if (!await ChangeOneValueAmount(sender, true))
             {
-                if (!GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, bpModel.BasketProduct.Product, true))  // увеличиваем значение, передаём Product для дальнейшей проверки
-                {
-                    return;  // если false значит значение увеличить неудалось
-                }
-                if (!await UpdateAmountProduct(bpModel, true))  // обновляем кол-во товара
-                {
-                    MessageBox.Show("При обновлении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private async void BtnReduceAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            BasketProductViewModel? bpModel = GetBasketProductsViewFromButton(sender);  // получаем объект BasketProductViewModel
-            if (bpModel is not null)
+            if (!await ChangeOneValueAmount(sender, false))
             {
-                if (!GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, bpModel.BasketProduct.Product, false))  // уменьшаем значение, передаём Product для дальнейшей проверки
-                {
-                    return;  // если false значит значение увеличить неудалось
-                }
-                if (!await UpdateAmountProduct(bpModel, false))  // обновляем кол-во товара
-                {
-                    MessageBox.Show("При обновлении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private async void BtnDelProduct_Click(object sender, RoutedEventArgs e)
         {
-            BasketProductViewModel? bp = GetBasketProductsViewFromButton(sender);  // получаем объект Entity.Product
-            if (bp is not null)
+            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+            if (bpModel is not null)
             {
-                if (MessageBox.Show($"Вы действительно хотите удалить \"{bp.BasketProduct.Product.Name}\"?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Вы действительно хотите удалить \"{bpModel.BasketProduct.Product.Name}\"?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    if (await BasketProductsDal.Del(bp.BasketProduct.Id))  // удаление из БД
-                    {
-                        BasketProductsView.Remove(bp);  // удаляем из коллекции UI
-                        ViewModel.BasketProducts.Remove(bp.BasketProduct);  // удаляем из коллекции BasketProducts
-                        await ViewModel.UpdateTotalBasketProductsPrice();  // обновляем цену товаров
-                    }
-                    else
+                    if (!await BPViewModel.DeleteBasketProduct(bpModel))  // удаление из БД и коллекции
                     {
                         MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
             }
+            else { MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
         }
 
 
@@ -188,11 +141,7 @@ namespace StoreExam.Views
             // 1. проверить, есть ли каждый выбранный товар в наличии (по кол-ву)
             // 2. если какие то не в наличие, то добавить их названия в строку и вывести
             // 3. 
-            // 4. * товары не в наличии пометить как НЕ В НАЛИЧИИ (добавить свойство string в BasketProductViewModel и привязать к элементу XAML)
-            foreach (var bpView in BasketProductsView)
-            {
-                
-            }
+            // 4. * товары не в наличии пометить как НЕ В НАЛИЧИИ (добавить свойство string в BasketProductModel и привязать к элементу XAML)
         }
     }
 }
