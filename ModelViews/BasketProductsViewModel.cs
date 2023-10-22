@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 
 namespace StoreExam.ModelViews
@@ -52,7 +53,7 @@ namespace StoreExam.ModelViews
                 // обновляем сумму корзины
                 TotalBasketProductsPrice = listBPModel.Sum(bp => bp.BasketProduct.Product.Price * bp.BasketProduct.Amounts);
 
-                // возвращаем кол-во
+                // обновляем кол-во товаров в корзине
                 Count = listBPModel.Count();
             });
         }
@@ -89,6 +90,31 @@ namespace StoreExam.ModelViews
         }
 
 
+        public void CheckSetProductInNotStock(BasketProductModel bpModel)
+        {
+            // проверяем наличие и обновляем
+            bpModel.IsNotStock = !CheckProduct.CheckInStock(bpModel.BasketProduct.Product, bpModel.BasketProduct.Amounts);
+        }
+        public async Task CheckSetProductsNotInStock()
+        {
+            // перебираем все товары, и если нет в наличии, то устанавливаем IsNotStock
+            foreach (var bpModel in BasketProductsModel)
+            {
+                CheckSetProductInNotStock(bpModel);
+            }
+            await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+        }
+        public bool IsHaveProductNotInStock()
+        {
+            // есть ли хотя бы один товар из корзины не в наличии
+            foreach (var bpModel in BasketProductsModel)
+            {
+                if (bpModel.IsNotStock) return true;
+            }
+            return false;
+        }
+
+
         public async void AddProduct(Guid userId, Guid productId, int amountAdd)
         {
             Data.Entity.BasketProduct bp = new()  // создаём новый объект для добавления продукта в корзину
@@ -107,7 +133,10 @@ namespace StoreExam.ModelViews
         {
             foreach (var bpModel in BasketProductsModel)  // перебираем каждый элемент
             {
-                bpModel.IsSelected = isChecked;  // устанавливаем новое значение чекбоксу
+                if (!bpModel.IsNotStock)  // если товар в наличии
+                {
+                    bpModel.IsSelected = isChecked;  // устанавливаем новое значение чекбоксу
+                }
             }
             await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
         }
@@ -115,6 +144,19 @@ namespace StoreExam.ModelViews
         {
             bpModel.IsSelected = !bpModel.IsSelected;  // меняем состояние чекбокса
             await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+        }
+        public List<BasketProductModel> GetChoiceProducts()
+        {
+            // возвращаются выбранные товары
+            List<BasketProductModel> listBPModelChoice = new();
+            foreach (var bpModel in BasketProductsModel)
+            {
+                if (bpModel.IsSelected == true)
+                {
+                    listBPModelChoice.Add(bpModel);
+                }
+            }
+            return listBPModelChoice;
         }
 
 

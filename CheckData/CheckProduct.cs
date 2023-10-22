@@ -14,7 +14,12 @@ namespace StoreExam.CheckData
 
         public static bool CheckMinValue(Data.Entity.Product product, int value)
         {
-            return value > 1 && product.Count > 1;
+            return value > 1 && product.Count >= 0;
+        }
+
+        public static bool CheckInStock(Data.Entity.Product product, int amountBuy)
+        {
+            return product.Count >= amountBuy;
         }
     }
 }

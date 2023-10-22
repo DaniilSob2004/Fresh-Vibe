@@ -26,10 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Resources\UserDefault.xaml" />
+    <Page Remove="Resources\DefaultValue.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
@@ -37,11 +38,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\password.png" />
-    <Resource Include="Resources\UserDefault.xaml" />
+    <Resource Include="Resources\DefaultValue.xaml">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\account.png" />
     <Resource Include="Images\cart.png" />
     <Resource Include="Images\exit.png" />

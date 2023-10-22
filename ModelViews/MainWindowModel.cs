@@ -19,7 +19,7 @@ namespace StoreExam.ModelViews
                 {
                     BPViewModel = new();
                     await BPViewModel.LoadBasketProduct(user);  // загружаем корзину товаров
-                    await BPViewModel.UpdateTotalBasketProductsPrice();  // обновляем сумму товаров в корзине
+                    await BPViewModel.CheckSetProductsNotInStock();  // проверка товаров в корзине в наличии, если нет, то добавляется текст "Нет в наличии"
                 }
             ).Wait();
 

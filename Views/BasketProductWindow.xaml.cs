@@ -9,8 +9,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 using StoreExam.ModelViews;
+using StoreExam.Extensions;
 using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
@@ -18,14 +20,13 @@ namespace StoreExam.Views
     public partial class BasketProductWindow : Window
     {
         public BasketProductsViewModel BPViewModel { get; set; }  // ViewModel для BasketProduct (в котором есть IsSelected и другие методы)
-        private bool flag = true;
 
         public BasketProductWindow(BasketProductsViewModel bPViewModel)
         {
             InitializeComponent();
             BPViewModel = bPViewModel;
             DataContext = BPViewModel;
-            Task.Run(() => BPViewModel.UpdateTotalBasketProductsPrice()).Wait();  // обновляем цену товаров в корзине
+            Task.Run(async () => await BPViewModel.CheckSetProductsNotInStock());  // проверка товаров в корзине в наличии, если нет, то добавляется текст "Нет в наличии"
         }
 
 
@@ -57,6 +58,7 @@ namespace StoreExam.Views
                 {
                     return await BPViewModel.UpdateAmountProduct(bpModel.BasketProduct, 1, isIncrease);  // обновляем значение кол-ва продукта
                 }
+                else return true;
             }
             return false;
         }
@@ -96,8 +98,8 @@ namespace StoreExam.Views
             {
                 if (item.Content is BasketProductModel bpModel)
                 {
+                    if (bpModel.IsNotStock) return;  // если товар не в наличии
                     BPViewModel.SetCheckBoxProduct(bpModel);  // меняем состояние чекбокса
-                    flag = false;
                 }
             }
         }
@@ -113,10 +115,15 @@ namespace StoreExam.Views
 
         private async void BtnReduceAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (!await ChangeOneValueAmount(sender, false))
+            if (await ChangeOneValueAmount(sender, false))
             {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+                if (bpModel is not null)
+                {
+                    BPViewModel.CheckSetProductInNotStock(bpModel);  // проверяем и обновляем товар в наличии
+                }
             }
+            else { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
         }
 
         private async void BtnDelProduct_Click(object sender, RoutedEventArgs e)
@@ -136,12 +143,59 @@ namespace StoreExam.Views
         }
 
 
-        private void BtnBuy_Click(object sender, RoutedEventArgs e)
+        private async void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
-            // 1. проверить, есть ли каждый выбранный товар в наличии (по кол-ву)
-            // 2. если какие то не в наличие, то добавить их названия в строку и вывести
-            // 3. 
-            // 4. * товары не в наличии пометить как НЕ В НАЛИЧИИ (добавить свойство string в BasketProductModel и привязать к элементу XAML)
+            await BPViewModel.CheckSetProductsNotInStock();  // проверяем и обновляем наличие товаров
+
+            if (BPViewModel.IsHaveProductNotInStock())  // хотя бы один товар из корзины не в наличии
+            {
+                if (MessageBox.Show("Некоторые товары не в наличии\nХотите продолжить?", "Нет в наличии", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                    return;
+            }
+
+            List<BasketProductModel> listBuyBPModels = BPViewModel.GetChoiceProducts();  // товары которые выбранны (купленны)
+            int lastIndProduct = -1;  // откат кол-ва товаров, которые успели изменится, но была ошибка, и пользователь остановил обработку
+            for (int i = 0; i < listBuyBPModels.Count; i++)
+            {
+                if (!await ProductsDal.ReduceCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts))  // уменьшаем кол-во товаров в БД
+                {
+                    if (MessageBox.Show($"При обработке '{listBuyBPModels[i].BasketProduct.Product.Name}' что-то пошло не так...\nПродолжить?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        listBuyBPModels.RemoveAt(i);  // удаляем из коллекции 'купленных' товаров
+                        i--;
+                    }
+                    else
+                    {
+                        lastIndProduct = i;  // сохраняем индекс
+                    }
+                }
+            }
+            if (lastIndProduct != -1)  // если пользователь остановил обработку
+            {
+                for (int i = 0; i < lastIndProduct; i++)  // проходимся до того товара, на котором остановился пользователь
+                {
+                    await ProductsDal.AddCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts);  // увеличиваем кол-во товаров в БД
+                }
+                return;
+            }
+
+            // TODO: ЗАПУСК ОКНА (вывод общей суммы, и кнопка для чека в pdf)
+            if (MessageBox.Show($"Сумма к оплате: {BPViewModel.TotalBasketProductsPrice.Hrn()}\nНапечатать чек(в PDF)?", "Печатать чек", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                FileWork.FilePdf filePdf = new();
+                filePdf.ShowDialog();
+
+                if (filePdf.PrintReceiptForBasketProducts(listBuyBPModels, BPViewModel.TotalBasketProductsPrice))
+                {
+                    MessageBox.Show("Чек успешно сохранился. Спасибо за заказ!", "Успешное сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Чек не удалось сохранить. Спасибо за заказ!", "Не удалось сохранить", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+            await BPViewModel.CheckSetProductsNotInStock();  // проверяем и обновляем наличие товаров
         }
     }
 }

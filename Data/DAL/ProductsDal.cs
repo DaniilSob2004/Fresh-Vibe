@@ -18,9 +18,9 @@ namespace StoreExam.Data.DAL
             await dataContext.Products.LoadAsync();  // загружаем записи из таблицы в память
         }
 
-        public static Entity.Product? Get(Guid id)
+        public static Task<Entity.Product?> Get(Guid id)
         {
-            return dataContext.Products.FirstOrDefault(p => p.Id == id);
+            return dataContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async static Task<List<Entity.Product>?> GetByCategory(Guid idCat)
@@ -33,13 +33,44 @@ namespace StoreExam.Data.DAL
             return null;
         }
 
+        public async static Task<bool> ReduceCount(Entity.Product product, int count)
+        {
+            if (count > 0)
+            {
+                Entity.Product? findProduct = await Get(product.Id);  // получаем объект из БД
+                if (findProduct is not null)
+                {
+                    findProduct.Count -= count;  // уменьшаем кол-во
+                    await dataContext.SaveChangesAsync();
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        public async static Task<bool> AddCount(Entity.Product product, int count)
+        {
+            if (count > 0)
+            {
+                Entity.Product? findProduct = await Get(product.Id);  // получаем объект из БД
+                if (findProduct is not null)
+                {
+                    findProduct.Count += count;  // увеличиваем кол-во
+                    await dataContext.SaveChangesAsync();
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public async static Task<List<Entity.Product>?> FindByName(string name, Guid idCat)
         {
             // находим товары определённой категории которые совпадают по названию
             Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
             if (category is not null)
             {
-                return dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToList();
+                return await dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToListAsync();
             }
             return null;
         }

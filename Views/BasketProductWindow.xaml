@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="Basket product" Height="400" Width="700" MinHeight="250" MinWidth="600" WindowStartupLocation="CenterScreen">
+        Title="Basket product" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -23,6 +23,17 @@
                 <Setter Property="Background" Value="{StaticResource DeleteColor}"/>
             </Style>
 
+            <Style x:Key="textBlockNotStockStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockStyle}">
+                <Setter Property="Foreground" Value="{StaticResource DeleteColor}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Visibility" Value="Hidden"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsNotStock}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            
             <Style x:Key="listBoxBS_Style" TargetType="ListBox">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
                 <Setter Property="ItemTemplate">
@@ -32,7 +43,7 @@
                                 <DockPanel LastChildFill="False" Margin="7 3">
                                     <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}"/>
                                     <Image Width="60" Height="60" Source="{Binding BasketProduct.Product.Image}" Margin="8 0 0 0" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                    <TextBlock Text="{Binding BasketProduct.Product.Name}" MaxWidth="320" MaxHeight="20" TextTrimming="CharacterEllipsis" Margin="8 0 0 0" Style="{StaticResource textBlockStyle}"/>
+                                    <TextBlock Text="{Binding BasketProduct.Product.Name}" MaxWidth="300" MaxHeight="20" TextTrimming="CharacterEllipsis" Margin="8 0 0 0" Style="{StaticResource textBlockStyle}"/>
                                     <Button DockPanel.Dock="Right" Tag="/Images/trash.png" Height="25" Width="25" Margin="0 0 10 0" Style="{StaticResource btnOneImageStyle}" Click="BtnDelProduct_Click"/>
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0 0 10 0">
                                         <Button Tag="/Images/plus.png" Width="24" Height="24" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnAddAmountProduct_Click"/>
@@ -44,6 +55,7 @@
                                         <TextBlock x:Name="textBlockProductPrice" Text="{Binding BasketProduct.Product.Price, StringFormat='{}{0} ₴'}" VerticalAlignment="Center"
                                                    Style="{StaticResource mediumHeaderTextBlockStyle}"/>
                                     </StackPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="Нет в наличии" Margin="0 0 15 0" Style="{StaticResource textBlockNotStockStyle}"/>
                                 </DockPanel>
                             </Border>
                         </DataTemplate>

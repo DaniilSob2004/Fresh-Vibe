@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace StoreExam.ModelViews
 {
@@ -26,6 +21,25 @@ namespace StoreExam.ModelViews
                 {
                     isSelected = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSelected)));
+                }
+            }
+        }
+
+
+        private bool isNotStock;
+        public bool IsNotStock
+        {
+            get => isNotStock;
+            set
+            {
+                if (isNotStock != value)
+                {
+                    isNotStock = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNotStock)));
+                    if (IsSelected == true)
+                    {
+                        IsSelected = false;
+                    }
                 }
             }
         }

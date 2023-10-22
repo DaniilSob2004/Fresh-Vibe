@@ -10,6 +10,8 @@
 
     <sys:String x:Key="DefSearch">Поиск...</sys:String>
     
+    <sys:String x:Key="StoreName">Store</sys:String>
+    
     <sys:Int32 x:Key="MinLenNameSurname">3</sys:Int32>
     <sys:Int32 x:Key="MinLenPassword">8</sys:Int32>
 </ResourceDictionary>

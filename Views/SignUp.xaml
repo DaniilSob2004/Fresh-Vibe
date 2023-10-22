@@ -51,8 +51,8 @@
             <RowDefinition MaxHeight="80"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{StaticResource headerTextBlockStyle}">Store</TextBlock>
-        
+        <TextBlock Text="{StaticResource StoreName}" Style="{StaticResource headerTextBlockStyle}"/>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Style="{StaticResource textEventStyle}">Sign In</TextBlock>
             <TextBlock Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}">Sign Up</TextBlock>
