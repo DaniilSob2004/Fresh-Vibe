@@ -37,42 +37,52 @@ namespace StoreExam.FileWork
 
         public bool PrintReceiptForBasketProducts(List<ModelViews.BasketProductModel> listBPModels, float totalPrice)
         {
+            bool isNotDeleteFile = true;
             try
             {
-                using Document doc = new();
-                PdfWriter.GetInstance(doc, new FileStream(SelectFile, FileMode.Create));
-                doc.Open();
+                using (FileStream fileStream = new(SelectFile, FileMode.Create))
+                using (Document doc = new())
+                {
+                    PdfWriter.GetInstance(doc, fileStream);
+                    doc.Open();
 
-                // настройка шрифта
-                BaseFont baseFont = BaseFont.CreateFont(@"c:\windows\fonts\cour.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                Font font = new(baseFont, 10);
-                Font headerFont = new(baseFont, 18);
+                    // настройка шрифта
+                    BaseFont baseFont = BaseFont.CreateFont(@"c:\windows\fonts\cour.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font font = new(baseFont, 10);
+                    Font headerFont = new(baseFont, 18);
 
-                // вывод названия магазина
-                string storeName = Application.Current.TryFindResource("StoreName").ToString()!;
-                Paragraph paragraph = new(storeName, headerFont) { Alignment = Element.ALIGN_CENTER };
-                doc.Add(paragraph);
+                    // вывод названия магазина
+                    string storeName = Application.Current.TryFindResource("StoreName").ToString()!;
+                    Paragraph paragraph = new(storeName, headerFont) { Alignment = Element.ALIGN_CENTER };
+                    doc.Add(paragraph);
 
-                // вывод даты
-                paragraph = new(DateTime.Now.ToString(), font) { Alignment = Element.ALIGN_CENTER };
-                doc.Add(paragraph);
+                    // вывод даты
+                    paragraph = new(DateTime.Now.ToString(), font) { Alignment = Element.ALIGN_CENTER };
+                    doc.Add(paragraph);
 
-                // вывод товаров (форматируем коллекцию товаров в строку)
-                paragraph = new(ProductFormat.GetStringProductsForReceipt(listBPModels), font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
-                doc.Add(paragraph);
+                    // вывод товаров (форматируем коллекцию товаров в строку)
+                    paragraph = new(ProductFormat.GetStringProductsForReceipt(listBPModels), font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
+                    doc.Add(paragraph);
 
-                // вывод суммы (вызов расширения Hrn() у float)
-                string price = $"Сумма к оплате:  {totalPrice.Hrn()}";
-                paragraph = new(price, font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
-                doc.Add(paragraph);
+                    // вывод суммы (вызов расширения Hrn() у float)
+                    string price = $"Сумма к оплате:  {totalPrice.Hrn()}";
+                    paragraph = new(price, font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
+                    doc.Add(paragraph);
 
-                paragraph = new("Спасибо за покупку!)", font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 15f };
-                doc.Add(paragraph);
+                    paragraph = new("Спасибо за покупку!)", font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 15f };
+                    doc.Add(paragraph);
 
-                doc.Close();
-                return true;
+                    return true;
+                }
             }
-            catch (Exception) { return false; }
+            catch (Exception) { return isNotDeleteFile = false; }
+            finally
+            {
+                if (!isNotDeleteFile)  // если что-то пошло не так, то удаляем созданный файл pdf
+                {
+                    BaseFileWork.Delete(SelectFile);
+                }
+            }
         }
     }
 }

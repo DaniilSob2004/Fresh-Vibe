@@ -39,7 +39,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" MaxHeight="165"/>
+            <RowDefinition MaxHeight="165"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -53,10 +53,13 @@
             <TextBlock x:Name="textBlockTotalPrice" Style="{StaticResource textBlockStyle}"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="Клик " Style="{StaticResource textBlockStyle}"/>
-            <TextBlock Text="здесь" Style="{StaticResource textBlockLinkStyle}"/>
-            <TextBlock Text=" если хотите скачать PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
+        <StackPanel Grid.Row="3" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Клик " Style="{StaticResource textBlockStyle}"/>
+                <TextBlock Text="здесь" Style="{StaticResource textBlockLinkStyle}"/>
+                <TextBlock Text=" если хотите скачать PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
+            </StackPanel>
+            <CheckBox x:Name="checkBoxOpenPdf" Content="Открыть после скачивании" HorizontalAlignment="Center" Margin="0 5" Style="{StaticResource baseCheckBoxStyle}"/>
         </StackPanel>
     </Grid>
     

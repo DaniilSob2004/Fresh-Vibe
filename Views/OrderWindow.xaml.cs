@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using StoreExam.Extensions;
@@ -28,9 +29,20 @@ namespace StoreExam.Views
             // печатаем чек в pdf
             FileWork.FilePdf filePdf = new();
             filePdf.ShowDialog();
-            string message = filePdf.PrintReceiptForBasketProducts(listBuyBPModels, totalPrice) ? "Чек успешно сохранился" : "Чек не удалось сохранить";
-            MessageBox.Show(message, "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information);
-            Close();
+
+            if (!String.IsNullOrEmpty(filePdf.SelectFile))  // если пользователь выбрал файл
+            {
+                if (filePdf.PrintReceiptForBasketProducts(listBuyBPModels, totalPrice))  // если pdf успешно создался
+                {
+                    if (checkBoxOpenPdf.IsChecked == true)  // если выбранно чтобы нужно запустить pdf-файл
+                    {
+                        FileWork.BaseFileWork.StartFile(filePdf.SelectFile);  // запускаем процесс
+                    }
+                    else { MessageBox.Show("Чек успешно сохранился", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information); }
+                    Close();
+                }
+                else { MessageBox.Show("Чек не удалось сохранить", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information); }
+            }
         }
     }
 }
