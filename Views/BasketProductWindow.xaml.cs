@@ -12,7 +12,6 @@ using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 using StoreExam.ModelViews;
-using StoreExam.Extensions;
 using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
@@ -61,6 +60,14 @@ namespace StoreExam.Views
                 else return true;
             }
             return false;
+        }
+
+        private void OpenOrderWindow(List<BasketProductModel> listBuyBPModels, float totalPrice)
+        {
+            Hide();
+            var dialog = new OrderWindow(listBuyBPModels, totalPrice);
+            dialog.ShowDialog();
+            ShowDialog();
         }
 
 
@@ -157,7 +164,7 @@ namespace StoreExam.Views
             int lastIndProduct = -1;  // откат кол-ва товаров, которые успели изменится, но была ошибка, и пользователь остановил обработку
             for (int i = 0; i < listBuyBPModels.Count; i++)
             {
-                if (!await ProductsDal.ReduceCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts))  // уменьшаем кол-во товаров в БД
+                if (!await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, false))  // уменьшаем кол-во товаров в БД
                 {
                     if (MessageBox.Show($"При обработке '{listBuyBPModels[i].BasketProduct.Product.Name}' что-то пошло не так...\nПродолжить?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
@@ -174,28 +181,15 @@ namespace StoreExam.Views
             {
                 for (int i = 0; i < lastIndProduct; i++)  // проходимся до того товара, на котором остановился пользователь
                 {
-                    await ProductsDal.AddCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts);  // увеличиваем кол-во товаров в БД
+                    await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, true);  // увеличиваем кол-во товаров в БД
                 }
                 return;
             }
 
-            // TODO: ЗАПУСК ОКНА (вывод общей суммы, и кнопка для чека в pdf)
-            if (MessageBox.Show($"Сумма к оплате: {BPViewModel.TotalBasketProductsPrice.Hrn()}\nНапечатать чек(в PDF)?", "Печатать чек", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                FileWork.FilePdf filePdf = new();
-                filePdf.ShowDialog();
-
-                if (filePdf.PrintReceiptForBasketProducts(listBuyBPModels, BPViewModel.TotalBasketProductsPrice))
-                {
-                    MessageBox.Show("Чек успешно сохранился. Спасибо за заказ!", "Успешное сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Чек не удалось сохранить. Спасибо за заказ!", "Не удалось сохранить", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
+            float totalPrice = BPViewModel.TotalBasketProductsPrice;  // запоминаем сумму
             await BPViewModel.CheckSetProductsNotInStock();  // проверяем и обновляем наличие товаров
+
+            OpenOrderWindow(listBuyBPModels, totalPrice);  // запуск окна заказа
         }
     }
 }

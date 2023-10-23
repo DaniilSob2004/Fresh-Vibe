@@ -1,0 +1,63 @@
+﻿<Window x:Class="StoreExam.Views.OrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StoreExam.Views"
+        mc:Ignorable="d"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        Title="Order window" Height="400" Width="700" MinHeight="300" MinWidth="525" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI_Settings/Styles/BaseStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="textBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource bigHeaderTextBlockStyle}">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0 12"/>
+            </Style>
+
+            <Style x:Key="textBlockLinkStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockStyle}">
+                <Setter Property="Foreground" Value="{StaticResource DeleteColor}"/>
+                <Setter Property="FontStyle" Value="Italic"/>
+                <Setter Property="TextDecorations" Value="Underline"/>
+                <EventSetter Event="MouseLeftButtonUp" Handler="DownloadReceiptTB_MouseLeftButtonUp"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MaxHeight="165"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Image Margin="0 10" gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimatedSource="\Images\success.gif"/>
+
+        <TextBlock Grid.Row="1" Text="Спасибо за покупку!)" Style="{StaticResource textBlockStyle}"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Сумма заказа:  " Style="{StaticResource textBlockStyle}"/>
+            <TextBlock x:Name="textBlockTotalPrice" Style="{StaticResource textBlockStyle}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Клик " Style="{StaticResource textBlockStyle}"/>
+            <TextBlock Text="здесь" Style="{StaticResource textBlockLinkStyle}"/>
+            <TextBlock Text=" если хотите скачать PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
+        </StackPanel>
+    </Grid>
+    
+</Window>

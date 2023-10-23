@@ -46,6 +46,10 @@
         <Setter Property="FontSize" Value="{StaticResource MediumBig}"/>
     </Style>
 
+    <Style x:Key="bigHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource Big}"/>
+    </Style>
+
     <Style x:Key="mediumHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource baseHeaderTextBlockStyle}">
         <Setter Property="FontSize" Value="{StaticResource Medium_1}"/>
     </Style>

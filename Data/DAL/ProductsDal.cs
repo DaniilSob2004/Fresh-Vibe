@@ -33,35 +33,20 @@ namespace StoreExam.Data.DAL
             return null;
         }
 
-        public async static Task<bool> ReduceCount(Entity.Product product, int count)
+        public async static Task<bool> UpdateCount(Entity.Product product, int count, bool isIncrease)
         {
             if (count > 0)
             {
                 Entity.Product? findProduct = await Get(product.Id);  // получаем объект из БД
                 if (findProduct is not null)
                 {
-                    findProduct.Count -= count;  // уменьшаем кол-во
+                    findProduct.Count = isIncrease ? findProduct.Count + count : findProduct.Count - count;  // изменяем кол-во
                     await dataContext.SaveChangesAsync();
                     return true;
                 }
             }
             return false;
 
-        }
-
-        public async static Task<bool> AddCount(Entity.Product product, int count)
-        {
-            if (count > 0)
-            {
-                Entity.Product? findProduct = await Get(product.Id);  // получаем объект из БД
-                if (findProduct is not null)
-                {
-                    findProduct.Count += count;  // увеличиваем кол-во
-                    await dataContext.SaveChangesAsync();
-                    return true;
-                }
-            }
-            return false;
         }
 
         public async static Task<List<Entity.Product>?> FindByName(string name, Guid idCat)

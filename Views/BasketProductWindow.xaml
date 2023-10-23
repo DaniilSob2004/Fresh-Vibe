@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="Basket product" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
+        Title="Basket products" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>

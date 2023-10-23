@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\999.gif" />
     <None Remove="Views\account.png" />
     <None Remove="Views\account_2.png" />
     <None Remove="Views\beverage.png" />
@@ -19,10 +20,14 @@
     <None Remove="Views\find.png" />
     <None Remove="Views\grocerie.png" />
     <None Remove="Views\minus.png" />
+    <None Remove="Views\ok.gif" />
     <None Remove="Views\password.png" />
     <None Remove="Views\plus.png" />
     <None Remove="Views\settings.png" />
+    <None Remove="Views\succcess.gif" />
+    <None Remove="Views\success.png" />
     <None Remove="Views\trash.png" />
+    <None Remove="ок2.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +44,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,6 +64,7 @@
     <Resource Include="Images\plus.png" />
     <Resource Include="Images\minus.png" />
     <Resource Include="Images\trash.png" />
+    <Resource Include="Images\success.gif" />
   </ItemGroup>
 
 </Project>
