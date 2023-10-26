@@ -10,6 +10,7 @@ namespace StoreExam.Data.Entity
         public string Surname { get; set; } = null!;
         public string NumTel { get; set; } = null!;
         public string? Email { get; set; }
+        public string? ConfirmCode { get; set; }
         public string Salt { get; set; } = null!;
         public string Password { get; set; } = null!;
         public DateTime CreateDt { get; set; }

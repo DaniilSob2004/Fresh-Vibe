@@ -36,10 +36,10 @@ namespace StoreExam.ModelViews
                 {
                     isNotStock = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNotStock)));
-                    if (IsSelected == true)
-                    {
-                        IsSelected = false;
-                    }
+                    //if (IsSelected == true)
+                    //{
+                    //    IsSelected = false;
+                    //}
                 }
             }
         }

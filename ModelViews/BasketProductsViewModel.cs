@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 
@@ -95,6 +94,7 @@ namespace StoreExam.ModelViews
         {
             // проверяем наличие и обновляем
             bpModel.IsNotStock = !CheckProduct.CheckInStock(bpModel.BasketProduct.Product, bpModel.BasketProduct.Amounts);
+            bpModel.IsSelected = !bpModel.IsNotStock;
         }
         public async Task CheckSetProductsNotInStock()
         {

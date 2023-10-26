@@ -78,7 +78,7 @@ namespace StoreExam.Views
                             {
                                 if (CheckNewPassword())  // проверка двух полей для нового пароля
                                 {
-                                    User.Password = PasswordHasher.HashPassword(User.Password, origUser.Salt);  // хэшируем новый пароль, на основе соли
+                                    User.Password = PasswordHasher.HashPassword(textBoxNewPassword.Text, origUser.Salt);  // хэшируем новый пароль, на основе соли
                                     stateUserData = StateData.Save;  // сохраняем состояние работы окна
                                     DialogResult = true;  // закрываем окно
                                 }

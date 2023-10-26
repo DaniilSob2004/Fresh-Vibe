@@ -110,8 +110,8 @@ namespace StoreExam.Views
                     {
                         if (CheckUser.CheckPasswordByString(User, passwordCheck.Password))  // пароль и пароль-подтверждения совпадают
                         {
-                            await AddUserInDB();  // добавление User в БД
                             CancelLoadingSignUpBtn();  // возвращаем состояние кнопки в исходное
+                            await AddUserInDB();  // добавление User в БД
                             Close();  // закрываем окно регистрации (возвращаемся в главное окно входа)
                         }
                         else ShowErrorMessage("Пароли не совпадают!");
