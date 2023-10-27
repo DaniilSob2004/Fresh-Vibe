@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace StoreExam.ModelViews
+namespace StoreExam.ViewModels
 {
     public class BasketProductModel : INotifyPropertyChanged
     {
@@ -36,13 +36,11 @@ namespace StoreExam.ModelViews
                 {
                     isNotStock = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNotStock)));
-                    //if (IsSelected == true)
-                    //{
-                    //    IsSelected = false;
-                    //}
                 }
             }
         }
+
+        public bool isNotStock2 => BasketProduct.Amounts > BasketProduct.Product.Count;
 
 
         public Data.Entity.BasketProduct BasketProduct { get; set; } = null!;

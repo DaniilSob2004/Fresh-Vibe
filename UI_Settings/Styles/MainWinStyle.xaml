@@ -66,10 +66,10 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <Border Style="{StaticResource borderStyle}" Margin="-5 -1">
+                    <Border Style="{StaticResource borderStyle}" Margin="0 4 0 0">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Height="20" Source="{Binding Image}" Margin="5 3 0 3"/>
-                            <TextBlock Text="{Binding Name}" Margin="15 0" Style="{StaticResource textBlockStyle}"/>
+                            <Image Width="20" Height="20" Source="{Binding Image}" Margin="5 3"/>
+                            <TextBlock Text="{Binding Name}" Margin="10 0" Style="{StaticResource textBlockStyle}"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
@@ -87,4 +87,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </ResourceDictionary>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreExam.ModelViews
+namespace StoreExam.ViewModels
 {
     public class ProductViewModel : INotifyPropertyChanged
     {

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoreExam.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using StoreExam.Data.Entity;
+using StoreExam.Generate;
 
 namespace StoreExam.Data.DAL
 {
@@ -28,6 +29,7 @@ namespace StoreExam.Data.DAL
             user.CreateDt = DateTime.Now;  // текущая дата
             user.Salt = SaltGenerator.GenerateSalt();  // генерируем соль
             user.Password = PasswordHasher.HashPassword(user.Password, user.Salt);  // генерация хеша, передаём пароль и соль
+            user.ConfirmCode = CodeGenerator.GetCode();  // генерация кода подтверждения
             await dataContext.Users.AddAsync(user);
             await dataContext.SaveChangesAsync();
         }

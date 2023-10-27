@@ -29,13 +29,14 @@ namespace StoreExam.FileWork
 
         public void ShowDialog()
         {
+            selectFile = String.Empty;
             if (saveFileDialog.ShowDialog() == true)
             {
                 selectFile = saveFileDialog.FileName;  // сохраняем путь к файлу
             }
         }
 
-        public bool PrintReceiptForBasketProducts(List<ModelViews.BasketProductModel> listBPModels, float totalPrice)
+        public bool PrintReceiptForBasketProducts(List<ViewModels.BasketProductModel> listBPModels, float totalPrice)
         {
             bool isNotDeleteFile = true;
             try
@@ -61,7 +62,12 @@ namespace StoreExam.FileWork
                     doc.Add(paragraph);
 
                     // вывод товаров (форматируем коллекцию товаров в строку)
-                    paragraph = new(ProductFormat.GetStringProductsForReceipt(listBPModels), font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
+                    paragraph = new(ProductFormat.GetStringProductsForReceipt(listBPModels), font)
+                    {
+                        Alignment = Element.ALIGN_LEFT,
+                        SpacingBefore = 30f,
+                        IndentationLeft = 60f
+                    };
                     doc.Add(paragraph);
 
                     // вывод суммы (вызов расширения Hrn() у float)

@@ -22,6 +22,7 @@ namespace StoreExam.Views
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+        public static string DefaultConfirmCode = Application.Current.TryFindResource("DefConfirmCode").ToString()!;
 
         public static Window? mainLoginWindow;  // ссылка на окно родителя (MainLoginWindow)
         public Data.Entity.User User { get; set; }
@@ -31,7 +32,7 @@ namespace StoreExam.Views
         {
             InitializeComponent();
             DataContext = this;
-            User = new() { Name = DefaultName, Surname = DefaultSurname, NumTel = DefaultNumTel, Email = DefaultEmail, Password = DefaultPassword };
+            User = new() { Name = DefaultName, Surname = DefaultSurname, NumTel = DefaultNumTel, Email = DefaultEmail, Password = DefaultPassword, ConfirmCode = DefaultConfirmCode };
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -48,6 +49,18 @@ namespace StoreExam.Views
             CheckUser.CheckAndChangeDefaultEmail(User);  // проверка на email по-умолчанию (чтобы установить в null если стоит по-умолчанию)
             await UserDal.Add(User);  // добавление User в БД
             MessageBox.Show($"Вы успешно зарегистрировались, {User.Name}!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OpenConfirmEmailWindow()
+        {
+            if (User.Email is not null)  // если почта указана
+            {
+                Hide();
+                var dialog = new ConfirmEmailWindow(User);  // запускаем окно подтверждения почты
+                _ = dialog.SendCodeToEmail();  // отправка кода на email пользователя
+                dialog.ShowDialog();
+                Close();  // закрываем окно регистрации (возвращаемся в главное окно входа)
+            }
         }
 
         private void CancelLoadingSignUpBtn()
@@ -112,11 +125,11 @@ namespace StoreExam.Views
                         {
                             CancelLoadingSignUpBtn();  // возвращаем состояние кнопки в исходное
                             await AddUserInDB();  // добавление User в БД
-                            Close();  // закрываем окно регистрации (возвращаемся в главное окно входа)
+                            OpenConfirmEmailWindow();  // запускаем окно подтверждения почты
                         }
                         else ShowErrorMessage("Пароли не совпадают!");
                     }
-                    else ShowErrorMessage($"Не все поля заполнены!\n(Пароль не менее {CheckUser.MinPassword} символов)");
+                    else ShowErrorMessage($"Поля не уникальны:\n{notUniqueFields}");
                 }
                 else ShowErrorMessage($"Не все поля заполнены!\n(Пароль не менее {CheckUser.MinPassword} символов)");
             }

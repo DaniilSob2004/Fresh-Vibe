@@ -11,7 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
-using StoreExam.ModelViews;
+using StoreExam.ViewModels;
 using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
@@ -65,7 +65,7 @@ namespace StoreExam.Views
         private void OpenOrderWindow(List<BasketProductModel> listBuyBPModels, float totalPrice)
         {
             Hide();
-            var dialog = new OrderWindow(listBuyBPModels, totalPrice);
+            var dialog = new OrderWindow(BPViewModel.User, listBuyBPModels, totalPrice);
             dialog.ShowDialog();
             ShowDialog();
         }

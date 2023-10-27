@@ -39,7 +39,7 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Border Style="{StaticResource borderStyle}" Margin="-5 -0.7">
+                            <Border Style="{StaticResource borderStyle}" Margin="0 0 0 4">
                                 <DockPanel LastChildFill="False" Margin="7 3">
                                     <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}"/>
                                     <Image Width="60" Height="60" Source="{Binding BasketProduct.Product.Image}" Margin="8 0 0 0" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -63,9 +63,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="itemListBS_Style" TargetType="ListBoxItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Style x:Key="itemListBS_Style" TargetType="ListBoxItem" BasedOn="{StaticResource baseListBoxItemStyle}">
                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItemBPViewModel_PreviewMouseLeftButtonDown"/>
             </Style>
         </ResourceDictionary>

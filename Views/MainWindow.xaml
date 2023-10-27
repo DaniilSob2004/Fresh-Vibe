@@ -16,9 +16,7 @@
                 <ResourceDictionary Source="/UI_Settings/Styles/MainWinStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="itemListBoxCatStyle" TargetType="ListBoxItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Style x:Key="itemListBoxCatStyle" TargetType="ListBoxItem" BasedOn="{StaticResource baseListBoxItemStyle}">
                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListBoxItemCategories_MouseLeftDown"/>
             </Style>
 

@@ -1,0 +1,13 @@
+{
+  "smtp": {
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "email": "*********@gmail.com",
+    "password": "*************",
+    "ssl": true
+  },
+
+  "database": {
+    "connection_string": "**********************"
+  }
+}

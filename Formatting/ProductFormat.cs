@@ -7,7 +7,7 @@ namespace StoreExam.Formatting
     public static class ProductFormat
     {
         // форматирование коллекции продуктов в строку для чека
-        public static string GetStringProductsForReceipt(List<ModelViews.BasketProductModel> listBPModels)
+        public static string GetStringProductsForReceipt(List<ViewModels.BasketProductModel> listBPModels)
         {
             StringBuilder sbProducts = new();
             string num, product, amount, price;

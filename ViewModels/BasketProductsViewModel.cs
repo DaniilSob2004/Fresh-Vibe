@@ -7,20 +7,31 @@ using System.Threading.Tasks;
 using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 
-namespace StoreExam.ModelViews
+namespace StoreExam.ViewModels
 {
     public class BasketProductsViewModel : INotifyPropertyChanged
     {
-        public BasketProductsViewModel()
+        public BasketProductsViewModel(Data.Entity.User user)
         {
+            this.user = user;
             BasketProductsModel = new();
+
+            Task.Run(async () =>
+            {
+                await LoadBasketProduct();  // загружаем корзину товаров
+                await CheckSetProductsNotInStock();  // проверка товаров в корзине на наличие
+            }).Wait();
         }
 
 
+        private Data.Entity.User user;
+        public Data.Entity.User User => user;
+
+
         public ObservableCollection<BasketProductModel> BasketProductsModel { get; set; }
-        public async Task LoadBasketProduct(Data.Entity.User user)
+        public async Task LoadBasketProduct()
         {
-            var listBp = await BasketProductsDal.GetBasketProductsByUser(user);  // получаем коллекцию корзины
+            var listBp = await BasketProductsDal.GetBasketProductsByUser(User);  // получаем коллекцию корзины
             if (listBp is not null)
             {
                 foreach (var bp in listBp)

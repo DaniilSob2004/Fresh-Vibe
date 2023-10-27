@@ -19,9 +19,11 @@ namespace StoreExam.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                    $@"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog={DbName};Integrated Security=True"
-                );
+            string? connectionString = App.GetConfiguration("database:connection_string");  // строка подключения из json
+            if (connectionString is not null)
+            {
+                optionsBuilder.UseSqlServer(connectionString.Replace("DbName", DbName));  // подставляем название БД
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

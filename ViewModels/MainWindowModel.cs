@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using StoreExam.Data.DAL;
 
-namespace StoreExam.ModelViews
+namespace StoreExam.ViewModels
 {
     public class MainWindowModel : INotifyPropertyChanged
     {
@@ -15,13 +15,7 @@ namespace StoreExam.ModelViews
             User = user;
 
             // запускаем задачу для создания и загрузки BasketProductViewModel
-            Task.Run(async () =>
-                {
-                    BPViewModel = new();
-                    await BPViewModel.LoadBasketProduct(user);  // загружаем корзину товаров
-                    await BPViewModel.CheckSetProductsNotInStock();  // проверка товаров в корзине в наличии, если нет, то добавляется текст "Нет в наличии"
-                }
-            ).Wait();
+            Task.Run(() => BPViewModel = new(user)).Wait();
 
             LoadCategories();  // загружаем категории
             Products = new();

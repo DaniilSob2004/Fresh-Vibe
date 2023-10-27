@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using StoreExam.Data.Entity;
+using StoreExam.Generate;
 
 namespace StoreExam.CheckData
 {
@@ -72,6 +73,21 @@ namespace StoreExam.CheckData
                 if (!isUnique) notUniqueFields += "email, ";
             }
             return notUniqueFields;  // возвращаем строку, которая содержит поля, которые не уникальны
+        }
+
+
+        public static bool CheckConfirmCode(User user, string code)
+        {
+            if (user.ConfirmCode is not null)
+            {
+                return user.ConfirmCode.Equals(code);
+            }
+            return false;
+        }
+
+        public static bool CheckIsConfirmedEmail(User user)
+        {
+            return user.ConfirmCode is null;
         }
 
 

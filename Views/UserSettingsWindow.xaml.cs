@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.Enums;
+using StoreExam.Generate;
 using StoreExam.UI_Settings;
 
 namespace StoreExam.Views

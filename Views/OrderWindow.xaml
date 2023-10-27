@@ -19,16 +19,16 @@
                 <Setter Property="Margin" Value="0 12"/>
             </Style>
 
-            <Style x:Key="textBlockLinkStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockStyle}">
+            <Style x:Key="textBlockLinkEventStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockLinkStyle}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0 12"/>
                 <Setter Property="Foreground" Value="{StaticResource DeleteColor}"/>
-                <Setter Property="FontStyle" Value="Italic"/>
-                <Setter Property="TextDecorations" Value="Underline"/>
                 <EventSetter Event="MouseLeftButtonUp" Handler="DownloadReceiptTB_MouseLeftButtonUp"/>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Cursor" Value="Hand"/>
-                    </Trigger>
-                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="checkBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource baseCheckBoxStyle}">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="12 5"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -56,10 +56,13 @@
         <StackPanel Grid.Row="3" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Клик " Style="{StaticResource textBlockStyle}"/>
-                <TextBlock Text="здесь" Style="{StaticResource textBlockLinkStyle}"/>
+                <TextBlock Text="здесь" Style="{StaticResource textBlockLinkEventStyle}"/>
                 <TextBlock Text=" если хотите скачать PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
             </StackPanel>
-            <CheckBox x:Name="checkBoxOpenPdf" Content="Открыть после скачивании" HorizontalAlignment="Center" Margin="0 5" Style="{StaticResource baseCheckBoxStyle}"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="checkBoxOpenPdf" Content="Открыть после скачивании" Style="{StaticResource checkBoxStyle}"/>
+                <CheckBox x:Name="checkBoxSendPdfEmail" Content="Отправить на email" IsChecked="True" Style="{StaticResource checkBoxStyle}"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
     

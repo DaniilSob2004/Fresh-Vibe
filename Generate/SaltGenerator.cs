@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-public static class SaltGenerator
+namespace StoreExam.Generate
 {
-    // Создание уникальной соли
-    public static string GenerateSalt(int size = 16)
+    public static class SaltGenerator
     {
-        byte[] saltBytes = new byte[size];
-
-        // используем криптографически безопасный генератор случайных чисел
-        using (var rng = RandomNumberGenerator.Create())
+        // Создание уникальной соли
+        public static string GenerateSalt(int size = 16)
         {
-            rng.GetBytes(saltBytes);
+            byte[] saltBytes = new byte[size];
+
+            // используем криптографически безопасный генератор случайных чисел
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(saltBytes);
+            }
+            return Convert.ToBase64String(saltBytes);  // преобразуем байты в строку
         }
-        return Convert.ToBase64String(saltBytes);  // преобразуем байты в строку
     }
 }

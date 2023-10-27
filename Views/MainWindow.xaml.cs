@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.Data.DAL;
 using StoreExam.Enums;
-using StoreExam.ModelViews;
+using StoreExam.ViewModels;
 using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
@@ -54,6 +54,18 @@ namespace StoreExam.Views
                 }
             }
             return null;
+        }
+
+
+        private void OpenConfirmEmailWindow()
+        {
+            if (ViewModel.User.Email is not null)  // если почта указана
+            {
+                Hide();
+                var dialog = new ConfirmEmailWindow(ViewModel.User);  // запускаем окно подтверждения почты
+                dialog.ShowDialog();
+                Show();
+            }
         }
 
 
@@ -115,10 +127,17 @@ namespace StoreExam.Views
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
-            var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
-            dialog.ShowDialog();
-            Show();
+            if (CheckData.CheckUser.CheckIsConfirmedEmail(ViewModel.User))  // если почта подтверждена
+            {
+                Hide();
+                var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
+                dialog.ShowDialog();
+                Show();
+            }
+            else if (MessageBox.Show("Почта не подтверждена.\nХотите подтвердить?", "Доступ ограничен", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                OpenConfirmEmailWindow();  // запускаем окно подтверждения почты
+            }
         }
 
 
@@ -186,10 +205,10 @@ namespace StoreExam.Views
                 {
                     MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                else
-                {
-                    MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                //else
+                //{
+                //    MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                //}
             }
         }
 

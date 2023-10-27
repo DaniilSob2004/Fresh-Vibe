@@ -10,6 +10,7 @@
     <SolidColorBrush x:Key="TextColorWhite" Color="White"/>
     <SolidColorBrush x:Key="TextColorGray" Color="Gray"/>
     <SolidColorBrush x:Key="IsMouseOverColor" Color="LightGreen"/>
+    <SolidColorBrush x:Key="IsMouseOverBorderColor" Color="LightGreen"/>
 
     <!-- Базовый шрифт -->
     <FontFamily x:Key="MainFont">Calibri</FontFamily>
@@ -27,7 +28,7 @@
     <CornerRadius x:Key="baseCornerRadius" TopLeft="5" TopRight="5" BottomRight="5" BottomLeft="5"/>
     <CornerRadius x:Key="baseCornerRadiusButton" TopLeft="12" TopRight="12" BottomRight="12" BottomLeft="12"/>
 
-    <Thickness x:Key="baseThicknessMouseBorder" Left="2" Top="2" Right="2" Bottom="2"/>
+    <Thickness x:Key="baseThicknessMouseBorder" Left="2.6" Top="2.6" Right="2.6" Bottom="2.6"/>
 
     <!-- Базовые стили для текста TextBlock -->
     <!-- Зелёный TextBlock -->
@@ -114,6 +115,17 @@
                 <Setter Property="CornerRadius" Value="{StaticResource baseCornerRadius}"/>
             </Style>
         </Style.Resources>
+    </Style>
+
+    <!-- Базовый стиль для ссылок TextBox -->
+    <Style x:Key="textBlockLinkStyle" TargetType="TextBlock" BasedOn="{StaticResource mediumHeaderTextBlockStyle}">
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Базовый стиль для PasswordBox -->
@@ -208,8 +220,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"-->
 
+    
     <!-- Базовый стиль для обычного Border -->
     <Style x:Key="baseBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource TextColorWhite}"/>
@@ -225,9 +237,10 @@
 
     <!-- Стиль и поведение при навидение курсора для Border -->
     <Style x:Key="borderStyle" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
+        <Setter Property="BorderThickness" Value="{StaticResource baseThicknessMouseBorder}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderThickness" Value="{StaticResource baseThicknessMouseBorder}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource IsMouseOverBorderColor}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -243,6 +256,22 @@
                 <DataTemplate>
                     <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource mediumHeaderTextBlockStyle}"/>
                 </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- Базовый стиль для ListBoxItem -->
+    <Style x:Key="baseListBoxItemStyle" TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <ContentPresenter/>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
