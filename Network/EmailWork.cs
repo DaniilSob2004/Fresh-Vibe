@@ -96,10 +96,14 @@ namespace StoreExam.Network
                 }
                 try
                 {
-                    await smtpClient.SendMailAsync(mailMessage);
+                    using (mailMessage)  // для освобождения ресурсов
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+                    }
                     return true;
                 }
                 catch (Exception) { return false; }
+                finally { smtpClient.Dispose(); }
             }
         }
     }

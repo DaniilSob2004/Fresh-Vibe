@@ -14,7 +14,7 @@
                 <ResourceDictionary Source="/UI_Settings/Styles/BaseStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="textBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource bigHeaderTextBlockStyle}">
+            <Style x:Key="textBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource bigBlackTextBlockStyle}">
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="0 12"/>
             </Style>
@@ -22,7 +22,6 @@
             <Style x:Key="textBlockLinkEventStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockLinkStyle}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="0 12"/>
-                <Setter Property="Foreground" Value="{StaticResource DeleteColor}"/>
                 <EventSetter Event="MouseLeftButtonUp" Handler="DownloadReceiptTB_MouseLeftButtonUp"/>
             </Style>
 
@@ -50,17 +49,17 @@
         <TextBlock Grid.Row="1" Text="Спасибо за покупку!)" Style="{StaticResource textBlockStyle}"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Сумма заказа:  " Style="{StaticResource textBlockStyle}"/>
-            <TextBlock x:Name="textBlockTotalPrice" Style="{StaticResource textBlockStyle}"/>
+            <TextBlock x:Name="textBlockTotalPrice" Foreground="{StaticResource MainColor}" Style="{StaticResource textBlockStyle}"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Клик " Style="{StaticResource textBlockStyle}"/>
                 <TextBlock Text="здесь" Style="{StaticResource textBlockLinkEventStyle}"/>
-                <TextBlock Text=" если хотите скачать PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
+                <TextBlock Text=" если хотите сохранить PDF-файл чека" Style="{StaticResource textBlockStyle}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="checkBoxOpenPdf" Content="Открыть после скачивании" Style="{StaticResource checkBoxStyle}"/>
+                <CheckBox x:Name="checkBoxOpenPdf" Content="Открыть после скачивания" Style="{StaticResource checkBoxStyle}"/>
                 <CheckBox x:Name="checkBoxSendPdfEmail" Content="Отправить на email" IsChecked="True" Style="{StaticResource checkBoxStyle}"/>
             </StackPanel>
         </StackPanel>

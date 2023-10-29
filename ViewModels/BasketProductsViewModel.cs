@@ -105,7 +105,6 @@ namespace StoreExam.ViewModels
         {
             // проверяем наличие и обновляем
             bpModel.IsNotStock = !CheckProduct.CheckInStock(bpModel.BasketProduct.Product, bpModel.BasketProduct.Amounts);
-            bpModel.IsSelected = !bpModel.IsNotStock;
         }
         public async Task CheckSetProductsNotInStock()
         {

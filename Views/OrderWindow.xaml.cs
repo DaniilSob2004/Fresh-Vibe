@@ -26,11 +26,16 @@ namespace StoreExam.Views
             this.totalPrice = totalPrice;
             filePdf = new();
             emailWork = new();
-            _mailMessage = Formatting.UserFormat.GetMailMessageForSendPdfEmail(user, emailWork.Email);  // получаем готовый MailMessage
+            _mailMessage = Formatting.EmailHelper.GetMailMessageForSendPdfEmail(user, emailWork.Email);  // получаем готовый MailMessage
 
             LoadTotalPrice();  // загрузка цены
         }
 
+
+        private void LoadTotalPrice()
+        {
+            textBlockTotalPrice.Text = totalPrice.Hrn();  // вызов расширения для float
+        }
 
         public async Task SendPdfReceiptToEmail()
         {
@@ -41,34 +46,43 @@ namespace StoreExam.Views
             }
         }
 
-        private void LoadTotalPrice()
+        private void WorkWithReceipt(string message, bool isSendEmail)
         {
-            textBlockTotalPrice.Text = totalPrice.Hrn();  // вызов расширения для float
+            if (filePdf.PrintReceiptForBasketProducts(listBuyBPModels, totalPrice))  // если pdf успешно создался
+            {
+                if (isSendEmail)  // если нужно отправить на email, то отправляем
+                {
+                    _ = SendPdfReceiptToEmail();
+                }
+
+                if (checkBoxOpenPdf.IsChecked == true)  // если нужно запустить pdf-файл, то запускаем процесс
+                {
+                    FileWork.BaseFileWork.StartFile(filePdf.SelectFile);
+                }
+                else
+                {
+                    MessageBox.Show(message, "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                Close();
+            }
+            else { MessageBox.Show("Чек не удалось сохранить", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
+
 
         private void DownloadReceiptTB_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            // печатаем чек в pdf
-            filePdf.ShowDialog();
-
-            if (!String.IsNullOrEmpty(filePdf.SelectFile))  // если пользователь выбрал файл
+            if (checkBoxSendPdfEmail.IsChecked == true)  // если отправка pdf-файла на email
             {
-                if (filePdf.PrintReceiptForBasketProducts(listBuyBPModels, totalPrice))  // если pdf успешно создался
+                filePdf.CreateTempFile();
+                WorkWithReceipt("Чек отправлен на email", true);
+            }
+            else  // сохранение файла локально
+            {
+                filePdf.ShowDialog();
+                if (!String.IsNullOrEmpty(filePdf.SelectFile))  // если пользователь выбрал файл
                 {
-                    if (checkBoxSendPdfEmail.IsChecked == true)  // если нужно pdf-файл отправить на email
-                    {
-                        _ = SendPdfReceiptToEmail();  // отправка email
-                    }
-
-                    if (checkBoxOpenPdf.IsChecked == true)  // если нужно запустить pdf-файл
-                    {
-                        FileWork.BaseFileWork.StartFile(filePdf.SelectFile);  // запускаем процесс
-                    }
-                    else { MessageBox.Show("Чек успешно сохранился", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information); }
-
-                    Close();
+                    WorkWithReceipt("Чек успешно сохранён", false);
                 }
-                else { MessageBox.Show("Чек не удалось сохранить", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information); }
             }
         }
     }

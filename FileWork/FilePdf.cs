@@ -12,6 +12,7 @@ namespace StoreExam.FileWork
 {
     public class FilePdf
     {
+        private static string tempFile = String.Empty;
         private VistaSaveFileDialog saveFileDialog;
         private string selectFile;
 
@@ -19,12 +20,20 @@ namespace StoreExam.FileWork
 
         public FilePdf()
         {
+            tempFile = BaseFileWork.GetPathTempFilePdf("Receipt.pdf");  // путь к временному файлу
             saveFileDialog = new()
             {
                 Filter = "PDF Files (*.pdf)|*.pdf",
                 DefaultExt = "pdf"
             };
             selectFile = String.Empty;
+        }
+
+
+        public void CreateTempFile()
+        {
+            BaseFileWork.Delete(tempFile);  // удаляем временный файл
+            selectFile = tempFile;
         }
 
         public void ShowDialog()

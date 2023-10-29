@@ -24,7 +24,7 @@ namespace StoreExam.ViewModels
         }
 
 
-        private Data.Entity.User user;
+        private Data.Entity.User user = null!;
         public Data.Entity.User User
         {
             get => user;
@@ -45,8 +45,10 @@ namespace StoreExam.ViewModels
 
 
         public ObservableCollection<Data.Entity.Product> Products { get; set; }
+        //public ObservableCollection<ProductViewModel> Products { get; set; }
         public ICollectionView productsListView;
         public void UpdateProducts(List<Data.Entity.Product> newListProducts)
+        //public void UpdateProducts(List<ProductViewModel> newListProducts)
         {
             // обновляем коллекцию продуктов
             Products.Clear();

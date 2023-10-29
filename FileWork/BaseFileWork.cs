@@ -11,6 +11,20 @@ namespace StoreExam.FileWork
 {
     public static class BaseFileWork
     {
+        public static string ReadFile(string path)
+        {
+            try
+            {
+                return File.ReadAllText(path);
+            }
+            catch (Exception) { return String.Empty; }
+        }
+
+        public static string GetPathTempFilePdf(string fileName)
+        {
+            return Path.Combine(Path.GetTempPath(), "Receipt.pdf");
+        }
+
         public static bool Delete(string path)
         {
             // удаление файла

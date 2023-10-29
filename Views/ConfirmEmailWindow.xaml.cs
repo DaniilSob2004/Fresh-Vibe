@@ -25,7 +25,7 @@ namespace StoreExam.Views
             DataContext = this;
             User = user;
             emailWork = new();
-            _mailMessage = Formatting.UserFormat.GetMailMessageForConfirmEmail(user, emailWork.Email);  // получаем готовый MailMessage
+            _mailMessage = Formatting.EmailHelper.GetMailMessageForConfirmEmail(user, emailWork.Email);  // получаем готовый MailMessage
         }
 
 

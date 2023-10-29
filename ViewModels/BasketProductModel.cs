@@ -36,11 +36,13 @@ namespace StoreExam.ViewModels
                 {
                     isNotStock = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNotStock)));
+                    if (IsSelected == true)
+                    {
+                        IsSelected = false;
+                    }
                 }
             }
         }
-
-        public bool isNotStock2 => BasketProduct.Amounts > BasketProduct.Product.Count;
 
 
         public Data.Entity.BasketProduct BasketProduct { get; set; } = null!;

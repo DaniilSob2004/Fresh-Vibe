@@ -1,21 +1,23 @@
-﻿using System.Net.Mail;
+﻿using System.IO;
+using System.Net.Mail;
 using System.Windows;
+using StoreExam.FileWork;
 
 namespace StoreExam.Formatting
 {
-    public static class UserFormat
+    public static class EmailHelper
     {
         public static string GetStringForConfirmEmail(Data.Entity.User user)
         {
-            return $"<h1>Подтвердите email</h1>" +
-                   $"<p>Для подтверждения адреса электронной почты используйте код: <span style='color: tomato; font-weight: bold;'>{user.ConfirmCode}</span></p>" +
-                   $"<p>Если вы не являетесь пользователем {Application.Current.TryFindResource("StoreName")}, не предпринимайте никаких действий</p>";
+            // считываем из ресурсов файл html
+            return BaseFileWork.ReadFile("Resources/confirm_code_template.html")
+                        .Replace("{ConfirmCode}", user.ConfirmCode)
+                        .Replace("{StoreName}", Application.Current.TryFindResource("StoreName").ToString());
         }
 
         public static string GetStringForSendPdfEmail()
         {
-            return $"<h1>Спасибо за покупку!)</h1>" +
-                   $"<p>Ваш чек pdf-файлом</p>";
+            return BaseFileWork.ReadFile("Resources/send_receipt_template.html");
         }
 
         public static MailMessage GetMailMessageForConfirmEmail(Data.Entity.User user, string emailFrom)

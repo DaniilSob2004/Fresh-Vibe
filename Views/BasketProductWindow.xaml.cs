@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using StoreExam.CheckData;
 using StoreExam.Data.DAL;
 using StoreExam.ViewModels;
 using StoreExam.UI_Settings;
@@ -18,14 +17,15 @@ namespace StoreExam.Views
 {
     public partial class BasketProductWindow : Window
     {
-        public BasketProductsViewModel BPViewModel { get; set; }  // ViewModel для BasketProduct (в котором есть IsSelected и другие методы)
+        public BasketProductsViewModel BPViewModel { get; set; }  // ViewModel для BasketProduct
 
         public BasketProductWindow(BasketProductsViewModel bPViewModel)
         {
             InitializeComponent();
             BPViewModel = bPViewModel;
             DataContext = BPViewModel;
-            Task.Run(async () => await BPViewModel.CheckSetProductsNotInStock());  // проверка товаров в корзине в наличии, если нет, то добавляется текст "Нет в наличии"
+            Task.Run(async () => await BPViewModel.CheckSetProductsNotInStock());
+                // проверка товаров в корзине на наличие, если нет, то добавляется текст "Нет в наличии"
         }
 
 
