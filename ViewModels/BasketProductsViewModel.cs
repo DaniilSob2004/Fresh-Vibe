@@ -15,12 +15,7 @@ namespace StoreExam.ViewModels
         {
             this.user = user;
             BasketProductsModel = new();
-
-            Task.Run(async () =>
-            {
-                await LoadBasketProduct();  // загружаем корзину товаров
-                await CheckSetProductsNotInStock();  // проверка товаров в корзине на наличие
-            }).Wait();
+            Task.Run(async () => await LoadBasketProduct()).Wait();  // загружаем корзину товаров
         }
 
 
@@ -39,6 +34,7 @@ namespace StoreExam.ViewModels
                     BasketProductsModel.Add(new(bp));
                 }
             }
+            await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
         }
 
 
@@ -85,12 +81,12 @@ namespace StoreExam.ViewModels
         }
 
 
-        public async Task<bool> UpdateAmountProduct(Data.Entity.BasketProduct basketProduct, int amountAdd, bool isIncrease = true)
+        public async Task<bool> UpdateAmountProduct(Data.Entity.BasketProduct basketProduct, bool isIncrease, int amount)
         {
             Data.Entity.BasketProduct? bp = await BasketProductsDal.GetBasketProduct(basketProduct.Id);  // находим BasketProduct
             if (bp is not null)
             {
-                bp.Amounts = isIncrease ? bp.Amounts + amountAdd : bp.Amounts - amountAdd;  // меняем значение
+                bp.Amounts = isIncrease ? bp.Amounts + amount : bp.Amounts - amount;  // меняем значение
                 if (await BasketProductsDal.Update(bp))  // обновляем данные в БД
                 {
                     await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
@@ -99,19 +95,30 @@ namespace StoreExam.ViewModels
             }
             return false;
         }
-
-
-        public void CheckSetProductInNotStock(BasketProductModel bpModel)
+        public async Task<bool> CheckUpdateAmountProduct(BasketProductModel bpModel, bool isIncrease = true, int amount = 1)
         {
-            // проверяем наличие и обновляем
-            bpModel.IsNotStock = !CheckProduct.CheckInStock(bpModel.BasketProduct.Product, bpModel.BasketProduct.Amounts);
+            int newCount;
+            if (isIncrease)  // если увеличиваем кол-во
+            {
+                newCount = bpModel.ChoiceCount + amount;
+                if (!CheckProduct.CheckMaxValue(bpModel.BasketProduct.Product, newCount)) { return true; }  // true - чтобы MessageBox не выводился
+            }
+            else
+            {
+                newCount = bpModel.ChoiceCount - amount;
+                if (!CheckProduct.CheckMinValue(bpModel.BasketProduct.Product, newCount)) { return true; }
+            }
+            bpModel.ChoiceCount = newCount;  // меняем значение
+            return await UpdateAmountProduct(bpModel.BasketProduct, isIncrease, amount);  // обновляем кол-во
         }
-        public async Task CheckSetProductsNotInStock()
+
+
+        public async Task UpdateInStockProducts()
         {
-            // перебираем все товары, и если нет в наличии, то устанавливаем IsNotStock
+            // перебираем все товары и обновляем ChoiceCount
             foreach (var bpModel in BasketProductsModel)
             {
-                CheckSetProductInNotStock(bpModel);
+                bpModel.ChoiceCount = bpModel.BasketProduct.Amounts;
             }
             await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
         }

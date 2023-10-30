@@ -108,33 +108,42 @@
                    Style="{StaticResource mediumBigBlackTextBlockStyle}"/>
 
         <ScrollViewer Grid.Row="3" Grid.Column="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Products}" Style="{StaticResource itemsControlProduct}">
+            <ItemsControl ItemsSource="{Binding ProductsModel}" Style="{StaticResource itemsControlProduct}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="170" Height="220" Margin="10 10 0 5" Style="{StaticResource borderStyle}" MouseLeftButtonDown="BorderProduct_MouseLeftButtonDown">
+                        <Border Width="170" Height="235" Margin="10 10 0 5" Style="{StaticResource borderStyle}" MouseLeftButtonDown="BorderProduct_MouseLeftButtonDown">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition/>
+                                    <RowDefinition Height="auto"/>
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <Image Source="{Binding Image}" Width="100" Height="100" Margin="5"/>
-                                <TextBlock Grid.Row="1" Text="{Binding Name}" MaxHeight="40" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
+                                <Image Source="{Binding Product.Image}" Width="100" Height="100" Margin="5"/>
+                                <TextBlock Grid.Row="1" Text="{Binding Product.Name}" MaxHeight="40" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
+                                <TextBlock Grid.Row="2" Text="Нет в наличии" Margin="8 0 0 0" VerticalAlignment="Center" Style="{StaticResource textBlockNotStockStyle}"/>
 
-                                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="8 8 0 0">
-                                    <TextBlock Text="{Binding Price, StringFormat='{}{0} ₴'}" Style="{StaticResource textBlockStyle}"/>
-
-                                    <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                                        <Button Tag="/Images/plus.png" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnAddAmountProduct_Click"/>
-                                        <TextBlock x:Name="textBlockAmountProducts" Text="1" Style="{StaticResource textBlockStyle}"/>
-                                        <Button Tag="/Images/minus.png" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnReduceAmountProduct_Click"/>
+                                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8 3.5 0 0">
+                                    <TextBlock Text="{Binding Product.Price, StringFormat='{}{0} ₴'}" Style="{StaticResource textBlockStyle}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="10 3 0 0">
+                                        <Button Tag="/Images/minus.png" Margin="2" Style="{StaticResource btnOneImageStyle}">
+                                            <b:Interaction.Behaviors>
+                                                <myBehaviors:ClickButtonReduceProduct/>
+                                            </b:Interaction.Behaviors>
+                                        </Button>
+                                        <TextBlock Text="{Binding ChoiceCount}" Style="{StaticResource textBlockStyle}"/>
+                                        <Button Tag="/Images/plus.png" Margin="2" Style="{StaticResource btnOneImageStyle}">
+                                            <b:Interaction.Behaviors>
+                                                <myBehaviors:ClickButtonAddProduct/>
+                                            </b:Interaction.Behaviors>
+                                        </Button>
                                     </StackPanel>
                                 </StackPanel>
 
                                 <!-- Content передаётся в шаблоне в TextBlock, а Tag это путь к картинке, передаётся в Image -->
-                                <Button Grid.Row="3" Content="В корзину" Tag="/Images/cart.png" Margin="5" Style="{StaticResource baseButtonTextImageStyle}" Click="BtnAddProductToBasket_Click"/>
+                                <Button Grid.Row="4" Content="В корзину" Margin="5" Style="{StaticResource btnInBasketStyle}" Click="BtnAddProductToBasket_Click"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

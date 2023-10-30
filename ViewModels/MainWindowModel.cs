@@ -18,9 +18,9 @@ namespace StoreExam.ViewModels
             Task.Run(() => BPViewModel = new(user)).Wait();
 
             LoadCategories();  // загружаем категории
-            Products = new();
-            productsListView = CollectionViewSource.GetDefaultView(Products);
-            BindingOperations.EnableCollectionSynchronization(Products, new object());  // позволяет безопасно обновлять коллекцию Products из других потоков
+            ProductsModel = new();
+            productsListView = CollectionViewSource.GetDefaultView(ProductsModel);
+            BindingOperations.EnableCollectionSynchronization(ProductsModel, new object());  // позволяет безопасно обновлять коллекцию Products из других потоков
         }
 
 
@@ -44,17 +44,26 @@ namespace StoreExam.ViewModels
         }
 
 
-        public ObservableCollection<Data.Entity.Product> Products { get; set; }
-        //public ObservableCollection<ProductViewModel> Products { get; set; }
+        public ObservableCollection<ProductViewModel> ProductsModel { get; set; }
         public ICollectionView productsListView;
         public void UpdateProducts(List<Data.Entity.Product> newListProducts)
-        //public void UpdateProducts(List<ProductViewModel> newListProducts)
         {
             // обновляем коллекцию продуктов
-            Products.Clear();
+            ProductsModel.Clear();
             foreach (var product in newListProducts)
             {
-                Products.Add(product);
+                ProductsModel.Add(new(product));
+            }
+        }
+        public void UpdateProductChoiceCount(ProductViewModel productVM)
+        {
+            productVM.ChoiceCount = 1;
+        }
+        public void UpdateProductsChoiceCount()
+        {
+            foreach (var productVM in ProductsModel)
+            {
+                UpdateProductChoiceCount(productVM);
             }
         }
 
@@ -82,19 +91,19 @@ namespace StoreExam.ViewModels
 
 
         public BasketProductsViewModel BPViewModel { get; set; } = null!;
-        public async Task<bool> AddProductInBasket(Data.Entity.Product product, int amountAdd)
+        public async Task<bool> AddProductInBasket(ProductViewModel productVM)
         {
             try
             {
-                Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.GetBasketProduct(User.Id, product.Id);  // находим объект
+                Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.GetBasketProduct(User.Id, productVM.Product.Id);  // находим объект
                 if (basketProduct is not null)  // если товар уже в корзине, то просто добавляем кол-во
                 {
                     // если при обновлении что-то пошло не так
-                    if (!await BPViewModel.UpdateAmountProduct(basketProduct, amountAdd)) return false;
+                    if (!await BPViewModel.UpdateAmountProduct(basketProduct, true, productVM.ChoiceCount)) { return false; }
                 }
                 else
                 {
-                    BPViewModel.AddProduct(User.Id, product.Id, amountAdd);  // добавляем продукт в корзину
+                    BPViewModel.AddProduct(User.Id, productVM.Product.Id, productVM.ChoiceCount);  // добавляем продукт в корзину
                 }
                 await BPViewModel.UpdateTotalBasketProductsPrice();  // обновляем сумму товаров в корзине через ViewModel корзины
                 return true;

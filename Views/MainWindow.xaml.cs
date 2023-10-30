@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.Data.DAL;
 using StoreExam.Enums;
@@ -27,30 +25,18 @@ namespace StoreExam.Views
 
             // запускаем задачу, и ждём, т.к. внутри конструктора выполняются ассинхронные методы и др. задачи
             Task.Run(() => ViewModel = new MainWindowModel(user)).Wait();  // создаём ViewModel окна и передаём user
-            
+
             DataContext = ViewModel;
         }
 
 
-        private Data.Entity.Product? GetProductFromButton(object sender)
-        {
-            if (sender is Button btn)  // если это кнопка
-            {
-                if (btn.DataContext is Data.Entity.Product product)  // получаем объект Entity.Product
-                {
-                    return product;
-                }
-            }
-            return null;
-        }
-
-        private Data.Entity.Product? GetProductFromBorder(object sender)
+        private ProductViewModel? GetProductFromBorder(object sender)
         {
             if (sender is Border border)  // если это border
             {
-                if (border.DataContext is Data.Entity.Product product)  // получаем объект Entity.Product
+                if (border.DataContext is ProductViewModel productVM)  // получаем объект ProductViewModel
                 {
-                    return product;
+                    return productVM;
                 }
             }
             return null;
@@ -133,6 +119,7 @@ namespace StoreExam.Views
                 var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
                 dialog.ShowDialog();
                 Show();
+                ViewModel.UpdateProductsChoiceCount();  // обновляем кол-во товаров
             }
             else if (MessageBox.Show("Почта не подтверждена.\nХотите подтвердить?", "Доступ ограничен", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
@@ -165,15 +152,18 @@ namespace StoreExam.Views
         {
             try
             {
-                Data.Entity.Product? product = GetProductFromBorder(sender);  // получаем объект Entity.Product
-                if (product is not null)
+                ProductViewModel? productVM = GetProductFromBorder(sender);  // получаем объект ProductViewModel
+                if (productVM is not null)
                 {
-                    var dialog = new ProductInfoWindow(product);  // создаём информационное окно для продукта
-                    if (dialog.ShowDialog() != true) { return; }  // если не true, значит не добавили в корзину
-                    if (await ViewModel.AddProductInBasket(product, dialog.AddAmount))  // добавляем продукт в корзину
+                    var dialog = new ProductInfoWindow(productVM);  // создаём информационное окно для продукта
+                    if (dialog.ShowDialog() == true)  // если true, значит добавили в корзину
                     {
-                        MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        if (await ViewModel.AddProductInBasket(productVM))  // добавляем продукт в корзину
+                        {
+                            MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                     }
+                    ViewModel.UpdateProductChoiceCount(productVM);  // обновляем кол-во товара
                 }
             }
             catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
@@ -184,50 +174,21 @@ namespace StoreExam.Views
             bool isBadMessage = true;
             try
             {
-                Data.Entity.Product? product = GetProductFromButton(sender);  // получаем объект Entity.Product
-                if (product is not null)
+                ProductViewModel? productVM = GuiBaseManipulation.GetProductFromButton(sender);  // получаем объект ProductViewModel
+                if (productVM is not null)
                 {
-                    TextBlock? textBlockAmount = GuiBaseManipulation.FindTextBlockAmountsProductBtnBasket(sender);  // получаем TextBlock
-                    int amount;
-                    if (textBlockAmount is not null && int.TryParse(textBlockAmount.Text, out amount))  // преобразовываем кол-во в int
+                    if (await ViewModel.AddProductInBasket(productVM))  // добавляем в корзину
                     {
-                        if (await ViewModel.AddProductInBasket(product, amount))  // добавляем продукт в корзину
-                        {
-                            isBadMessage = false;
-                        }
+                        ViewModel.UpdateProductChoiceCount(productVM);  // обновляем выбранное кол-во
+                        isBadMessage = false;
                     }
                 }
             }
             catch (Exception) { }
             finally
             {
-                if (isBadMessage)
-                {
-                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                //else
-                //{
-                //    MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                //}
-            }
-        }
-
-
-        private void BtnAddAmountProduct_Click(object sender, RoutedEventArgs e)
-        {
-            Data.Entity.Product? product = GetProductFromButton(sender);  // получаем объект Entity.Product
-            if (product is not null)
-            {
-                GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, product, true);  // увеличиваем значение, передаём Product для дальнейшей проверки
-            }
-        }
-
-        private void BtnReduceAmountProduct_Click(object sender, RoutedEventArgs e)
-        {
-            Data.Entity.Product? product = GetProductFromButton(sender);  // получаем объект Entity.Product
-            if (product is not null)
-            {
-                GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, product, false);  // уменьшаем значение, передаём Product для дальнейшей проверки
+                if (isBadMessage) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+                else { MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information); }
             }
         }
 
@@ -258,10 +219,7 @@ namespace StoreExam.Views
             catch (Exception) { }
             finally
             {
-                if (isBadMessage)
-                {
-                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                if (isBadMessage) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
             }
         }
     }

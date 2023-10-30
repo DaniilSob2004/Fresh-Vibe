@@ -18,7 +18,7 @@ namespace StoreExam.UI_Settings.Behavior
         {
             base.OnDetaching();
             AssociatedObject.GotFocus -= OnGotFocus;
-            AssociatedObject.GotFocus -= OnLostFocus;
+            AssociatedObject.LostFocus -= OnLostFocus;
             // удаляем обработчик события GotFocus и LostFocus
         }
 

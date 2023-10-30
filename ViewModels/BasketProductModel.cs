@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using StoreExam.CheckData;
 
 namespace StoreExam.ViewModels
 {
@@ -8,7 +9,11 @@ namespace StoreExam.ViewModels
         {
             BasketProduct = basketProduct;
             IsSelected = true;
+            ChoiceCount = basketProduct.Amounts;
         }
+
+
+        public Data.Entity.BasketProduct BasketProduct { get; set; } = null!;
 
 
         private bool? isSelected;
@@ -26,6 +31,22 @@ namespace StoreExam.ViewModels
         }
 
 
+        private int choiceCount;
+        public int ChoiceCount
+        {
+            get => choiceCount;
+            set
+            {
+                if (choiceCount != value)
+                {
+                    choiceCount = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(ChoiceCount)));
+                }
+                IsNotStock = !CheckProduct.CheckInStock(BasketProduct.Product, ChoiceCount);  // проверка наличия
+            }
+        }
+
+
         private bool isNotStock;
         public bool IsNotStock
         {
@@ -36,16 +57,10 @@ namespace StoreExam.ViewModels
                 {
                     isNotStock = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNotStock)));
-                    if (IsSelected == true)
-                    {
-                        IsSelected = false;
-                    }
+                    IsSelected = false;
                 }
             }
         }
-
-
-        public Data.Entity.BasketProduct BasketProduct { get; set; } = null!;
 
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -24,7 +24,6 @@ namespace StoreExam.Views
         {
             Hide();  // скрываем окно
             new SignUp().ShowDialog();  // запускаем окно регистрации
-            Show();  // показываем окно
         }
     }
 }

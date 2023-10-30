@@ -11,7 +11,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.Data.DAL;
 using StoreExam.ViewModels;
-using StoreExam.UI_Settings;
 
 namespace StoreExam.Views
 {
@@ -24,8 +23,7 @@ namespace StoreExam.Views
             InitializeComponent();
             BPViewModel = bPViewModel;
             DataContext = BPViewModel;
-            Task.Run(async () => await BPViewModel.CheckSetProductsNotInStock());
-                // проверка товаров в корзине на наличие, если нет, то добавляется текст "Нет в наличии"
+            Task.Run(async () => await BPViewModel.UpdateInStockProducts());  // проверка корзины на наличие товаров
         }
 
 
@@ -47,25 +45,10 @@ namespace StoreExam.Views
             return null;
         }
 
-        private async Task<bool> ChangeOneValueAmount(object sender, bool isIncrease)
-        {
-            // меняем кол-во продукта, в зависимости от isIncrease (увеличиваем/уменьшаем)
-            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
-            if (bpModel is not null)
-            {
-                if (GuiBaseManipulation.TextBlockAmountProductChangeValue(sender, bpModel.BasketProduct.Product, isIncrease))  // меняем значение, передаём Product для дальнейшей проверки
-                {
-                    return await BPViewModel.UpdateAmountProduct(bpModel.BasketProduct, 1, isIncrease);  // обновляем значение кол-ва продукта
-                }
-                else return true;
-            }
-            return false;
-        }
-
         private void OpenOrderWindow(List<BasketProductModel> listBuyBPModels, float totalPrice)
         {
             Hide();
-            var dialog = new OrderWindow(BPViewModel.User, listBuyBPModels, totalPrice);
+            var dialog = new OrderWindow(BPViewModel.User, listBuyBPModels, totalPrice);  // TODO: передавать объект Order
             dialog.ShowDialog();
             ShowDialog();
         }
@@ -114,23 +97,26 @@ namespace StoreExam.Views
 
         private async void BtnAddAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (!await ChangeOneValueAmount(sender, true))
+            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+            if (bpModel is not null)
             {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (!await BPViewModel.CheckUpdateAmountProduct(bpModel))  // увеличиваем кол-во
+                {
+                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
         private async void BtnReduceAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (await ChangeOneValueAmount(sender, false))
+            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+            if (bpModel is not null)
             {
-                BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
-                if (bpModel is not null)
+                if (!await BPViewModel.CheckUpdateAmountProduct(bpModel, false))  // уменьшаем кол-во
                 {
-                    BPViewModel.CheckSetProductInNotStock(bpModel);  // проверяем и обновляем товар в наличии
+                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-            else { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
         }
 
         private async void BtnDelProduct_Click(object sender, RoutedEventArgs e)
@@ -152,7 +138,7 @@ namespace StoreExam.Views
 
         private async void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
-            await BPViewModel.CheckSetProductsNotInStock();  // проверяем и обновляем наличие товаров
+            await BPViewModel.UpdateInStockProducts();  // проверяем и обновляем наличие товаров
 
             if (BPViewModel.IsHaveProductNotInStock())  // хотя бы один товар из корзины не в наличии
             {
@@ -187,7 +173,7 @@ namespace StoreExam.Views
             }
 
             float totalPrice = BPViewModel.TotalBasketProductsPrice;  // запоминаем сумму
-            await BPViewModel.CheckSetProductsNotInStock();  // проверяем и обновляем наличие товаров
+            await BPViewModel.UpdateInStockProducts();  // проверяем и обновляем наличие товаров
 
             OpenOrderWindow(listBuyBPModels, totalPrice);  // запуск окна заказа
         }

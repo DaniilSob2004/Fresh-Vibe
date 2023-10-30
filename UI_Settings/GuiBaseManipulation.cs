@@ -49,62 +49,17 @@ namespace StoreExam.UI_Settings
         }
 
 
-        // Работа с TextBlock который отвечает за кол-во товара
-        public static TextBlock? FindTextBlockAmountsProductBtnPlMi(object sender)
+        // Работа с Button (-/+) который отвечает за кол-во товара
+        public static ViewModels.ProductViewModel? GetProductFromButton(object sender)
         {
-            // находим TextBlock который отвечает за кол-во выбранного товара (для кнопок +/-)
-            DependencyObject parent = VisualTreeHelper.GetParent((UIElement)sender);  // находим родителя
-            if (parent is StackPanel stack)  // если это StackPanel (наш TextBlock находится в StackPanel)
+            if (sender is Button btn)  // если это кнопка (-/+)
             {
-                if (stack.FindName("textBlockAmountProducts") is TextBlock textBlockAmount)  // если нашли TextBlock
+                if (btn.DataContext is ViewModels.ProductViewModel productVM)  // получаем объект ProductViewModel
                 {
-                    return textBlockAmount;
+                    return productVM;
                 }
             }
             return null;
-        }
-
-        public static TextBlock? FindTextBlockAmountsProductBtnBasket(object sender)
-        {
-            // находим TextBlock который отвечает за кол-во выбранного товара (для кнопок В КОРЗИНУ)
-            DependencyObject parent = VisualTreeHelper.GetParent((UIElement)sender);  // находим родителя
-            if (parent is Grid grid)  // если это Grid (наш TextBlock находится в Grid)
-            {
-                if (grid.FindName("textBlockAmountProducts") is TextBlock textBlockAmount)  // если нашли TextBlock
-                {
-                    return textBlockAmount;
-                }
-            }
-            return null;
-        }
-
-        public static bool TextBlockAmountProductChangeValue(object sender, Data.Entity.Product product, bool shouldIncrease)
-        {
-            TextBlock? textBlockAmount = FindTextBlockAmountsProductBtnPlMi(sender);  // находим TextBlock
-            if (textBlockAmount is not null)
-            {
-                int amountProduct;
-                if (int.TryParse(textBlockAmount.Text, out amountProduct))  // преобразовываем в int
-                {
-                    if (shouldIncrease)  // если true, значит увеличиваем
-                    {
-                        if (CheckProduct.CheckMaxValue(product, amountProduct))  // проверка перед тем как увеличить
-                        {
-                            textBlockAmount.Text = (++amountProduct).ToString();
-                            return true;
-                        }
-                    }
-                    else  // иначе уменьшаем
-                    {
-                        if (CheckProduct.CheckMinValue(product, amountProduct))  // проверка перед тем как уменьшить
-                        {
-                            textBlockAmount.Text = (--amountProduct).ToString();
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
         }
 
 

@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/UI_Settings/Styles/BaseStyle.xaml"/>
@@ -16,7 +18,19 @@
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
-    
+    <!-- Стиль для НЕТ В НАЛИЧИИ TextBlock -->
+    <Style x:Key="textBlockNotStockStyle" TargetType="TextBlock" BasedOn="{StaticResource textBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource DeleteColor}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsNotStock}" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
     <!-- Стиль и шаблон для аккаунта пользователя Button -->
     <Style x:Key="btnUserNameStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
         <Setter Property="Template">
@@ -58,6 +72,18 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- Стиль и шаблон для В КОРЗИНЕ Button -->
+    <Style x:Key="btnInBasketStyle" TargetType="Button" BasedOn="{StaticResource baseButtonTextImageStyle}">
+        <Setter Property="Tag" Value="/Images/cart.png"/>
+        <Setter Property="IsEnabled" Value="True"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsNotStock}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+                <Setter Property="Background" Value="{StaticResource DeleteColor}"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     
