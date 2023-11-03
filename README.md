@@ -9,9 +9,9 @@
   - Создание чека в PDF-формате
   - Отправка PDF-чека на email и сохранение чека
 
-![ExamStore0](https://github.com/DaniilSob2004/StoreExam/assets/106149184/5ef7d53e-9699-43fe-b398-06b586b82255)
-![ExamStore2_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/2027cf02-2b8f-4b9b-9911-4916f81a5b32)
-![ExamStore1_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/6e2fcb9f-1161-4400-b079-dca5a0b16565)
+![ExamStore0](https://github.com/DaniilSob2004/StoreExam/assets/106149184/16751b9a-b1b1-489e-aaa2-d812f2b074d6)
+![ExamStore2_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/73e9a71d-582a-4094-886b-34722583d111)
+![ExamStore1_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/47193943-d6e1-456a-b95c-d4775f457abd)
 ![ExamStore9](https://github.com/DaniilSob2004/StoreExam/assets/106149184/faa905f6-3a24-45d9-85d8-b7955dd2fbe4)
 ![ExamStore3](https://github.com/DaniilSob2004/StoreExam/assets/106149184/e344912e-73a7-4630-9857-d901597ab9f0)
 ![ExamStore4](https://github.com/DaniilSob2004/StoreExam/assets/106149184/fcf39064-6758-4d9e-bef5-e08ac4a8bfd9)
