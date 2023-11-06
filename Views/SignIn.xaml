@@ -49,12 +49,12 @@
 
         <TextBlock Text="{StaticResource StoreName}" Style="{StaticResource headerTextBlockStyle}"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}">Sign In</TextBlock>
-            <TextBlock Style="{StaticResource textEventStyle}">Sign Up</TextBlock>
+            <TextBlock Text="{StaticResource SignInText}" Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}"/>
+            <TextBlock Text="{StaticResource SignUpText}" Style="{StaticResource textEventStyle}"/>
         </StackPanel>
 
-        <TextBox x:Name="numTel" Grid.Row="2" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Tag="{StaticResource DefNumTel}" Style="{StaticResource textBoxEventStyle}">
+        <TextBox x:Name="email" Grid.Row="2" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                 Tag="{StaticResource DefEmail}" Style="{StaticResource textBoxEventStyle}">
             <b:Interaction.Behaviors>
                 <myBehaviors:GotLostFocusTextBoxBehavior/>
             </b:Interaction.Behaviors>
@@ -81,7 +81,7 @@
             </TextBox>
         </Grid>
 
-        <Button Grid.Row="4" x:Name="btnSignIn" Content="SIGN IN" Style="{StaticResource btnStyle}" Click="SignInBtn_Click"/>
+        <Button Grid.Row="4" x:Name="btnSignIn" Content="{StaticResource SignInText}" Style="{StaticResource btnStyle}" Click="SignInBtn_Click"/>
     </Grid>
     
 </Window>

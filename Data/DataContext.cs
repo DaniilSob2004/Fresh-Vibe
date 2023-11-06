@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace StoreExam.Data
 {
@@ -30,8 +25,8 @@ namespace StoreExam.Data
         {
             modelBuilder
                 .Entity<Entity.User>()
-                .HasIndex(u => u.NumTel)
-                .IsUnique();  // делаем поле User.NumTel уникальным и устанавливаем индекс
+                .HasIndex(u => u.Email)
+                .IsUnique();  // делаем поле User.Email уникальным и устанавливаем индекс
 
             modelBuilder  // настраиваем навигационные свойства Product.Category и Category.Products
                 .Entity<Entity.Product>()

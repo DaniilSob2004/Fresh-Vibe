@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace StoreExam.FileWork
 {
@@ -22,12 +17,11 @@ namespace StoreExam.FileWork
 
         public static string GetPathTempFilePdf(string fileName)
         {
-            return Path.Combine(Path.GetTempPath(), "Receipt.pdf");
+            return Path.Combine(Path.GetTempPath(), fileName);
         }
 
         public static bool Delete(string path)
         {
-            // удаление файла
             try
             {
                 if (File.Exists(path))
@@ -41,7 +35,7 @@ namespace StoreExam.FileWork
 
         public static bool StartFile(string path)
         {
-            // открытие файла приложения
+            // открытие файла приложения (запуск процесса)
             try
             {
                 Process.Start(new ProcessStartInfo

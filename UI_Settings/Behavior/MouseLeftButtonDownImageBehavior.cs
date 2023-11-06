@@ -4,9 +4,6 @@ using System.Windows.Input;
 
 namespace StoreExam.UI_Settings.Behavior
 {
-    // Behavior<Image> - базовый класс для всех поведений, которые могут быть применены к элементам управления Image
-    // Поведения - позволяют инкапсулировать части функциональности пользовательского интерфейса в повторно используемые объекты.
-
     // Данный класс нужен для обработки события клика по Image, т.к. сам Image определён в шаблоне TextBox, и Image ссылается на данный класс
     // Сам шаблон определён в StartStyle.xamls
     public class MouseLeftButtonDownImageBehavior : Behavior<Image>
@@ -27,7 +24,6 @@ namespace StoreExam.UI_Settings.Behavior
 
         private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // обработчик события MouseLeftButtonDown
             if (sender is Image image)
             {
                 TextBox? textBox = image.Tag as TextBox;

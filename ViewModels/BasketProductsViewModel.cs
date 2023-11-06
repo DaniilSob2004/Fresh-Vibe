@@ -26,7 +26,7 @@ namespace StoreExam.ViewModels
         public ObservableCollection<BasketProductModel> BasketProductsModel { get; set; }
         public async Task LoadBasketProduct()
         {
-            var listBp = await BasketProductsDal.GetBasketProductsByUser(User);  // получаем коллекцию корзины
+            var listBp = await BasketProductsDal.GetByUser(User);  // получаем коллекцию корзины
             if (listBp is not null)
             {
                 foreach (var bp in listBp)
@@ -81,17 +81,13 @@ namespace StoreExam.ViewModels
         }
 
 
-        public async Task<bool> UpdateAmountProduct(Data.Entity.BasketProduct basketProduct, bool isIncrease, int amount)
+        public async Task<bool> UpdateAmountProduct(Data.Entity.BasketProduct bp, bool isIncrease, int amount)
         {
-            Data.Entity.BasketProduct? bp = await BasketProductsDal.GetBasketProduct(basketProduct.Id);  // находим BasketProduct
-            if (bp is not null)
+            bp.Amounts = isIncrease ? bp.Amounts + amount : bp.Amounts - amount;  // меняем значение
+            if (await BasketProductsDal.Update(bp))  // обновляем данные в БД
             {
-                bp.Amounts = isIncrease ? bp.Amounts + amount : bp.Amounts - amount;  // меняем значение
-                if (await BasketProductsDal.Update(bp))  // обновляем данные в БД
-                {
-                    await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
-                    return true;
-                }
+                await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+                return true;
             }
             return false;
         }
@@ -124,12 +120,7 @@ namespace StoreExam.ViewModels
         }
         public bool IsHaveProductNotInStock()
         {
-            // есть ли хотя бы один товар из корзины не в наличии
-            foreach (var bpModel in BasketProductsModel)
-            {
-                if (bpModel.IsNotStock) return true;
-            }
-            return false;
+            return BasketProductsModel.Any(bpModel => bpModel.IsNotStock);  // есть ли хотя бы один товар из корзины не в наличии
         }
 
 
@@ -142,48 +133,48 @@ namespace StoreExam.ViewModels
                 ProductId = productId,
                 Amounts = amountAdd
             };
-            BasketProductsModel.Add(new(bp));  // добавляем в коллекцию
             await BasketProductsDal.Add(bp);  // добавляем в БД
+            BasketProductsModel.Add(new(bp));  // добавляем в коллекцию
+            await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
         }
 
 
         public async void SetCheckBoxAllProduct(bool? isChecked)
         {
-            foreach (var bpModel in BasketProductsModel)  // перебираем каждый элемент
+            foreach (var bpModel in BasketProductsModel.Where(bpm => !bpm.IsNotStock))
             {
-                if (!bpModel.IsNotStock)  // если товар в наличии
-                {
-                    bpModel.IsSelected = isChecked;  // устанавливаем новое значение чекбоксу
-                }
+                bpModel.IsSelected = isChecked;
             }
-            await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+            await UpdateTotalBasketProductsPrice();
         }
         public async void SetCheckBoxProduct(BasketProductModel bpModel)
         {
-            bpModel.IsSelected = !bpModel.IsSelected;  // меняем состояние чекбокса
-            await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+            if (!bpModel.IsNotStock)  // если товар в наличии
+            {
+                bpModel.IsSelected = !bpModel.IsSelected;  // меняем состояние чекбокса
+                await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
+            }
         }
         public List<BasketProductModel> GetChoiceProducts()
         {
-            // возвращаются выбранные товары
-            List<BasketProductModel> listBPModelChoice = new();
-            foreach (var bpModel in BasketProductsModel)
-            {
-                if (bpModel.IsSelected == true)
-                {
-                    listBPModelChoice.Add(bpModel);
-                }
-            }
-            return listBPModelChoice;
+            return BasketProductsModel.Where(bpModel => bpModel.IsSelected == true).ToList();  // возвращаются выбранные товары
+        }
+        public List<Data.Entity.BasketProduct> GetChoiceProductsForDel()
+        {
+            return BasketProductsModel
+                .Where(bpModel => bpModel.IsSelected == true)
+                .Select(bpModel => bpModel.BasketProduct)
+                .ToList();
         }
 
 
-        public void DeleteBasketProduct(Data.Entity.BasketProduct bp)
+        public void RemoveRange(List<Data.Entity.BasketProduct> delBasketProducts)
         {
-            BasketProductModel? findBp = BasketProductsModel.FirstOrDefault(bpModel => bpModel.BasketProduct == bp);  // находим BasketProductModel
-            if (findBp is not null)
+            var listIdToRemove = delBasketProducts.Select(bp => bp.Id).ToList();  // список id
+            var bpModelsToRemove = BasketProductsModel.Where(bpm => listIdToRemove.Contains(bpm.BasketProduct.Id)).ToList();  // список продуктов
+            foreach (var bpModel in bpModelsToRemove)
             {
-                BasketProductsModel.Remove(findBp);  // удаляем из коллекции
+                BasketProductsModel.Remove(bpModel);
             }
         }
         public async Task<bool> DeleteBasketProduct(BasketProductModel bpModel)
@@ -198,20 +189,10 @@ namespace StoreExam.ViewModels
         }
         public async Task<bool> DeleteChoiseProduct()
         {
-            List<Data.Entity.BasketProduct> delBasketProducts = new();  // буфферная коллекция (для дальнейшего удаления из БД)
-            foreach (var bpModel in BasketProductsModel)
-            {
-                if (bpModel.IsSelected == true)  // если выбран
-                {
-                    delBasketProducts.Add(bpModel.BasketProduct);  // добавляем в буфферную коллекцию
-                }
-            }
+            List<Data.Entity.BasketProduct> delBasketProducts = GetChoiceProductsForDel();
             if (await BasketProductsDal.DeleteRange(delBasketProducts))  // удаление из БД
             {
-                foreach (var delBp in delBasketProducts)
-                {
-                    DeleteBasketProduct(delBp);  // удаляем из коллекции BasketProductsView
-                }
+                RemoveRange(delBasketProducts);  // удаляем из коллекции BasketProductsView
                 await UpdateTotalBasketProductsPrice();  // обновляем цену товаров
                 return true;
             }

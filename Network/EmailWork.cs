@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
@@ -90,10 +87,7 @@ namespace StoreExam.Network
         {
             using (SmtpClient? smtpClient = GetSmtpClient())
             {
-                if (smtpClient is null)
-                {
-                    return false;
-                }
+                if (smtpClient is null) { return false; }
                 try
                 {
                     using (mailMessage)  // для освобождения ресурсов

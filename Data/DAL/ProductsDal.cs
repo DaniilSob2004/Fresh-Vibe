@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using StoreExam.Data.Entity;
 
 namespace StoreExam.Data.DAL
 {
@@ -18,26 +17,22 @@ namespace StoreExam.Data.DAL
             await dataContext.Products.LoadAsync();  // загружаем записи из таблицы в память
         }
 
-        public static Task<Entity.Product?> Get(Guid id)
+        public static Task<Product?> Get(Guid id)
         {
             return dataContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async static Task<List<Entity.Product>?> GetByCategory(Guid idCat)
+        public async static Task<List<Product>?> GetByCategory(Guid idCat)
         {
-            Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
-            if (category is not null)
-            {
-                return category.Products;
-            }
-            return null;
+            Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
+            return category?.Products;
         }
 
-        public async static Task<bool> UpdateCount(Entity.Product product, int count, bool isIncrease)
+        public async static Task<bool> UpdateCount(Product product, int count, bool isIncrease)
         {
             if (count > 0)
             {
-                Entity.Product? findProduct = await Get(product.Id);  // получаем объект из БД
+                Product? findProduct = await Get(product.Id);  // получаем объект из БД
                 if (findProduct is not null)
                 {
                     findProduct.Count = isIncrease ? findProduct.Count + count : findProduct.Count - count;  // изменяем кол-во
@@ -49,10 +44,10 @@ namespace StoreExam.Data.DAL
 
         }
 
-        public async static Task<List<Entity.Product>?> FindByName(string name, Guid idCat)
+        public async static Task<List<Product>?> FindByName(string name, Guid idCat)
         {
             // находим товары определённой категории которые совпадают по названию
-            Entity.Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
+            Category? category = await CategoriesDal.Get(idCat);  // получаем категорию по id
             if (category is not null)
             {
                 return await dataContext.Products.Where(p => p.IdCat == idCat && p.Name.Contains(name)).ToListAsync();

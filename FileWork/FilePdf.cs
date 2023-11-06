@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ookii.Dialogs.Wpf;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using System.IO;
 using System.Windows;
 using StoreExam.Formatting;
 using StoreExam.Extensions;
+using Ookii.Dialogs.Wpf;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace StoreExam.FileWork
 {
     public class FilePdf
     {
-        private static string tempFile = String.Empty;
+        private static string FileNameTemp = "Receipt.pdf";
+        private static string TempFile = String.Empty;
+
         private VistaSaveFileDialog saveFileDialog;
         private string selectFile;
 
@@ -20,7 +22,7 @@ namespace StoreExam.FileWork
 
         public FilePdf()
         {
-            tempFile = BaseFileWork.GetPathTempFilePdf("Receipt.pdf");  // путь к временному файлу
+            TempFile = BaseFileWork.GetPathTempFilePdf(FileNameTemp);  // путь к временному файлу
             saveFileDialog = new()
             {
                 Filter = "PDF Files (*.pdf)|*.pdf",
@@ -32,8 +34,8 @@ namespace StoreExam.FileWork
 
         public void CreateTempFile()
         {
-            BaseFileWork.Delete(tempFile);  // удаляем временный файл
-            selectFile = tempFile;
+            BaseFileWork.Delete(TempFile);  // удаляем временный файл
+            selectFile = TempFile;
         }
 
         public void ShowDialog()

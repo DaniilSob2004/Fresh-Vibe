@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using StoreExam.Data.Entity;
@@ -14,12 +11,12 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public async static Task<User?> GetUser(string numTel)
+        public async static Task<User?> Get(string email)
         {
-            return await dataContext.Users.FirstOrDefaultAsync(u => u.NumTel == numTel);
+            return await dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async static Task<User?> GetUser(Guid id)
+        public async static Task<User?> Get(Guid id)
         {
             return await dataContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
@@ -36,7 +33,7 @@ namespace StoreExam.Data.DAL
 
         public async static Task<bool> Delete(User delUser)
         {
-            User? user = await GetUser(delUser.NumTel);  // находим пользователя по email
+            User? user = await Get(delUser.Email);  // находим пользователя по email
             if (user is not null)
             {
                 user.DeleteDt = DateTime.Now;  // дата удаления пользователя
@@ -48,7 +45,7 @@ namespace StoreExam.Data.DAL
 
         public async static Task<bool> Update(User updateUser)
         {
-            User? user = await GetUser(updateUser.Id);  // находим пользователя по Id
+            User? user = await Get(updateUser.Id);  // находим пользователя по Id
             if (user is not null)
             {
                 // если значения полей различны, то обновляем
@@ -56,6 +53,7 @@ namespace StoreExam.Data.DAL
                 if (user.Surname != updateUser.Surname) user.Surname = updateUser.Surname;
                 if (user.NumTel != updateUser.NumTel) user.NumTel = updateUser.NumTel;
                 if (user.Email != updateUser.Email) user.Email = updateUser.Email;
+                if (user.ConfirmCode != updateUser.ConfirmCode) user.ConfirmCode = updateUser.ConfirmCode;
                 if (user.Password != updateUser.Password) user.Password = updateUser.Password;
 
                 await dataContext.SaveChangesAsync();
@@ -64,14 +62,18 @@ namespace StoreExam.Data.DAL
             return false;
         }
 
-        public async static Task<bool> IsUniqueNumTel(string numTel)
+        public async static Task<bool> IsUniqueNumTel(string? numTel)
         {
-            return await dataContext.Users.AnyAsync(u => u.NumTel == numTel);
+            if (numTel is not null)
+            {
+                return !await dataContext.Users.AnyAsync(u => u.NumTel == numTel);
+            }
+            return true;
         }
 
-        public async static Task<bool> IsUniqueEmail(string? email)
+        public async static Task<bool> IsUniqueEmail(string email)
         {
-            return await dataContext.Users.AnyAsync(u => u.Email == email);
+            return !await dataContext.Users.AnyAsync(u => u.Email == email);
         }
     }
 }

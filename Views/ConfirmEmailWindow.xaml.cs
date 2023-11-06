@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
 using System.Net.Mail;
-using System.Threading;
 using StoreExam.CheckData;
+using System.Windows.Input;
 
 namespace StoreExam.Views
 {
@@ -45,7 +39,7 @@ namespace StoreExam.Views
         }
 
 
-        private void TextBlockSkip_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TextBlockSkip_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Close();
         }
@@ -70,9 +64,9 @@ namespace StoreExam.Views
             }
         }
 
-        private async void TextBlockAgainSendCode_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void TextBlockAgainSendCode_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (await SendCodeToEmail())  // повторная отправка кода
+            if (await SendCodeToEmail())  // отправка кода
             {
                 MessageBox.Show("Код отправлен", "Подтверждение почты", MessageBoxButton.OK, MessageBoxImage.Information);
             }

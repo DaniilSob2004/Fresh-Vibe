@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.UI_Settings;
@@ -14,9 +11,11 @@ namespace StoreExam.Views
 {
     public partial class SignIn : Window
     {
-        // статические поля, для хранения значений по умолчанию для user, которые хранятся в ресурсах UserDefault.xaml
-        public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
+        // статические поля, для хранения значений по умолчанию, которые хранятся в ресурсах UserDefault.xaml
+        public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+        public static string SignInText = Application.Current.TryFindResource("SignInText").ToString()!;
+        public static string SignUpText = Application.Current.TryFindResource("SignUpText").ToString()!;
 
         public static Window? mainLoginWindow;  // ссылка на окно родителя (MainLoginWindow)
         public Data.Entity.User User { get; set; }
@@ -26,7 +25,7 @@ namespace StoreExam.Views
         {
             InitializeComponent();
             DataContext = this;
-            User = new() { NumTel = DefaultNumTel, Password = DefaultPassword };
+            User = new() { Email = DefaultEmail, Password = DefaultPassword };
         }
 
         private void Window_Clossing(object sender, EventArgs e)
@@ -49,11 +48,12 @@ namespace StoreExam.Views
         private void CancelLoadingSignInBtn()
         {
             cts?.Cancel();  // для отмены работы ассинхроного метода
-            GuiBaseManipulation.CancelLoadingButton(btnSignIn, "SIGN IN");  // возвращаем исходное состояние
+            GuiBaseManipulation.CancelLoadingButton(btnSignIn, SignInText);  // возвращаем исходное состояние
         }
 
         private void ShowErrorMessage(string message)
         {
+            CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное состояние
             MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
@@ -63,7 +63,7 @@ namespace StoreExam.Views
             // переключение на окно регистрации
             if (sender is TextBlock textBlock)
             {
-                if (textBlock.Text == "Sign Up")
+                if (textBlock.Text == SignUpText)
                 {
                     GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
                     new SignUp().ShowDialog();  // запускаем окно регистрации
@@ -73,14 +73,12 @@ namespace StoreExam.Views
 
         private void TextBox_TextChanged(object sender, RoutedEventArgs e)
         {
-            if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetPasswordBox(textBoxShowPassword, password);  // при изменение TextBox, присваиваем значение в PasswordBox
+            GuiBaseManipulation.SetPasswordBox(textBoxShowPassword, password);  // при изменение TextBox, присваиваем значение в PasswordBox
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (password.Password != textBoxShowPassword.Text)
-                GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // при изменение PasswordBox, присваиваем значение в TextBox
+            GuiBaseManipulation.SetTextBox(textBoxShowPassword, password);  // при изменение PasswordBox, присваиваем значение в TextBox
         }
 
         private async void SignInBtn_Click(object sender, RoutedEventArgs e)
@@ -91,30 +89,24 @@ namespace StoreExam.Views
                 GuiBaseManipulation.ShowLoadingButton(btnSignIn, cts.Token);  // делаем кнопку загрузочной
                 await Task.Delay(1000);  // для проверки
 
-                Data.Entity.User? user = await Data.DAL.UserDal.GetUser(User.NumTel);  // находим user по номер тел.
-                if (user is not null)  // если такой user есть
-                {
-                    if (CheckUser.PasswordEntryVerification(user, User.Password))  // если пароль введён верный
-                    {
-                        if (CheckUser.CheckIsDeletedUser(user))  // если аккаунт user-а удалён
-                        {
-                            ShowErrorMessage("Неверный номер телефона!");
-                        }
-                        else
-                        {
-                            // запускаем выполнение загрузки категорий и продуктов
-                            await Data.DAL.CategoriesDal.LoadData()
-                                .ContinueWith(task => Data.DAL.ProductsDal.LoadData());
+                Data.Entity.User? user = await Data.DAL.UserDal.Get(User.Email);  // находим user по email
+                if (user is null) { ShowErrorMessage("Неверный email!"); return; }
 
-                            OpenMainWindow(user);  // запускаем главное окно
-                        }
-                    }
-                    else ShowErrorMessage("Неверный пароль!");
+                if (!CheckUser.PasswordEntryVerification(user, User.Password)) { ShowErrorMessage("Неверный пароль!"); return; }
+
+                if (!CheckUser.CheckIsDeletedUser(user))  // если аккаунт пользователя не удалён
+                {
+                    // запускаем выполнение загрузки категорий и продуктов
+                    await Data.DAL.CategoriesDal.LoadData().ContinueWith(task => Data.DAL.ProductsDal.LoadData());
+                    OpenMainWindow(user);  // запускаем главное окно
                 }
-                else ShowErrorMessage("Неверный номер телефона!");
+                else
+                {
+                    ShowErrorMessage("Неверный email!");
+                }
+                CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное состояние
             }
             catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
-            finally { CancelLoadingSignInBtn(); }   // возвращаем состояние кнопки в исходное состояние
         }
     }
 }

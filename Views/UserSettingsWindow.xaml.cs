@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.Enums;
 using StoreExam.Generate;
@@ -48,10 +42,27 @@ namespace StoreExam.Views
                    !String.IsNullOrEmpty(textBoxConfirmNewPassword.Text);
         }
 
+        private bool IsChangeEmail()
+        {
+            return origUser.Email != User.Email;
+        }
+
         private void CancelLoadingSaveBtn()
         {
             cts?.Cancel();  // для отмены работы ассинхроного метода
             GuiBaseManipulation.CancelLoadingButton(btnSave, "Сохранить");  // возвращаем исходное состояние
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            CancelLoadingSaveBtn();  // возвращаем состояние кнопки в исходное
+            MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void SaveStateUserData(StateData stateData)
+        {
+            stateUserData = stateData;  // сохраняем состояние работы окна
+            Close();
         }
 
 
@@ -68,51 +79,51 @@ namespace StoreExam.Views
                 GuiBaseManipulation.ShowLoadingButton(btnSave, cts.Token);  // делаем кнопку загрузочной
                 await Task.Delay(1000);  // для проверки
 
-                if (CheckUser.CheckAllData(User))  // данные корректны
+                // данные не корректны
+                if (!CheckUser.CheckAllData(User)) { ShowErrorMessage("Не все поля заполнены!"); return; }
+
+                // получаем названия полей, которые не уникальны
+                string? notUniqueFields = await CheckUser.CheckUniqueUserInDB(User);
+                if (notUniqueFields is not null) { ShowErrorMessage($"Некоторые поля не уникальны:\n{notUniqueFields}"); return; }
+
+                if (IsChangePassword())  // если пароль был изменён
                 {
-                    string? notUniqueFields = await CheckUser.CheckUniqueUserInDB(User);  // получаем названия полей, которые не уникальны
-                    if (notUniqueFields is null)  // данные уникальны
+                    if (CheckUser.PasswordEntryVerification(origUser, textBoxOldPassword.Text))  // если пароль введён верный
                     {
-                        if (IsChangePassword())  // если пароль был изменён, значит user его поменял
+                        if (CheckNewPassword())  // проверка двух полей для нового пароля
                         {
-                            if (CheckUser.PasswordEntryVerification(origUser, textBoxOldPassword.Text))  // если пароль введён верный
-                            {
-                                if (CheckNewPassword())  // проверка двух полей для нового пароля
-                                {
-                                    User.Password = PasswordHasher.HashPassword(textBoxNewPassword.Text, origUser.Salt);  // хэшируем новый пароль, на основе соли
-                                    stateUserData = StateData.Save;  // сохраняем состояние работы окна
-                                    DialogResult = true;  // закрываем окно
-                                }
-                                else MessageBox.Show("Новые пароли не совпадают!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            else MessageBox.Show("Пароль подтверждения неверный!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            User.Password = PasswordHasher.HashPassword(textBoxNewPassword.Text, origUser.Salt);  // хэшируем новый пароль, на основе соли
+                            //SaveStateUserData(StateData.Save);
                         }
-                        else
-                        {
-                            stateUserData = StateData.Save;  // сохраняем состояние работы окна
-                            DialogResult = true;  // закрываем окно
-                        }
+                        else { ShowErrorMessage("Новые пароли не совпадают!"); return; }
                     }
-                    else MessageBox.Show($"Данный {notUniqueFields}уже используются", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    else { ShowErrorMessage("Пароль подтверждения неверный!"); return; }
                 }
-                else MessageBox.Show("Не все поля заполнены!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                if (IsChangeEmail())  // если email был изменён
+                {
+                    User.ConfirmCode = CodeGenerator.GetCode();  // генерируем новый код подтверждения
+                    SaveStateUserData(StateData.ChangeEmail);
+                }
+                else
+                {
+                    SaveStateUserData(StateData.Save);
+                }
             }
-            catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
             finally { CancelLoadingSaveBtn(); }  // возвращаем состояние кнопки в исходное
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            stateUserData = StateData.Exit;  // сохраняем состояние работы окна
-            DialogResult = true;  // закрываем окно
+            SaveStateUserData(StateData.Exit);
         }
 
         private void BtnDelAccount_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Вы действительно хотите удалить аккаунт?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                stateUserData = StateData.Delete;  // сохраняем состояние работы окна
-                DialogResult = true;  // закрываем окно
+                SaveStateUserData(StateData.Delete);
             }
         }
     }

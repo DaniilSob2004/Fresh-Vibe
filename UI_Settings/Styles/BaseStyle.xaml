@@ -103,6 +103,18 @@
     </Style>
 
 
+    <!-- Базовый стиль для ссылок TextBlock -->
+    <Style x:Key="textBlockLinkStyle" TargetType="TextBlock" BasedOn="{StaticResource mediumHeaderTextBlockStyle}">
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
     <!-- Базовый стиль для TextBox -->
     <Style x:Key="baseTextBoxStyle" TargetType="TextBox">
         <Setter Property="Foreground" Value="{StaticResource TextColorBlack}"/>
@@ -115,17 +127,6 @@
                 <Setter Property="CornerRadius" Value="{StaticResource baseCornerRadius}"/>
             </Style>
         </Style.Resources>
-    </Style>
-
-    <!-- Базовый стиль для ссылок TextBox -->
-    <Style x:Key="textBlockLinkStyle" TargetType="TextBlock" BasedOn="{StaticResource mediumHeaderTextBlockStyle}">
-        <Setter Property="FontStyle" Value="Italic"/>
-        <Setter Property="TextDecorations" Value="Underline"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Cursor" Value="Hand"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <!-- Базовый стиль для PasswordBox -->

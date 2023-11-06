@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Windows;
 using StoreExam.FileWork;
 
@@ -22,6 +21,7 @@ namespace StoreExam.Formatting
 
         public static MailMessage GetMailMessageForConfirmEmail(Data.Entity.User user, string emailFrom)
         {
+            // создаём MailMessage для отправки email
             return new(emailFrom,
                        user.Email!,
                        "Подтверждение почты",

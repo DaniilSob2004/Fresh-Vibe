@@ -9,6 +9,7 @@ using StoreExam.Data.DAL;
 using StoreExam.Enums;
 using StoreExam.ViewModels;
 using StoreExam.UI_Settings;
+using StoreExam.CheckData;
 
 namespace StoreExam.Views
 {
@@ -32,24 +33,18 @@ namespace StoreExam.Views
 
         private ProductViewModel? GetProductFromBorder(object sender)
         {
-            if (sender is Border border)  // если это border
+            if (sender is Border border)
             {
-                if (border.DataContext is ProductViewModel productVM)  // получаем объект ProductViewModel
-                {
-                    return productVM;
-                }
+                if (border.DataContext is ProductViewModel productVM) { return productVM; }  // получаем объект ProductViewModel
             }
             return null;
         }
 
 
-        private void OpenConfirmEmailWindow()
+        private void OpenConfirmEmailWindow(string? text = null)
         {
-            if (ViewModel.User.Email is not null)  // если почта указана
+            if (GuiBaseManipulation.OpenConfirmEmailWindow(this, ViewModel.User, text))  // запускаем окно подтверждения почты
             {
-                Hide();
-                var dialog = new ConfirmEmailWindow(ViewModel.User);  // запускаем окно подтверждения почты
-                dialog.ShowDialog();
                 Show();
             }
         }
@@ -81,31 +76,37 @@ namespace StoreExam.Views
                 dialog.ShowDialog();  // отображаем окно аккаунта пользователя
                 stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
 
-                if (stateUserData == StateData.Save)
+                switch (stateUserData)
                 {
-                    if (await ViewModel.UpdateUser(dialog.User))  // сохраняем изменения, передаём объект User из окна аккаунта пользователя
-                    {
+                    case StateData.Delete:
+                        if (await UserDal.Delete(ViewModel.User))  // если User-а успешно удалили
+                        {
+                            Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть позже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        break;
+
+                    case StateData.Exit:
+                        Close(); break;
+
+                    case StateData.Cancel: break;
+
+                    default:  // если StateData.Save или StateData.ChangeEmail
+                        if (!await ViewModel.UpdateUser(dialog.User))  // сохраняем изменения, передаём объект User из окна аккаунта пользователя
+                        {
+                            MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть позже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+
                         MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
-                else if (stateUserData == StateData.Delete)
-                {
-                    if (await UserDal.Delete(ViewModel.User))  // если User-а успешно удалили
-                    {
-                        Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть похже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
-                else if (stateUserData == StateData.Exit)
-                {
-                    Close();
+                        if (stateUserData == StateData.ChangeEmail)
+                        {
+                            OpenConfirmEmailWindow();  // запускаем окно подтверждения почты
+                        }
+                        break;
                 }
             }
             catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
@@ -113,7 +114,7 @@ namespace StoreExam.Views
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckData.CheckUser.CheckIsConfirmedEmail(ViewModel.User))  // если почта подтверждена
+            if (CheckUser.CheckIsConfirmedEmail(ViewModel.User))  // если почта подтверждена
             {
                 Hide();
                 var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
@@ -121,9 +122,9 @@ namespace StoreExam.Views
                 Show();
                 ViewModel.UpdateProductsChoiceCount();  // обновляем кол-во товаров
             }
-            else if (MessageBox.Show("Почта не подтверждена.\nХотите подтвердить?", "Доступ ограничен", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            else
             {
-                OpenConfirmEmailWindow();  // запускаем окно подтверждения почты
+                OpenConfirmEmailWindow("Почта не подтверждена.\nХотите подтвердить?");  // запускаем окно подтверждения почты
             }
         }
 
@@ -137,8 +138,7 @@ namespace StoreExam.Views
                     var listProducts = await ProductsDal.GetByCategory(category.Id);
                     if (listProducts is not null)
                     {
-                        ViewModel.ChoiceCategory = category;  // присваиваем новую выбранную категорию
-                        ViewModel.UpdateProducts(listProducts);  // обновляем коллекцию продуктов
+                        ViewModel.UpdateProducts(listProducts, category);  // обновляем коллекцию продуктов
                     }
                     else
                     {

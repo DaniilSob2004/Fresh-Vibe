@@ -12,7 +12,7 @@
             return value >= 1 && product.Count >= 0;
         }
 
-        public static bool CheckCount(Data.Entity.Product? product, int value)
+        public static bool CheckCount(Data.Entity.Product product, int value)
         {
             return product.Count > 0 && value > 0 && value <= product.Count;
         }

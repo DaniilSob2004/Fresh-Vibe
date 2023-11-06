@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using StoreExam.CheckData;
+using StoreExam.Views;
 
 namespace StoreExam.UI_Settings
 {
@@ -16,6 +17,7 @@ namespace StoreExam.UI_Settings
         public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
+        public static string LoadingText = Application.Current.TryFindResource("LoadingText").ToString()!;
 
 
         // Работа с Button для отображения загрузки и для возвращения в исходное состояние
@@ -23,14 +25,14 @@ namespace StoreExam.UI_Settings
         {
             // отображаем кнопку закрузки
             button.IsEnabled = false;
-            button.Content = "Loading";
+            button.Content = LoadingText;
 
             int countDots = 4, i = 0;
             while (!token.IsCancellationRequested)
             {
                 if (i == countDots)
                 {
-                    button.Content = "Loading";
+                    button.Content = LoadingText;
                     i = 0;
                 }
                 else
@@ -69,7 +71,7 @@ namespace StoreExam.UI_Settings
             if (sender is TextBox textBox && textBox.Tag is not null)
             {
                 string? tag = textBox.Tag.ToString();  // узнаём с помощью тега какое это поле
-                bool isErrorInput = false;  // флаг, ошибочный ли ввод
+                bool isErrorInput = false;  // ошибочный ли ввод
 
                 if (tag == DefaultName)
                 {
@@ -100,61 +102,82 @@ namespace StoreExam.UI_Settings
 
         public static void TextBoxGotFocus(object sender)  // при получении фокуса для TextBox и PasswordBox
         {
-            string tag;
-            if (sender is TextBox textBox)
+            if (sender is Control control)
             {
-                tag = textBox.Tag.ToString()!;
-                if (textBox.Text == tag)  // если тэг и текст textBox-а совпадают
+                string? tag = control.Tag?.ToString();
+                if (tag is not null)
                 {
-                    textBox.Clear();
-                    textBox.Foreground = Brushes.Black;
-                }
-            }
-            else if (sender is PasswordBox passwordBox)
-            {
-                tag = passwordBox.Tag.ToString()!;
-                if (passwordBox.Password == tag)   // если тэг и текст passwordBox-а совпадают
-                {
-                    passwordBox.Clear();
-                    passwordBox.Foreground = Brushes.Black;
+                    // если тэг и текст совпадают
+                    if (control is TextBox tb && tb.Text == tag) { tb.Clear(); }
+                    else if (control is PasswordBox pb && pb.Password == tag) { pb.Clear(); }
+                    control.Foreground = Brushes.Black;
                 }
             }
         }
 
         public static void TextBoxLostFocus(object sender)  // при потери фокуса для TextBox и PasswordBox
         {
-            if (sender is TextBox textBox)
+            if (sender is Control control)
             {
-                if (String.IsNullOrEmpty(textBox.Text))
+                bool isUpdate = true;
+
+                // если поле пустое, то устанавливаем значение тэга
+                if (sender is TextBox tb && String.IsNullOrEmpty(tb.Text)) { tb.Text = tb.Tag.ToString(); }
+                else if (sender is PasswordBox pb && String.IsNullOrEmpty(pb.Password)) { pb.Password = pb.Tag.ToString(); }
+                else { isUpdate = false; }
+
+                if (isUpdate)
                 {
-                    textBox.Foreground = Brushes.Gray;
-                    textBox.BorderBrush = Brushes.Gray;
-                    textBox.Text = textBox.Tag.ToString();
-                }
-            }
-            else if (sender is PasswordBox passwordBox)
-            {
-                if (String.IsNullOrEmpty(passwordBox.Password))
-                {
-                    passwordBox.Foreground = Brushes.Gray;
-                    passwordBox.BorderBrush = Brushes.Gray;
-                    passwordBox.Password = passwordBox.Tag.ToString();
+                    control.Foreground = Brushes.Gray;
+                    control.BorderBrush = Brushes.Gray;
                 }
             }
         }
 
         public static void SetPasswordBox(TextBox textBox, PasswordBox passwordBox)
         {
-            passwordBox.Password = textBox.Text;
+            if (passwordBox.Password != textBox.Text)
+            {
+                passwordBox.Password = textBox.Text;
+            }
         }
 
         public static void SetTextBox(TextBox textBox, PasswordBox passwordBox)
         {
-            textBox.Text = passwordBox.Password;
+            if (textBox.Text != passwordBox.Password)
+            {
+                textBox.Text = passwordBox.Password;
+            }
         }
 
 
         // Работа с окнами
+        public static bool OpenConfirmEmailWindow(Window window, Data.Entity.User user, string? text = null)
+        {
+            // запускается окно подтверждения почты
+            bool isShowWindow = true;
+
+            if (text is not null)
+            {
+                if (MessageBox.Show(text, "Доступ ограничен", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    isShowWindow = false;
+                }
+            }
+            if (isShowWindow)
+            {
+                window.Hide();
+                var dialog = new ConfirmEmailWindow(user);  // запускаем окно подтверждения почты
+                if (text is null)
+                {
+                    _ = dialog.SendCodeToEmail();  // отправка кода на email пользователя
+                }
+                dialog.ShowDialog();
+                return true;
+            }
+            return false;
+        }
+
         public static void CloseWindow(Window closeWindow, Window settingWindow)
         {
             // закрытие окна без показа главного окна входа

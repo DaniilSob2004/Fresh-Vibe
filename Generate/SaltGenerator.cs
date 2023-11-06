@@ -10,7 +10,7 @@ namespace StoreExam.Generate
         {
             byte[] saltBytes = new byte[size];
 
-            // используем криптографически безопасный генератор случайных чисел
+            // криптографически безопасный генератор случайных чисел
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(saltBytes);

@@ -71,8 +71,8 @@
                             <TextBox Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefSurname}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Электрорнная почта:</TextBlock>
-                            <TextBox Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefEmail}"/>
+                            <TextBlock Style="{StaticResource textBlockStyle}">Контактный номер:</TextBlock>
+                            <TextBox x:Name="textBoxNumTel" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefNumTel}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -81,8 +81,8 @@
                     <StackPanel>
                         <TextBlock Style="{StaticResource headerTBlockStyle}">Безопасность</TextBlock>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Контактный номер:</TextBlock>
-                            <TextBox x:Name="textBoxNumTel" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefNumTel}"/>
+                            <TextBlock Style="{StaticResource textBlockStyle}">Электрорнная почта:</TextBlock>
+                            <TextBox x:Name="textBoxEmail" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefEmail}"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Style="{StaticResource textBlockStyle}">Старый пароль:</TextBlock>

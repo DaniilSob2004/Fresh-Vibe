@@ -39,7 +39,7 @@ namespace StoreExam.Views
 
         public async Task SendPdfReceiptToEmail()
         {
-            _mailMessage.Attachments.Add(new(filePdf.SelectFile, pdfType));
+            _mailMessage.Attachments.Add(new(filePdf.SelectFile, pdfType));  // прикрепляем pdf
             if (!await emailWork.SendEmail(_mailMessage))
             {
                 MessageBox.Show("При отправке почты, что-то пошло не так...", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
+﻿using System.Windows;
 using StoreExam.CheckData;
 using StoreExam.Enums;
 
@@ -33,18 +26,18 @@ namespace StoreExam.Views
             stateUserData = dialog.stateUserData;  // сохраняем состояние работы окна
             if (stateUserData != StateData.Cancel)
             {
-                if (stateUserData == StateData.Save)
+                if (stateUserData == StateData.Save || stateUserData == StateData.ChangeEmail)
                 {
                     User = copyUser;  // сохраняем измененного user-а
                 }
-                DialogResult = true;  // закрываем окно
+                Close();  // закрываем окно
             }
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
             stateUserData = StateData.Exit;  // сохраняем состояние работы окна
-            DialogResult = true;  // закрываем окно
+            Close();  // закрываем окно
         }
     }
 }

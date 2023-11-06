@@ -9,7 +9,7 @@ namespace StoreExam.Views
             InitializeComponent();
 
             // инициализируем статические поля, для доступа к главному окну входа
-            Tag = true;  // "флаг" для пометки состояния окна (если true - показываем окно)
+            Tag = true;  // "флаг" для пометки состояния окна (если true - показываем окно, false - нет)
             SignIn.mainLoginWindow = this;
             SignUp.mainLoginWindow = this;
         }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using StoreExam.Data.Entity;
 
 namespace StoreExam.Data.DAL
 {
@@ -18,21 +16,20 @@ namespace StoreExam.Data.DAL
             await dataContext.Categories.LoadAsync();  // загружаем записи из таблицы в память
         }
 
-        public async static Task<ObservableCollection<Entity.Category>?> GetCategories()
+        public async static Task<ObservableCollection<Category>?> GetCategories()
         {
             try
             {
                 // преобразовываем коллекцию Entity в ObservableCollection
                 var categories = await dataContext.Categories.ToListAsync();
-                return new ObservableCollection<Entity.Category>(categories);
+                return new ObservableCollection<Category>(categories);
             }
             catch (Exception) { return null; }
         }
 
-        public async static Task<Entity.Category?> Get(Guid id)
+        public async static Task<Category?> Get(Guid id)
         {
-            // получаем категорию по Id
-            return await dataContext.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.Id == id);
+            return await dataContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using StoreExam.Data.DAL;
 using StoreExam.ViewModels;
@@ -37,12 +32,19 @@ namespace StoreExam.Views
         {
             if (sender is Button btn)  // если это кнопка
             {
-                if (btn.DataContext is BasketProductModel bpModel)  // получаем объект BasketProductModel
-                {
-                    return bpModel;
-                }
+                if (btn.DataContext is BasketProductModel bpModel) { return bpModel; }  // получаем объект BasketProductModel
             }
             return null;
+        }
+
+        private async Task<bool> UpdateAmount(object sender, bool isIncrease)
+        {
+            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
+            if (bpModel is not null)
+            {
+                return await BPViewModel.CheckUpdateAmountProduct(bpModel, isIncrease);  // изменяем кол-во
+            }
+            return false;
         }
 
         private void OpenOrderWindow(List<BasketProductModel> listBuyBPModels, float totalPrice)
@@ -88,7 +90,6 @@ namespace StoreExam.Views
             {
                 if (item.Content is BasketProductModel bpModel)
                 {
-                    if (bpModel.IsNotStock) return;  // если товар не в наличии
                     BPViewModel.SetCheckBoxProduct(bpModel);  // меняем состояние чекбокса
                 }
             }
@@ -97,25 +98,17 @@ namespace StoreExam.Views
 
         private async void BtnAddAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
-            if (bpModel is not null)
+            if (!await UpdateAmount(sender, true))  // увеличиваем кол-во
             {
-                if (!await BPViewModel.CheckUpdateAmountProduct(bpModel))  // увеличиваем кол-во
-                {
-                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private async void BtnReduceAmountProduct_Click(object sender, RoutedEventArgs e)
         {
-            BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
-            if (bpModel is not null)
+            if (!await UpdateAmount(sender, false))  // уменьшаем кол-во
             {
-                if (!await BPViewModel.CheckUpdateAmountProduct(bpModel, false))  // уменьшаем кол-во
-                {
-                    MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

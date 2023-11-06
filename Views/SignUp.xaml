@@ -54,8 +54,8 @@
         <TextBlock Text="{StaticResource StoreName}" Style="{StaticResource headerTextBlockStyle}"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Style="{StaticResource textEventStyle}">Sign In</TextBlock>
-            <TextBlock Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}">Sign Up</TextBlock>
+            <TextBlock Text="{StaticResource SignInText}" Style="{StaticResource textEventStyle}"/>
+            <TextBlock Text="{StaticResource SignUpText}" Foreground="{StaticResource MainColor}" Style="{StaticResource textEventStyle}"/>
         </StackPanel>
 
         <TextBox x:Name="userName" Grid.Row="2" Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -123,7 +123,7 @@
             </TextBox>
         </Grid>
 
-        <Button Grid.Row="8" x:Name="btnSignUp" Content="SIGN UP" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>
+        <Button Grid.Row="8" x:Name="btnSignUp" Content="{StaticResource SignUpText}" Style="{StaticResource btnStyle}" Click="SignUpBtn_Click"/>
     </Grid>
 
 </Window>

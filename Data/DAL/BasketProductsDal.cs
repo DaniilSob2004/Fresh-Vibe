@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +11,17 @@ namespace StoreExam.Data.DAL
     {
         private static DataContext dataContext = ((App)Application.Current).dataContext;
 
-        public async static Task<BasketProduct?> GetBasketProduct(Guid userId, Guid productId)
+        public async static Task<BasketProduct?> Get(Guid userId, Guid productId)
         {
             return await dataContext.BasketProducts.FirstOrDefaultAsync(bp => bp.UserId == userId && bp.ProductId == productId);
         }
 
-        public async static Task<BasketProduct?> GetBasketProduct(Guid id)
+        public async static Task<BasketProduct?> Get(Guid id)
         {
             return await dataContext.BasketProducts.FirstOrDefaultAsync(bp => bp.Id == id);
         }
 
-        public async static Task<List<BasketProduct>?> GetBasketProductsByUser(User user)
+        public async static Task<List<BasketProduct>?> GetByUser(User user)
         {
             try
             {
@@ -42,10 +39,9 @@ namespace StoreExam.Data.DAL
 
         public async static Task<bool> Update(BasketProduct updateBasketProduct)
         {
-            BasketProduct? basketProduct = await GetBasketProduct(updateBasketProduct.Id);  // находим объект корзины по Id
+            BasketProduct? basketProduct = await Get(updateBasketProduct.Id);  // находим объект корзины по Id
             if (basketProduct is not null)
             {
-                // если значения полей различны, то обновляем
                 if (basketProduct.Amounts != updateBasketProduct.Amounts)
                 {
                     basketProduct.Amounts = updateBasketProduct.Amounts;
@@ -60,14 +56,14 @@ namespace StoreExam.Data.DAL
         {
             try
             {
-                BasketProduct? bp = await GetBasketProduct(id);
+                BasketProduct? bp = await Get(id);
                 if (bp is not null)
                 {
-                    dataContext.Remove(bp);
+                    dataContext.BasketProducts.Remove(bp);
                     await dataContext.SaveChangesAsync();
                     return true;
                 }
-                else { return false; }
+                return false;
             }
             catch (Exception) { return false; }
         }

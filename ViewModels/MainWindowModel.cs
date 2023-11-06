@@ -46,9 +46,11 @@ namespace StoreExam.ViewModels
 
         public ObservableCollection<ProductViewModel> ProductsModel { get; set; }
         public ICollectionView productsListView;
-        public void UpdateProducts(List<Data.Entity.Product> newListProducts)
+        public void UpdateProducts(List<Data.Entity.Product> newListProducts, Data.Entity.Category? category = null)
         {
-            // обновляем коллекцию продуктов
+            // обновляем категорию и коллекцию продуктов
+            if (category is not null) { ChoiceCategory = category; }
+
             ProductsModel.Clear();
             foreach (var product in newListProducts)
             {
@@ -95,17 +97,12 @@ namespace StoreExam.ViewModels
         {
             try
             {
-                Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.GetBasketProduct(User.Id, productVM.Product.Id);  // находим объект
-                if (basketProduct is not null)  // если товар уже в корзине, то просто добавляем кол-во
+                Data.Entity.BasketProduct? basketProduct = await BasketProductsDal.Get(User.Id, productVM.Product.Id);  // находим объект
+                if (basketProduct is not null)  // если товар уже есть в корзине
                 {
-                    // если при обновлении что-то пошло не так
-                    if (!await BPViewModel.UpdateAmountProduct(basketProduct, true, productVM.ChoiceCount)) { return false; }
+                    return await BPViewModel.UpdateAmountProduct(basketProduct, true, productVM.ChoiceCount);  // обновляем кол-во
                 }
-                else
-                {
-                    BPViewModel.AddProduct(User.Id, productVM.Product.Id, productVM.ChoiceCount);  // добавляем продукт в корзину
-                }
-                await BPViewModel.UpdateTotalBasketProductsPrice();  // обновляем сумму товаров в корзине через ViewModel корзины
+                BPViewModel.AddProduct(User.Id, productVM.Product.Id, productVM.ChoiceCount);  // добавляем продукт в корзину
                 return true;
             }
             catch (Exception) { return false; }

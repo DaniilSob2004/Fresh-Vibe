@@ -3,6 +3,7 @@
     public enum StateData
     {
         Save,
+        ChangeEmail,
         Delete,
         Exit,
         Cancel
