@@ -19,3 +19,4 @@
 ![ExamStore6](https://github.com/DaniilSob2004/StoreExam/assets/106149184/845b8caf-68eb-4c1c-9af3-28f1c75cde28)
 ![ExamStore7](https://github.com/DaniilSob2004/StoreExam/assets/106149184/1c624a1c-d2b6-4b6e-8ee4-c3863dea3d2f)
 ![ExamStore8](https://github.com/DaniilSob2004/StoreExam/assets/106149184/311f10bf-f0fa-4fab-850f-790cd4ce962b)
+![Diagram](https://github.com/DaniilSob2004/StoreExam/assets/150459743/21ea2cc2-6357-4b4c-b0c2-d4a2cc8eb069)

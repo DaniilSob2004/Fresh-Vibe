@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Ссылки на классы">
+    <Position X="1.873" Y="3.943" Height="0.307" Width="1.263" />
+  </Comment>
+  <Comment CommentText="РАБОТА С БД">
+    <Position X="2.987" Y="0.5" Height="0.32" Width="0.966" />
+  </Comment>
+  <Comment CommentText="ОКНА И VIEWMODELS">
+    <Position X="13.828" Y="0.5" Height="0.328" Width="1.543" />
+  </Comment>
+  <Comment CommentText="У каждого окна есть ссылка на User">
+    <Position X="16.456" Y="4.691" Height="0.291" Width="2.297" />
+  </Comment>
+  <Comment CommentText="ПОВЕДЕНИЯ (BEHAVIOR)">
+    <Position X="16.712" Y="5.528" Height="0.291" Width="1.701" />
+  </Comment>
+  <Comment CommentText="КОРРЕКТНОСТЬ ДАННЫХ">
+    <Position X="1.348" Y="5.265" Height="0.291" Width="1.725" />
+  </Comment>
+  <Comment CommentText="ПЕРЕЧИСЛЕНИЯ">
+    <Position X="12.19" Y="7.106" Height="0.291" Width="1.156" />
+  </Comment>
+  <Comment CommentText="РАСШИРЕНИЯ">
+    <Position X="8.291" Y="7.075" Height="0.291" Width="1.055" />
+  </Comment>
+  <Comment CommentText="ФОРМАТИРОВАНИЕ">
+    <Position X="11.674" Y="5.573" Height="0.291" Width="1.384" />
+  </Comment>
+  <Comment CommentText="ГЕНЕРАЦИЯ">
+    <Position X="6.835" Y="5.272" Height="0.291" Width="0.89" />
+  </Comment>
+  <Comment CommentText="РАБОТА С ФАЙЛАМИ">
+    <Position X="1.376" Y="6.82" Height="0.291" Width="1.472" />
+  </Comment>
+  <Comment CommentText="РАБОТА С EMAIL">
+    <Position X="4.655" Y="6.848" Height="0.291" Width="1.156" />
+  </Comment>
+  <Class Name="StoreExam.Generate.CodeGenerator" Collapsed="true">
+    <Position X="4.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Generate\CodeGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Generate.PasswordHasher" Collapsed="true">
+    <Position X="8.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generate\PasswordHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Generate.SaltGenerator" Collapsed="true">
+    <Position X="6.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generate\SaltGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Network.EmailWork" Collapsed="true">
+    <Position X="4.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAgAAAAAAEAChAACAgSAEgAAgAAAAA=</HashCode>
+      <FileName>Network\EmailWork.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.DataContext" Collapsed="true">
+    <Position X="2.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEACAAAQAAAAAAAAAAAAAAEAAAEAAAAAAAAAAAIAQ=</HashCode>
+      <FileName>Data\DataContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.Entity.BasketProduct" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Data\Entity\BasketProduct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.Entity.Category" Collapsed="true">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Data\Entity\Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.Entity.Product" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAEAQQAgAAAAAAAAAAQAAAAAABAAAABAAAAACAA=</HashCode>
+      <FileName>Data\Entity\Product.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.Entity.User" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABCAAEAQCAAAAAAAAAAAQQABAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>Data\Entity\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Data.DAL.BasketProductsDal" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAADgAAAAAAAAAAAAAAAAAgAAAIIAAAA=</HashCode>
+      <FileName>Data\DAL\BasketProductsDal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dataContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StoreExam.Data.DAL.CategoriesDal" Collapsed="true">
+    <Position X="5.5" Y="1" Width="1.5" />
+    <AssociationLine Name="dataContext" Type="StoreExam.Data.DataContext">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.783" Y="0.053" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAABAAAAAAAAAAQAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Data\DAL\CategoriesDal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dataContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StoreExam.Data.DAL.ProductsDal" Collapsed="true">
+    <Position X="5.5" Y="3" Width="1.5" />
+    <AssociationLine Name="dataContext" Type="StoreExam.Data.DataContext">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.142" Y="0.414" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAQAABAAAAAAAQAAAAAAAAAAAAAAIACAAA=</HashCode>
+      <FileName>Data\DAL\ProductsDal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dataContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StoreExam.Data.DAL.UserDal" Collapsed="true">
+    <Position X="5.25" Y="4" Width="1.5" />
+    <AssociationLine Name="dataContext" Type="StoreExam.Data.DataContext">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="1.196" Y="-1.093" Height="0.182" Width="1.003" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAABAAEAAAAAAAAEAAAAAAAAAAIAAACA=</HashCode>
+      <FileName>Data\DAL\UserDal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dataContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StoreExam.CheckData.CheckProduct" Collapsed="true">
+    <Position X="2.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAgAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>CheckData\CheckProduct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.CheckData.CheckUser" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAQAAAAAQAAICJIAEACAAoEAAAAQCAEAAAKAAAQA=</HashCode>
+      <FileName>CheckData\CheckUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.App" Collapsed="true">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <AssociationLine Name="dataContext" Type="StoreExam.Data.DataContext">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.085" Y="0.199" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAgAAAAAAAAAAACAAAAAgAAAAIAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="dataContext" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StoreExam.Extensions.FloatExtensions" Collapsed="true">
+    <Position X="9" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Extensions\FloatExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Extensions.StringExtensions" Collapsed="true">
+    <Position X="7.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\StringExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.FileWork.BaseFileWork" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAQAAAAAACAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileWork\BaseFileWork.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.FileWork.FilePdf" Collapsed="true">
+    <Position X="2.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAABAAAAAAQEAAAABAABQAAAAAAAAACA=</HashCode>
+      <FileName>FileWork\FilePdf.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Formatting.EmailHelper" Collapsed="true">
+    <Position X="12.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQQA=</HashCode>
+      <FileName>Formatting\EmailHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.Formatting.ProductFormat" Collapsed="true">
+    <Position X="10.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Formatting\ProductFormat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.Behavior.ClickButtonAddProduct" Collapsed="true">
+    <Position X="18" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAFAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI_Settings\Behavior\ClickButtonAddProduct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.Behavior.ClickButtonReduceProduct" Collapsed="true">
+    <Position X="17.5" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAFAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI_Settings\Behavior\ClickButtonReduceProduct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.Behavior.GotLostFocusPasswordBoxBehavior" Collapsed="true">
+    <Position X="15" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IABAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI_Settings\Behavior\GotLostFocusPasswordBoxBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.Behavior.GotLostFocusTextBoxBehavior" Collapsed="true">
+    <Position X="15" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IABAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI_Settings\Behavior\GotLostFocusTextBoxBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.Behavior.MouseLeftButtonDownImageBehavior" Collapsed="true">
+    <Position X="16" Y="7.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI_Settings\Behavior\MouseLeftButtonDownImageBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.UI_Settings.GuiBaseManipulation" Collapsed="true">
+    <Position X="18.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>MQAAAAEAAAAAAQAAAAAAAAAAMBAAEAQAIIAAAECAAIA=</HashCode>
+      <FileName>UI_Settings\GuiBaseManipulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoreExam.ViewModels.BasketProductModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAQIAAAEEAAIAAAAAAAoAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>ViewModels\BasketProductModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.288" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.ViewModels.BasketProductsViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.25" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAgAAAMCRACAAJAAAQAQIgAACgAAAGQgAAIAAQQA=</HashCode>
+      <FileName>ViewModels\BasketProductsViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.ViewModels.MainWindowModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABBAAACQAQEAAAIAAAABAggwgAEAAAAAAAAAAAAQA=</HashCode>
+      <FileName>ViewModels\MainWindowModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BPViewModel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.ViewModels.ProductViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAIAAAAAAAIAAAAAAAoAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>ViewModels\ProductViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.BasketProductWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="0.75" Width="1.5" />
+    <AssociationLine Name="BPViewModel" Type="StoreExam.ViewModels.BasketProductsViewModel">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="2.439" Y="0.376" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACCAAACAAQAAAAAACIAAAAACAAiAAACBAAAAAAAAEAE=</HashCode>
+      <FileName>Views\BasketProductWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BPViewModel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.ConfirmEmailWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAAAAAAACAAAAAoAAEAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Views\ConfirmEmailWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.MainLoginWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\MainLoginWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <AssociationLine Name="ViewModel" Type="StoreExam.ViewModels.MainWindowModel">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.161" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAAAAAAABAAAAAAMBIAAQAgCAAQAAgAAAA=</HashCode>
+      <FileName>Views\MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ViewModel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.OrderWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAJAAAAAAAAAABAAEIBAEAAAAIAAAACAABAAAAA=</HashCode>
+      <FileName>Views\OrderWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.ProductInfoWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="2.75" Width="1.75" />
+    <AssociationLine Name="ProductVM" Type="StoreExam.ViewModels.ProductViewModel">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="2.06" Y="0.085" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Views\ProductInfoWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProductVM" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.SignIn" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQABAAwACAAAAAAAAAAAiAAAIBAAAkQAMAEAAAAAAAA=</HashCode>
+      <FileName>Views\SignIn.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.SignUp" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQABAAwACAAAAAAAADAAAAAAIBAAEiQAMIEAAAAAABE=</HashCode>
+      <FileName>Views\SignUp.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.UserAccountWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAEAAAAAAAAAAAAAAAABAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Views\UserAccountWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="StoreExam.Views.UserSettingsWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAHRAAgAAAAAAAAAAAAIAAIAABAAAgAAIAAQIAQAAAA=</HashCode>
+      <FileName>Views\UserSettingsWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Enum Name="StoreExam.Enums.StateData" Collapsed="true">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAQAAAAAAAAAAACAAAAAEAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Enums\StateData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
