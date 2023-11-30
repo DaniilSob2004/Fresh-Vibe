@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\icon.png" />
     <None Remove="Views\999.gif" />
     <None Remove="Views\account.png" />
     <None Remove="Views\account_2.png" />
@@ -48,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\icon.png" />
     <Resource Include="Images\password.png" />
     <Resource Include="Resources\DefaultValue.xaml">
       <CopyToOutputDirectory></CopyToOutputDirectory>

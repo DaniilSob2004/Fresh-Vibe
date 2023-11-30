@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:StoreExam"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="Store 3.0" Height="525" Width="900" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="525" Width="900" MinHeight="300" MinWidth="400" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -54,6 +54,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -128,13 +132,13 @@
                                 <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8 3.5 0 0">
                                     <TextBlock Text="{Binding Product.Price, StringFormat='{}{0} ₴'}" Style="{StaticResource textBlockStyle}"/>
                                     <StackPanel Orientation="Horizontal" Margin="10 3 0 0">
-                                        <Button Tag="/Images/minus.png" Margin="2" Style="{StaticResource btnOneImageStyle}">
+                                        <Button Tag="/Images/minus.png" Margin="0.8" Style="{StaticResource btnOneImageStyle}">
                                             <b:Interaction.Behaviors>
                                                 <myBehaviors:ClickButtonReduceProduct/>
                                             </b:Interaction.Behaviors>
                                         </Button>
                                         <TextBlock Text="{Binding ChoiceCount}" Style="{StaticResource textBlockStyle}"/>
-                                        <Button Tag="/Images/plus.png" Margin="2" Style="{StaticResource btnOneImageStyle}">
+                                        <Button Tag="/Images/plus.png" Margin="0.8" Style="{StaticResource btnOneImageStyle}">
                                             <b:Interaction.Behaviors>
                                                 <myBehaviors:ClickButtonAddProduct/>
                                             </b:Interaction.Behaviors>

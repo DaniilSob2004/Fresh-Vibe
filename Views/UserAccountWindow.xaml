@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="User account" Height="350" Width="250" MinHeight="250" MinWidth="200" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="350" Width="250" MinHeight="250" MinWidth="200" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -23,6 +23,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.RowDefinitions>

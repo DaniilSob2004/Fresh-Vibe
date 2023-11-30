@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="Basket products" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -14,13 +14,14 @@
                 <ResourceDictionary Source="/UI_Settings/Styles/MainWinStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonMainStyle}">
                 <Setter Property="Padding" Value="0 3 0 4"/>
                 <Setter Property="Margin" Value="15 8"/>
             </Style>
 
-            <Style x:Key="btnDeleteStyle" TargetType="Button" BasedOn="{StaticResource btnStyle}">
-                <Setter Property="Background" Value="{StaticResource DeleteColor}"/>
+            <Style x:Key="btnDeleteStyle" TargetType="Button" BasedOn="{StaticResource baseButtonDeleteStyle}">
+                <Setter Property="Padding" Value="0 3 0 4"/>
+                <Setter Property="Margin" Value="15 8"/>
             </Style>
 
             <Style x:Key="listBoxBS_Style" TargetType="ListBox">
@@ -33,11 +34,11 @@
                                     <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}"/>
                                     <Image Width="60" Height="60" Source="{Binding BasketProduct.Product.Image}" Margin="8 0 0 0" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     <TextBlock Text="{Binding BasketProduct.Product.Name}" MaxWidth="300" MaxHeight="20" TextTrimming="CharacterEllipsis" Margin="8 0 0 0" Style="{StaticResource textBlockStyle}"/>
-                                    <Button DockPanel.Dock="Right" Tag="/Images/trash.png" Height="25" Width="25" Margin="0 0 10 0" Style="{StaticResource btnOneImageStyle}" Click="BtnDelProduct_Click"/>
+                                    <Button DockPanel.Dock="Right" Tag="/Images/trash.png" Height="28" Width="28" Margin="0 0 10 0" Style="{StaticResource btnOneImageStyle}" Click="BtnDelProduct_Click"/>
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0 0 10 0">
-                                        <Button Tag="/Images/minus.png" Width="24" Height="24" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnReduceAmountProduct_Click"/>
+                                        <Button Tag="/Images/minus.png" Width="26.5" Height="26.5" Margin="0.8" Style="{StaticResource btnOneImageStyle}" Click="BtnReduceAmountProduct_Click"/>
                                         <TextBlock Text="{Binding ChoiceCount}" Style="{StaticResource textBlockStyle}"/>
-                                        <Button Tag="/Images/plus.png" Width="24" Height="24" Margin="2" Style="{StaticResource btnOneImageStyle}" Click="BtnAddAmountProduct_Click"/>
+                                        <Button Tag="/Images/plus.png" Width="26.5" Height="26.5" Margin="0.8" Style="{StaticResource btnOneImageStyle}" Click="BtnAddAmountProduct_Click"/>
                                     </StackPanel>
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0 0 15 0">
                                         <TextBlock Text="x1" Margin="0 0 5 0" VerticalAlignment="Center" Style="{StaticResource verySmallBlackTextBlockStyle}"/>
@@ -61,6 +62,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.ColumnDefinitions>

@@ -8,7 +8,7 @@
     <sys:String x:Key="DefEmail">Email</sys:String>
     <sys:String x:Key="DefPassword">Password</sys:String>
 
-    <sys:String x:Key="StoreName">Store</sys:String>
+    <sys:String x:Key="StoreName">Fresh Vibe</sys:String>
     <sys:String x:Key="DefSearch">Поиск...</sys:String>
     <sys:String x:Key="DefConfirmCode">Confirmation code</sys:String>
     

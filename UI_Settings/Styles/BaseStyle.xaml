@@ -4,13 +4,15 @@
 
     <!-- Базовые цвета -->
     <SolidColorBrush x:Key="BGWindow" Color="WhiteSmoke"/>
-    <SolidColorBrush x:Key="MainColor" Color="Green"/>
-    <SolidColorBrush x:Key="DeleteColor" Color="IndianRed"/>
+    <SolidColorBrush x:Key="MainColor" Color="DarkGreen"/>
+    <SolidColorBrush x:Key="DeleteColor" Color="#a31818"/>
     <SolidColorBrush x:Key="TextColorBlack" Color="Black"/>
     <SolidColorBrush x:Key="TextColorWhite" Color="White"/>
     <SolidColorBrush x:Key="TextColorGray" Color="Gray"/>
-    <SolidColorBrush x:Key="IsMouseOverColor" Color="LightGreen"/>
-    <SolidColorBrush x:Key="IsMouseOverBorderColor" Color="LightGreen"/>
+    <SolidColorBrush x:Key="IsMouseOverColor" Color="Green"/>
+    <SolidColorBrush x:Key="IsMouseOverGrayColor" Color="#9E9AA6"/>
+    <SolidColorBrush x:Key="IsMouseOverBorderColor" Color="#2fa84f"/>
+    <SolidColorBrush x:Key="IsMouseOverDeleteColor" Color="IndianRed"/>
 
     <!-- Базовый шрифт -->
     <FontFamily x:Key="MainFont">Calibri</FontFamily>
@@ -138,91 +140,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
-    
-    <!-- Базовый стиль для Button -->
-    <Style x:Key="baseButtonStyle" TargetType="Button">
-        <Setter Property="Foreground" Value="{StaticResource TextColorWhite}"/>
-        <Setter Property="Background" Value="{StaticResource MainColor}"/>
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadiusButton}"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource IsMouseOverColor}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
-    <!-- Базовый стиль для кнопок, изображение с левой стороны, текст с правой Button -->
-    <Style x:Key="baseButtonImageTextStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="10 4">
-                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
-                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                        <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" Style="{StaticResource whiteTextBlockStyle}"
-                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Базовый стиль для кнопок, текст с левой стороны, изображение с правой Button -->
-    <Style x:Key="baseButtonTextImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
-                        <TextBlock VerticalAlignment="Center" Margin="0 0 8 0" Style="{StaticResource whiteTextBlockStyle}"
-                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Базовый стиль для кнопок с изображением Button -->
-    <Style x:Key="baseButtonImageStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource IsMouseOverColor}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <!-- Базовый стиль для кнопок с одним только изображением Button -->
-    <Style x:Key="btnOneImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}"
-                                Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
-                        <!-- путь к изображению получаем из самого Button, для которого этот шаблон предназначен -->
-                        <Image Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Margin="{TemplateBinding Margin}"/>
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    
     <!-- Базовый стиль для обычного Border -->
     <Style x:Key="baseBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource TextColorWhite}"/>
@@ -245,6 +163,138 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Стиль и поведение при навидение курсора для кнопки с картинками Border -->
+    <Style x:Key="borderImageBtnStyle" TargetType="Border" BasedOn="{StaticResource borderStyle}">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+
+
+    <!-- Базовый стиль для Button -->
+    <Style x:Key="baseButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource TextColorWhite}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+    </Style>
+
+    <!-- Базовый стиль для основы Button --> 
+    <Style x:Key="baseButtonMainStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource MainColor}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadiusButton}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource IsMouseOverColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для удаления Button --> 
+    <Style x:Key="baseButtonDeleteStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource DeleteColor}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadiusButton}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource IsMouseOverDeleteColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для серого Button --> 
+    <Style x:Key="baseButtonGrayStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource TextColorGray}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource baseCornerRadiusButton}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource IsMouseOverGrayColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для кнопок, изображение с левой стороны, текст с правой Button -->
+    <Style x:Key="baseButtonImageTextStyle" TargetType="Button" BasedOn="{StaticResource baseButtonMainStyle}">
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="10 4">
+                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
+                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" Style="{StaticResource whiteTextBlockStyle}"
+                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для кнопок, текст с левой стороны, изображение с правой Button -->
+    <Style x:Key="baseButtonTextImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonMainStyle}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- путь к изображению и текст получаем из самого Button, для которого этот шаблон предназначен -->
+                        <TextBlock VerticalAlignment="Center" Margin="0 0 8 0" Style="{StaticResource whiteTextBlockStyle}"
+                                   Text="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <Image Height="20" Width="20" Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Базовый стиль для кнопок с изображением Button -->
+    <Style x:Key="baseButtonImageStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+
+    <!-- Базовый стиль для кнопок с одним только изображением Button -->
+    <Style x:Key="btnOneImageStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Style="{StaticResource borderImageBtnStyle}" Background="{TemplateBinding Background}">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- путь к изображению получаем из самого Button, для которого этот шаблон предназначен -->
+                            <Image Source="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Margin="{TemplateBinding Margin}"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <!-- Базовый стиль для CheckBox -->
     <Style x:Key="baseCheckBoxStyle" TargetType="CheckBox">
@@ -276,5 +326,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
 </ResourceDictionary>

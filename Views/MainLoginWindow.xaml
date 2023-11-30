@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="Store v3.0" Height="280" Width="500" MinHeight="225" MinWidth="350" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="280" Width="500" MinHeight="225" MinWidth="350" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -13,19 +13,30 @@
                 <ResourceDictionary Source="/UI_Settings/Styles/StartStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonMainStyle}">
                 <Setter Property="Margin" Value="0 20 0 0"/>
                 <Setter Property="Padding" Value="100 0"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="MinHeight" Value="20"/>
             </Style>
-            
+
+            <Style x:Key="btnGrayStyle" TargetType="Button" BasedOn="{StaticResource baseButtonGrayStyle}">
+                <Setter Property="Margin" Value="0 20 0 0"/>
+                <Setter Property="Padding" Value="100 0"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="MinHeight" Value="20"/>
+            </Style>
+
         </ResourceDictionary>
     </Window.Resources>
 
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -37,7 +48,7 @@
 
         <TextBlock Text="{StaticResource StoreName}" Style="{StaticResource headerTextBlockStyle}"/>
         <Button Grid.Row="1" Content="{StaticResource SignInText}" Style="{StaticResource btnStyle}" Click="BtnSignIn_Click"/>
-        <Button Grid.Row="2" Content="{StaticResource SignUpText}" Background="Gray" Style="{StaticResource btnStyle}" Click="BtnSignUp_Click"/>
+        <Button Grid.Row="2" Content="{StaticResource SignUpText}" Style="{StaticResource btnGrayStyle}" Click="BtnSignUp_Click"/>
     </Grid>
 
 </Window>

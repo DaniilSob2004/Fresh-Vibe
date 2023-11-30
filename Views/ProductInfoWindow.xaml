@@ -7,7 +7,7 @@
         xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="Product info" Height="400" Width="700" MinHeight="250" MinWidth="550" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="400" Width="700" MinHeight="250" MinWidth="550" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -21,12 +21,20 @@
 
             <Style x:Key="btnAmountProductStyle" TargetType="Button" BasedOn="{StaticResource btnOneImageStyle}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Width" Value="24"/>
-                <Setter Property="Height" Value="24"/>
+                <Setter Property="Width" Value="29"/>
+                <Setter Property="Height" Value="29"/>
                 <Setter Property="Margin" Value="2"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Window.Background>
+        <StaticResource ResourceKey="BGWindow"/>
+    </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <ScrollViewer>
         <Grid VerticalAlignment="Top" MaxHeight="600">
@@ -43,7 +51,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.RowSpan="4" Margin="2" Style="{StaticResource baseBorderStyle}">
+            <Border Grid.RowSpan="4" Margin="2" Background="{StaticResource BGWindow}" Style="{StaticResource baseBorderStyle}">
                 <Image Width="160" Height="160" Source="{Binding Product.Image}" Margin="15"/>
             </Border>
 

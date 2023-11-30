@@ -30,43 +30,48 @@
 
 
     <!-- Стиль и шаблон для аккаунта пользователя Button -->
-    <Style x:Key="btnUserNameStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
+    <Style x:Key="btnUserNameStyle" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
-                        <Image Width="25" Height="25" Source="/Images/account.png" Margin="8 0 0 0"/>
-                        <TextBlock x:Name="textBlockUserName" Text="{Binding Path=User.Name}" Margin="2 0 10 0" Style="{StaticResource textBlockStyle}"/>
-                    </StackPanel>
+                    <Border Style="{StaticResource borderImageBtnStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="25" Height="25" Source="/Images/account.png" Margin="8 0 0 0"/>
+                            <TextBlock x:Name="textBlockUserName" Text="{Binding Path=User.Name}" Margin="2 0 10 0" Style="{StaticResource textBlockStyle}"/>
+                        </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <!-- Стиль и шаблон для корзины пользователя Button -->
-    <Style x:Key="btnUserBasketStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
+    <Style x:Key="btnUserBasketStyle" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
-                        <Image Width="25" Height="25" Source="/Images/cart.png" Margin="10 0 0 0"/>
-                        <TextBlock Text="{Binding BPViewModel.Count}" Margin="0 10 0 0" Style="{StaticResource textBlockMiniStyle}"/>
-                        <TextBlock Text="{Binding BPViewModel.TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}" Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
-                        <TextBlock Text=" ₴" Margin="0 0 10 0" Style="{StaticResource textBlockStyle}"/>
-                    </StackPanel>
+                    <Border Style="{StaticResource borderImageBtnStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="25" Height="25" Source="/Images/cart.png" Margin="10 0 0 0"/>
+                            <TextBlock Text="{Binding BPViewModel.Count}" Margin="0 10 0 0" Style="{StaticResource textBlockMiniStyle}"/>
+                            <TextBlock Text="{Binding BPViewModel.TotalBasketProductsPrice, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"
+                                       Margin="5 0 0 0" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text=" ₴" Margin="0 0 10 0" Style="{StaticResource textBlockStyle}"/>
+                        </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <!-- Стиль и шаблон для выхода пользователя Button -->
-    <Style x:Key="btnUserExitStyle" TargetType="Button" BasedOn="{StaticResource baseButtonImageStyle}">
+    <Style x:Key="btnUserExitStyle" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
+                    <Border Style="{StaticResource borderImageBtnStyle}">
                         <Image Width="21" Height="21" Source="/Images/exit.png" Margin="10 0"/>
-                    </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

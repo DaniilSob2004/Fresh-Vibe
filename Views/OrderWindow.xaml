@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
-        Title="Order window" Height="400" Width="700" MinHeight="300" MinWidth="525" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="400" Width="700" MinHeight="300" MinWidth="525" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -35,6 +35,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.RowDefinitions>

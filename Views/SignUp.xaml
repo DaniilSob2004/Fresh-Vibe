@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="Store v3.0" Height="450" Width="400" MinHeight="425" MinWidth="350" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="450" Width="400" MinHeight="425" MinWidth="350" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -37,6 +37,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.RowDefinitions>

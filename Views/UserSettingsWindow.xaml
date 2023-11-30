@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="Settings account" Height="400" Width="320" MinHeight="300" MinWidth="250" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="400" Width="320" MinHeight="300" MinWidth="250" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -34,7 +34,13 @@
                 <Setter Property="MaxWidth" Value="500"/>
             </Style>
 
-            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonStyle}">
+            <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource baseButtonMainStyle}">
+                <Setter Property="Margin" Value="10 0 10 10"/>
+                <Setter Property="Padding" Value="0 2 0 3"/>
+                <Setter Property="MaxWidth" Value="500"/>
+            </Style>
+            
+            <Style x:Key="btnDeleteStyle" TargetType="Button" BasedOn="{StaticResource baseButtonDeleteStyle}">
                 <Setter Property="Margin" Value="10 0 10 10"/>
                 <Setter Property="Padding" Value="0 2 0 3"/>
                 <Setter Property="MaxWidth" Value="500"/>
@@ -45,6 +51,10 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -101,7 +111,7 @@
 
                 <Button x:Name="btnSave" Style="{StaticResource btnStyle}" Click="BtnSave_Click">Сохранить</Button>
                 <Button Style="{StaticResource btnStyle}" Click="BtnExit_Click">Выйти</Button>
-                <Button Background="{StaticResource DeleteColor}" Style="{StaticResource btnStyle}" Click="BtnDelAccount_Click">Удалить аккаунт</Button>
+                <Button Style="{StaticResource btnDeleteStyle}" Click="BtnDelAccount_Click">Удалить аккаунт</Button>
             </StackPanel>
         </ScrollViewer>
     </Grid>

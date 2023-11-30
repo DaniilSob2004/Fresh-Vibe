@@ -7,7 +7,7 @@
         xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="Confirm email" Height="400" Width="700" MinHeight="380" MinWidth="525" WindowStartupLocation="CenterScreen">
+        Title="{StaticResource StoreName}" Height="400" Width="700" MinHeight="380" MinWidth="525" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -28,7 +28,11 @@
     <Window.Background>
         <StaticResource ResourceKey="BGWindow"/>
     </Window.Background>
-    
+
+    <Window.Icon>
+        <BitmapImage UriSource="/Images/icon.png"/>
+    </Window.Icon>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -65,7 +69,7 @@
                 </b:Interaction.Behaviors>
             </TextBox>
 
-            <Button Grid.Column="1" x:Name="btnConfirmCode" Content="Продолжить" Margin="8 0" Style="{StaticResource baseButtonStyle}" Click="BtnConfirmCode_Click"/>
+            <Button Grid.Column="1" x:Name="btnConfirmCode" Content="Продолжить" Margin="8 0" Style="{StaticResource baseButtonMainStyle}" Click="BtnConfirmCode_Click"/>
 
             <TextBlock x:Name="textBlockShowError" Grid.Row="2" Text="некорректный код" Foreground="{StaticResource DeleteColor}" HorizontalAlignment="Left"
                        Margin="15 0" Visibility="Hidden" Style="{StaticResource verySmallHeaderTextBlockStyle}"/>
