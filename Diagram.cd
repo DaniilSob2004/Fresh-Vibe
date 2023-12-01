@@ -19,7 +19,7 @@
     <Position X="1.348" Y="5.265" Height="0.291" Width="1.725" />
   </Comment>
   <Comment CommentText="ПЕРЕЧИСЛЕНИЯ">
-    <Position X="12.19" Y="7.106" Height="0.291" Width="1.156" />
+    <Position X="12.706" Y="7.844" Height="0.291" Width="1.156" />
   </Comment>
   <Comment CommentText="РАСШИРЕНИЯ">
     <Position X="8.291" Y="7.075" Height="0.291" Width="1.055" />
@@ -164,7 +164,7 @@
   <Class Name="StoreExam.CheckData.CheckUser" Collapsed="true">
     <Position X="0.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQQAAQAAAAAQAAICJIAEACAAoEAAAAQCAEAAAKAAAQA=</HashCode>
+      <HashCode>AAQAAQAAAAAQAAACJAAEACAAoEAAAAACAEAAAIAAAQA=</HashCode>
       <FileName>CheckData\CheckUser.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -261,9 +261,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="StoreExam.UI_Settings.GuiBaseManipulation" Collapsed="true">
-    <Position X="18.25" Y="3.5" Width="1.75" />
+    <Position X="19.25" Y="2.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>MQAAAAEAAAAAAQAAAAAAAAAAMBAAEAQAIIAAAECAAIA=</HashCode>
+      <HashCode>NAAAAAEAAAAAAQAAAAAAABAAMAAAAAAAIIAAAECAAAA=</HashCode>
       <FileName>UI_Settings\GuiBaseManipulation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -278,7 +278,7 @@
   <Class Name="StoreExam.ViewModels.BasketProductsViewModel" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="16.25" Y="1.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAABAgAAAMCRACAAJAAAQAQIgAACgAAAGQgAAIAAQQA=</HashCode>
+      <HashCode>AAABAgAAAMCRACAEJAAAQAQIgAACgAAAGQgAAIAAQQA=</HashCode>
       <FileName>ViewModels\BasketProductsViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -303,7 +303,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="StoreExam.Views.BasketProductWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.25" Y="0.75" Width="1.5" />
+    <Position X="9.75" Y="0.75" Width="2" />
     <AssociationLine Name="BPViewModel" Type="StoreExam.ViewModels.BasketProductsViewModel">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="2.439" Y="0.376" />
@@ -377,7 +377,7 @@
   <Class Name="StoreExam.Views.SignIn" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="12.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQABAAwACAAAAAAAAAAAiAAAIBAAAkQAMAEAAAAAAAA=</HashCode>
+      <HashCode>AQABAAwACAAAAAAAAAAAiAAAIAAAAEAAIAAAAAAAAAA=</HashCode>
       <FileName>Views\SignIn.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -385,7 +385,7 @@
   <Class Name="StoreExam.Views.SignUp" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="14" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQABAAwACAAAAAAAADAAAAAAIBAAEiQAMIEAAAAAABE=</HashCode>
+      <HashCode>AAABAAwACAAAAAAAADAAAAAAIAAAACAAIAAAAAAAAAE=</HashCode>
       <FileName>Views\SignUp.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -401,16 +401,45 @@
   <Class Name="StoreExam.Views.UserSettingsWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="12.25" Y="4.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAHRAAgAAAAAAAAAAAAIAAIAABAAAgAAIAAQIAQAAAA=</HashCode>
+      <HashCode>AAHRAAgAAAAAAAAAAAAIAAIAABAAAAAAIAAQIAQAAAA=</HashCode>
       <FileName>Views\UserSettingsWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
+  <Class Name="StoreExam.Views.MessageWindow" Collapsed="true">
+    <Position X="17.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAABABAAAAAAACAgAAAAAAAAAAAAAJAAAAAA=</HashCode>
+      <FileName>Views\MessageWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="StoreExam.Formatting.ResourceHelper" Collapsed="true">
+    <Position X="11.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Formatting\ResourceHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="StoreExam.Enums.StateData" Collapsed="true">
-    <Position X="12" Y="7.5" Width="1.5" />
+    <Position X="12.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAIAAQAAAAAAAAAAACAAAAAEAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Enums\StateData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="StoreExam.Enums.TypeMessWin" Collapsed="true">
+    <Position X="10.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAIAAAAAA=</HashCode>
+      <FileName>Enums\TypeMessWin.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="StoreExam.Enums.StateWindow" Collapsed="true">
+    <Position X="14.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAACAAAAAAAAABAACAAAA=</HashCode>
+      <FileName>Enums\StateWindow.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

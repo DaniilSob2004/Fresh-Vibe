@@ -19,4 +19,4 @@
 ![ExamStore6](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/17fb64a5-341e-4fc2-bc51-8024e0f0d40c)
 ![ExamStore7](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/7f68bb10-6584-4b68-987f-f5fd1067dc73)
 ![ExamStore8](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/a4d7788f-7dcf-4df1-8044-1d607d481b09)
-![Diagram](https://github.com/DaniilSob2004/StoreExam/assets/150459743/21ea2cc2-6357-4b4c-b0c2-d4a2cc8eb069)
+![Diagram](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/8e791a95-efd8-443f-8603-db27a0367246)
