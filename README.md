@@ -4,19 +4,19 @@
   - Просмотр товаров по категориям
   - Поиск товаров по категориям
   - Добавление товаров в корзину
-  - При клике по товару, можно просмотреть доп. информацию
+  - При клике по товару, можно просмотреть дополнительную информацию
   - Работа с корзиной товаров
   - Создание чека в PDF-формате
   - Отправка PDF-чека на email и сохранение чека
 
-![ExamStore0](https://github.com/DaniilSob2004/StoreExam/assets/106149184/16751b9a-b1b1-489e-aaa2-d812f2b074d6)
-![ExamStore2_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/73e9a71d-582a-4094-886b-34722583d111)
-![ExamStore1_2](https://github.com/DaniilSob2004/StoreExam/assets/106149184/47193943-d6e1-456a-b95c-d4775f457abd)
-![ExamStore9](https://github.com/DaniilSob2004/StoreExam/assets/106149184/faa905f6-3a24-45d9-85d8-b7955dd2fbe4)
-![ExamStore3](https://github.com/DaniilSob2004/StoreExam/assets/106149184/e344912e-73a7-4630-9857-d901597ab9f0)
-![ExamStore4](https://github.com/DaniilSob2004/StoreExam/assets/106149184/fcf39064-6758-4d9e-bef5-e08ac4a8bfd9)
-![ExamStore5](https://github.com/DaniilSob2004/StoreExam/assets/106149184/61e70cf2-631d-42e9-a05e-bd079207c12e)
-![ExamStore6](https://github.com/DaniilSob2004/StoreExam/assets/106149184/845b8caf-68eb-4c1c-9af3-28f1c75cde28)
-![ExamStore7](https://github.com/DaniilSob2004/StoreExam/assets/106149184/1c624a1c-d2b6-4b6e-8ee4-c3863dea3d2f)
-![ExamStore8](https://github.com/DaniilSob2004/StoreExam/assets/106149184/311f10bf-f0fa-4fab-850f-790cd4ce962b)
+![ExamStore0](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/28a473aa-ea32-47e4-be6f-c06489cac3b8)
+![ExamStore2_2](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/f8f7894d-d979-4828-ab4e-c151301801b9)
+![ExamStore1_2](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/7681ca7f-a768-4638-89a7-68a7481e932c)
+![ExamStore9](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/6d666a7a-bfc3-482e-b855-3f9852d7245c)
+![ExamStore3](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/f427f464-e6b1-4549-8e2d-3545de1a31eb)
+![ExamStore4](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/2f19d622-220a-4264-ae8e-7ec0f8687b26)
+![ExamStore5](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/9cde706f-0d28-46d1-8686-f0dae6557210)
+![ExamStore6](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/17fb64a5-341e-4fc2-bc51-8024e0f0d40c)
+![ExamStore7](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/7f68bb10-6584-4b68-987f-f5fd1067dc73)
+![ExamStore8](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/a4d7788f-7dcf-4df1-8044-1d607d481b09)
 ![Diagram](https://github.com/DaniilSob2004/StoreExam/assets/150459743/21ea2cc2-6357-4b4c-b0c2-d4a2cc8eb069)
