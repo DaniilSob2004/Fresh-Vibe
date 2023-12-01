@@ -25,8 +25,8 @@ namespace StoreExam.Formatting
 
         public static class CorrectValues
         {
-            public static string MinLenNameSurname => GetString("MinLenNameSurname");
-            public static string MinLenPassword => GetString("MinLenPassword");
+            public static int MinLenNameSurname => int.Parse(GetString("MinLenNameSurname"));
+            public static int MinLenPassword => int.Parse(GetString("MinLenPassword"));
         }
 
         public static class Texts
@@ -44,6 +44,10 @@ namespace StoreExam.Formatting
             public static string YesText => GetString("YesText");
             public static string NoText => GetString("NoText");
             public static string OkText => GetString("OkText");
+            public static string ConfirmEmailText => GetString("ConfirmEmailText");
+            public static string CheckPdfFileText => GetString("CheckPdfFileText");
+            public static string SumOrderText => GetString("SumOrderText");
+            public static string ThanksBuyText => GetString("ThanksBuyText");
         }
 
         public static class MessageValues

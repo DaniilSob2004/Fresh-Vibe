@@ -8,19 +8,13 @@ using System.Windows.Media.Animation;
 using StoreExam.CheckData;
 using StoreExam.Enums;
 using StoreExam.Views;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.UI_Settings
 {
-    // общие операции над интерфейсом, которые дублировались в окнах
+    // общие операции над интерфейсом, которые дублировались в других классах
     public static class GuiBaseManipulation
     {
-        public static string DefaultName = Application.Current.TryFindResource("DefName").ToString()!;
-        public static string DefaultSurname = Application.Current.TryFindResource("DefSurname").ToString()!;
-        public static string DefaultNumTel = Application.Current.TryFindResource("DefNumTel").ToString()!;
-        public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
-        public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
-        public static string LoadingText = Application.Current.TryFindResource("LoadingText").ToString()!;
-
         // Работа с метками сообщений (предупреждений)
         public static void ShowInfoMessage(Border borderMessage)
         {
@@ -42,14 +36,14 @@ namespace StoreExam.UI_Settings
         {
             // отображаем кнопку закрузки
             button.IsEnabled = false;
-            button.Content = LoadingText;
+            button.Content = Texts.LoadingText;
 
             int countDots = 4, i = 0;
             while (!token.IsCancellationRequested)
             {
                 if (i == countDots)
                 {
-                    button.Content = LoadingText;
+                    button.Content = Texts.LoadingText;
                     i = 0;
                 }
                 else
@@ -90,26 +84,26 @@ namespace StoreExam.UI_Settings
                 string? tag = textBox.Tag.ToString();  // узнаём с помощью тега какое это поле
                 bool isErrorInput = false;  // ошибочный ли ввод
 
-                if (tag == DefaultName)
+                if (tag == DefaultValues.DefaultName)
                 {
                     // если в поле не строка по умолчанию и данные неверно введены, то красим border красным цветом
-                    if (user.Name != DefaultName && !CheckUser.CheckName(user)) isErrorInput = true;
+                    if (user.Name != DefaultValues.DefaultName && !CheckUser.CheckName(user)) isErrorInput = true;
                 }
-                else if (tag == DefaultSurname)
+                else if (tag == DefaultValues.DefaultSurname)
                 {
-                    if (user.Surname != DefaultSurname && !CheckUser.CheckSurname(user)) isErrorInput = true;
+                    if (user.Surname != DefaultValues.DefaultSurname && !CheckUser.CheckSurname(user)) isErrorInput = true;
                 }
-                else if (tag == DefaultNumTel)
+                else if (tag == DefaultValues.DefaultNumTel)
                 {
-                    if (user.NumTel != DefaultNumTel && !CheckUser.CheckNumTel(user)) isErrorInput = true;
+                    if (user.NumTel != DefaultValues.DefaultNumTel && !CheckUser.CheckNumTel(user)) isErrorInput = true;
                 }
-                else if (tag == DefaultEmail)
+                else if (tag == DefaultValues.DefaultEmail)
                 {
-                    if (user.Email != DefaultEmail && !CheckUser.CheckEmail(user)) isErrorInput = true;
+                    if (user.Email != DefaultValues.DefaultEmail && !CheckUser.CheckEmail(user)) isErrorInput = true;
                 }
-                else if (tag == DefaultPassword)
+                else if (tag == DefaultValues.DefaultPassword)
                 {
-                    if (textBox.Text != DefaultPassword && !CheckUser.CheckPassword(textBox.Text)) isErrorInput = true;
+                    if (textBox.Text != DefaultValues.DefaultPassword && !CheckUser.CheckPassword(textBox.Text)) isErrorInput = true;
                 }
 
                 if (isErrorInput) textBox.BorderBrush = Brushes.Red;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 using StoreExam.Formatting;
 using StoreExam.Extensions;
 using Ookii.Dialogs.Wpf;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.FileWork
 {
@@ -64,8 +64,7 @@ namespace StoreExam.FileWork
                     Font headerFont = new(baseFont, 18);
 
                     // вывод названия магазина
-                    string storeName = Application.Current.TryFindResource("StoreName").ToString()!;
-                    Paragraph paragraph = new(storeName, headerFont) { Alignment = Element.ALIGN_CENTER };
+                    Paragraph paragraph = new(Texts.StoreName, headerFont) { Alignment = Element.ALIGN_CENTER };
                     doc.Add(paragraph);
 
                     // вывод даты
@@ -82,11 +81,11 @@ namespace StoreExam.FileWork
                     doc.Add(paragraph);
 
                     // вывод суммы (вызов расширения Hrn() у float)
-                    string price = $"Сумма к оплате:  {totalPrice.Hrn()}";
+                    string price = $"{Texts.SumOrderText}  {totalPrice.Hrn()}";
                     paragraph = new(price, font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 30f };
                     doc.Add(paragraph);
 
-                    paragraph = new("Спасибо за покупку!)", font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 15f };
+                    paragraph = new(Texts.ThanksBuyText, font) { Alignment = Element.ALIGN_CENTER, SpacingBefore = 15f };
                     doc.Add(paragraph);
 
                     return true;

@@ -35,7 +35,7 @@
     <sys:String x:Key="BuyText">Купить</sys:String>
     <sys:String x:Key="ContinueText">Продолжить</sys:String>
     <sys:String x:Key="NotInStockText">Нет в наличии</sys:String>
-    <sys:String x:Key="ConfirmEmailText">Подтвердить email</sys:String>
+    <sys:String x:Key="ConfirmEmailText">Подтверждение почты</sys:String>
     <sys:String x:Key="SkipEmailText">пропустить</sys:String>
     <sys:String x:Key="SendEmail1Text">Код подтверждения выслан на</sys:String>
     <sys:String x:Key="SendEmail2Text">Если почта не будет подтверждена, доступ к корзине будет ограничен.</sys:String>
@@ -50,6 +50,7 @@
     <sys:String x:Key="DownloadCheck1Text">Клик</sys:String>
     <sys:String x:Key="DownloadCheck2Text">здесь</sys:String>
     <sys:String x:Key="DownloadCheck3Text">если хотите сохранить PDF-файл чека</sys:String>
+    <sys:String x:Key="CheckPdfFileText">"Чек PDF-файл"</sys:String>
     <sys:String x:Key="OpenAfterDownloadText">Открыть после скачивания</sys:String>
     <sys:String x:Key="SendCheckEmailText">Отправить на email</sys:String>
     <sys:String x:Key="PriceText">Цена:</sys:String>

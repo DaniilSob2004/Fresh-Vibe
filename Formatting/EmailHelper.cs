@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
-using System.Windows;
 using StoreExam.FileWork;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Formatting
 {
@@ -11,7 +11,7 @@ namespace StoreExam.Formatting
             // считываем из ресурсов файл html
             return BaseFileWork.ReadFile("Resources/confirm_code_template.html")
                         .Replace("{ConfirmCode}", user.ConfirmCode)
-                        .Replace("{StoreName}", Application.Current.TryFindResource("StoreName").ToString());
+                        .Replace("{StoreName}", Texts.StoreName);
         }
 
         public static string GetStringForSendPdfEmail()
@@ -24,7 +24,7 @@ namespace StoreExam.Formatting
             // создаём MailMessage для отправки email
             return new(emailFrom,
                        user.Email!,
-                       "Подтверждение почты",
+                       Texts.ConfirmEmailText,
                        GetStringForConfirmEmail(user)  // получаем строку для отправки email
                    )
                    {
@@ -36,7 +36,7 @@ namespace StoreExam.Formatting
         {
             return new(emailFrom,
                        user.Email!,
-                       "Чек PDF-файл",
+                       Texts.CheckPdfFileText,
                        GetStringForSendPdfEmail()  // получаем строку для отправки email
                    )
                    {
