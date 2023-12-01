@@ -14,6 +14,7 @@ namespace StoreExam.CheckData
         public static int MinPassword = Convert.ToInt32(Application.Current.FindResource("MinLenPassword"));
         public static string DefaultEmail = Application.Current.FindResource("DefEmail").ToString()!;
         public static string DefaultNumTel = Application.Current.FindResource("DefNumTel").ToString()!;
+        public static string DefaultPassword = Application.Current.FindResource("DefPassword").ToString()!;
         public static string NumTelText = Application.Current.FindResource("NumTelText").ToString()!;
 
         private static Match result = null!;
@@ -120,7 +121,7 @@ namespace StoreExam.CheckData
 
         public static bool CheckPassword(string password)
         {
-            return String.IsNullOrEmpty(password) || password.Length >= MinPassword;
+            return !String.IsNullOrEmpty(password) && password != DefaultPassword && password.Length >= MinPassword;
         }
 
         public static bool CheckAllData(User user)

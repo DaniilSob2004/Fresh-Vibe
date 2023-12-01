@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Globalization;
+using System.Threading;
+using System.Windows.Markup;
 
 namespace StoreExam
 {
@@ -17,6 +20,18 @@ namespace StoreExam
         {
             base.OnStartup(e);
             dataContext = new();
+
+            //CultureInfo russianCulture = new CultureInfo("ru-RU");
+            //Thread.CurrentThread.CurrentCulture = russianCulture;
+            //Thread.CurrentThread.CurrentUICulture = russianCulture;
+
+            //// Применяем изменения культуры к элементу
+            //FrameworkElement.LanguageProperty.OverrideMetadata(
+            //    typeof(FrameworkElement),
+            //    new FrameworkPropertyMetadata(
+            //        XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)
+            //    )
+            //);
         }
 
         private static string configFilename = "settings.json";

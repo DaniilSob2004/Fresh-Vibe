@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using StoreExam.Extensions;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
@@ -42,7 +43,7 @@ namespace StoreExam.Views
             _mailMessage.Attachments.Add(new(filePdf.SelectFile, pdfType));  // прикрепляем pdf
             if (!await emailWork.SendEmail(_mailMessage))
             {
-                MessageBox.Show("При отправке почты, что-то пошло не так...", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                new MessageWindow(MessageValues.SendEmailErrorMess).ShowDialog();
             }
         }
 
@@ -61,11 +62,11 @@ namespace StoreExam.Views
                 }
                 else
                 {
-                    MessageBox.Show(message, "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Information);
+                    new MessageWindow(message).ShowDialog();
                 }
                 Close();
             }
-            else { MessageBox.Show("Чек не удалось сохранить", "Сохранение чека", MessageBoxButton.OK, MessageBoxImage.Error); }
+            else { new MessageWindow(MessageValues.SaveCheckErrorMess).ShowDialog(); }
         }
 
 
@@ -74,14 +75,14 @@ namespace StoreExam.Views
             if (checkBoxSendPdfEmail.IsChecked == true)  // если отправка pdf-файла на email
             {
                 filePdf.CreateTempFile();
-                WorkWithReceipt("Чек отправлен на email", true);
+                WorkWithReceipt(MessageValues.SendCheckMess, true);
             }
             else  // сохранение файла локально
             {
                 filePdf.ShowDialog();
                 if (!String.IsNullOrEmpty(filePdf.SelectFile))  // если пользователь выбрал файл
                 {
-                    WorkWithReceipt("Чек успешно сохранён", false);
+                    WorkWithReceipt(MessageValues.SaveCheckMess, false);
                 }
             }
         }

@@ -89,7 +89,17 @@
         </Style.Triggers>
     </Style>
 
-    
+    <!-- Стиль и шаблон для метки ТОВАР ДОБАВЛЕН Border и TextBlock -->
+    <Style x:Key="borderMessage" TargetType="Border" BasedOn="{StaticResource baseBorderStyle}">
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="MaxWidth" Value="100"/>
+        <Setter Property="MaxHeight" Value="22"/>
+    </Style>
+    <Style x:Key="textBlockMessage" TargetType="TextBlock" BasedOn="{StaticResource verySmallHeaderTextBlockStyle}">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!-- Стиль и шаблон для списка категорий ListBox -->
     <Style x:Key="listBoxCatStyle" TargetType="ListBox">
         <Setter Property="ItemTemplate">
@@ -116,5 +126,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 </ResourceDictionary>

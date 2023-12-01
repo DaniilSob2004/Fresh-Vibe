@@ -10,6 +10,7 @@ using StoreExam.Enums;
 using StoreExam.ViewModels;
 using StoreExam.UI_Settings;
 using StoreExam.CheckData;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
@@ -54,13 +55,16 @@ namespace StoreExam.Views
         {
             if (stateUserData != StateData.Delete)  // если удаление аккаунта не было, то выводим пользователю вопрос
             {
-                if (MessageBox.Show("Вы действительно хотите выйти из аккаунта?", "Выход", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.ExitAccMess) == StateWindow.Yes)  // запускаем окно уведомлений
                 {
-                    mainLoginWindow.Show();  // снова показываем главное окно входа
-                    return;
+                    mainLoginWindow.Show();  // показываем главное окно входа
+                }
+                else
+                {
+                    e.Cancel = true;  // отменяем событие закрытия
                 }
             }
-            e.Cancel = true;  // отменяем событие закрытия
+            else { mainLoginWindow.Show(); }  // показываем главное окно входа
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -85,7 +89,7 @@ namespace StoreExam.Views
                         }
                         else
                         {
-                            MessageBox.Show("При удалении аккаунта, что-то пошло не так!\nПопробуйте чуть позже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            new MessageWindow(MessageValues.DelAccErrorMess).ShowDialog();  // запускаем окно уведомлений
                         }
                         break;
 
@@ -97,11 +101,11 @@ namespace StoreExam.Views
                     default:  // если StateData.Save или StateData.ChangeEmail
                         if (!await ViewModel.UpdateUser(dialog.User))  // сохраняем изменения, передаём объект User из окна аккаунта пользователя
                         {
-                            MessageBox.Show("При обновлении аккаунта, что-то пошло не так!\nПопробуйте чуть позже.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            new MessageWindow(MessageValues.UpdateAccErrorMess).ShowDialog();
                             return;
                         }
 
-                        MessageBox.Show("Изменения сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        new MessageWindow(MessageValues.ChangeSucValueMess).ShowDialog();
                         if (stateUserData == StateData.ChangeEmail)
                         {
                             OpenConfirmEmailWindow();  // запускаем окно подтверждения почты
@@ -109,7 +113,7 @@ namespace StoreExam.Views
                         break;
                 }
             }
-            catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            catch (Exception) { new MessageWindow(MessageValues.BaseErrorMess).ShowDialog(); }
         }
 
         private void BtnUserBasketProduct_Click(object sender, RoutedEventArgs e)
@@ -124,7 +128,7 @@ namespace StoreExam.Views
             }
             else
             {
-                OpenConfirmEmailWindow("Почта не подтверждена.\nХотите подтвердить?");  // запускаем окно подтверждения почты
+                OpenConfirmEmailWindow(MessageValues.ConfirmEmailQuestMess);  // запускаем окно подтверждения почты
             }
         }
 
@@ -142,7 +146,7 @@ namespace StoreExam.Views
                     }
                     else
                     {
-                        MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        new MessageWindow(MessageValues.BaseErrorMess).ShowDialog();
                     }
                 }
             }
@@ -160,14 +164,15 @@ namespace StoreExam.Views
                     {
                         if (await ViewModel.AddProductInBasket(productVM))  // добавляем продукт в корзину
                         {
-                            MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                            GuiBaseManipulation.ShowInfoMessage(borderMessage);
                         }
                     }
                     ViewModel.UpdateProductChoiceCount(productVM);  // обновляем кол-во товара
                 }
             }
-            catch (Exception) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            catch (Exception) { new MessageWindow(MessageValues.BaseErrorMess).ShowDialog(); }
         }
+
 
         private async void BtnAddProductToBasket_Click(object sender, RoutedEventArgs e)
         {
@@ -187,8 +192,8 @@ namespace StoreExam.Views
             catch (Exception) { }
             finally
             {
-                if (isBadMessage) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
-                else { MessageBox.Show("Товар успешно добавлен в корзину!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information); }
+                if (isBadMessage) { new MessageWindow(MessageValues.BaseErrorMess).ShowDialog(); }
+                else { GuiBaseManipulation.ShowInfoMessage(borderMessage); }
             }
         }
 
@@ -219,7 +224,7 @@ namespace StoreExam.Views
             catch (Exception) { }
             finally
             {
-                if (isBadMessage) { MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+                if (isBadMessage) { new MessageWindow(MessageValues.BaseErrorMess).ShowDialog(); }
             }
         }
     }

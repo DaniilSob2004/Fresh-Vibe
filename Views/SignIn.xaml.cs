@@ -6,17 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using StoreExam.CheckData;
 using StoreExam.UI_Settings;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
     public partial class SignIn : Window
     {
-        // статические поля, для хранения значений по умолчанию, которые хранятся в ресурсах UserDefault.xaml
-        public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
-        public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
-        public static string SignInText = Application.Current.TryFindResource("SignInText").ToString()!;
-        public static string SignUpText = Application.Current.TryFindResource("SignUpText").ToString()!;
-
         public static Window? mainLoginWindow;  // ссылка на окно родителя (MainLoginWindow)
         public Data.Entity.User User { get; set; }
         private CancellationTokenSource cts = null!;  // источник токенов
@@ -25,7 +20,7 @@ namespace StoreExam.Views
         {
             InitializeComponent();
             DataContext = this;
-            User = new() { Email = DefaultEmail, Password = DefaultPassword };
+            User = new() { Email = DefaultValues.DefaultEmail, Password = DefaultValues.DefaultPassword };
         }
 
         private void Window_Clossing(object sender, EventArgs e)
@@ -39,22 +34,21 @@ namespace StoreExam.Views
 
         private void OpenMainWindow(Data.Entity.User user)
         {
-            CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное
-            MessageBox.Show($"Добро пожаловать {user.Name}", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
+            ShowMessage(MessageValues.WelcomeMess.Replace("{UserName}", user.Name));
             GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
             new MainWindow(user, mainLoginWindow!).ShowDialog();  // запускаем основное окно и передаём объект user
         }
 
         private void CancelLoadingSignInBtn()
         {
-            cts?.Cancel();  // для отмены работы ассинхроного метода
-            GuiBaseManipulation.CancelLoadingButton(btnSignIn, SignInText);  // возвращаем исходное состояние
+            cts?.Cancel();  // для отмены работы async метода
+            GuiBaseManipulation.CancelLoadingButton(btnSignIn, Texts.SignInText);  // возвращаем исходное состояние
         }
 
-        private void ShowErrorMessage(string message)
+        private void ShowMessage(string message)
         {
-            CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное состояние
-            MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное
+            new MessageWindow(message).ShowDialog();  // запускаем окно уведомлений
         }
 
 
@@ -63,7 +57,7 @@ namespace StoreExam.Views
             // переключение на окно регистрации
             if (sender is TextBlock textBlock)
             {
-                if (textBlock.Text == SignUpText)
+                if (textBlock.Text == Texts.SignUpText)
                 {
                     GuiBaseManipulation.CloseWindow(this, mainLoginWindow!);  // закрываем окно без показа главного окна входа
                     new SignUp().ShowDialog();  // запускаем окно регистрации
@@ -90,9 +84,9 @@ namespace StoreExam.Views
                 await Task.Delay(1000);  // для проверки
 
                 Data.Entity.User? user = await Data.DAL.UserDal.Get(User.Email);  // находим user по email
-                if (user is null) { ShowErrorMessage("Неверный email!"); return; }
+                if (user is null) { ShowMessage(MessageValues.ErrorEmailMess); return; }
 
-                if (!CheckUser.PasswordEntryVerification(user, User.Password)) { ShowErrorMessage("Неверный пароль!"); return; }
+                if (!CheckUser.PasswordEntryVerification(user, User.Password)) { ShowMessage(MessageValues.ErrorPassMess); return; }
 
                 if (!CheckUser.CheckIsDeletedUser(user))  // если аккаунт пользователя не удалён
                 {
@@ -102,11 +96,10 @@ namespace StoreExam.Views
                 }
                 else
                 {
-                    ShowErrorMessage("Неверный email!");
+                    ShowMessage(MessageValues.ErrorEmailMess);
                 }
-                CancelLoadingSignInBtn();  // возвращаем состояние кнопки в исходное состояние
             }
-            catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
+            catch (Exception) { ShowMessage(MessageValues.BaseErrorMess); }
         }
     }
 }

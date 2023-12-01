@@ -6,6 +6,7 @@ using StoreExam.CheckData;
 using StoreExam.Enums;
 using StoreExam.Generate;
 using StoreExam.UI_Settings;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
@@ -50,13 +51,13 @@ namespace StoreExam.Views
         private void CancelLoadingSaveBtn()
         {
             cts?.Cancel();  // для отмены работы ассинхроного метода
-            GuiBaseManipulation.CancelLoadingButton(btnSave, "Сохранить");  // возвращаем исходное состояние
+            GuiBaseManipulation.CancelLoadingButton(btnSave, Texts.SaveText);  // возвращаем исходное состояние
         }
 
-        private void ShowErrorMessage(string message)
+        private void ShowMessage(string message)
         {
             CancelLoadingSaveBtn();  // возвращаем состояние кнопки в исходное
-            MessageBox.Show(message, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            new MessageWindow(message).ShowDialog();
         }
 
         private void SaveStateUserData(StateData stateData)
@@ -80,11 +81,11 @@ namespace StoreExam.Views
                 await Task.Delay(1000);  // для проверки
 
                 // данные не корректны
-                if (!CheckUser.CheckAllData(User)) { ShowErrorMessage("Не все поля заполнены!"); return; }
+                if (!CheckUser.CheckAllData(User)) { ShowMessage(MessageValues.NotWriteFieldMess); return; }
 
                 // получаем названия полей, которые не уникальны
                 string? notUniqueFields = await CheckUser.CheckUniqueUserInDB(User);
-                if (notUniqueFields is not null) { ShowErrorMessage($"Некоторые поля не уникальны:\n{notUniqueFields}"); return; }
+                if (notUniqueFields is not null) { ShowMessage(MessageValues.NotUniqueFieldMess.Replace("{NotUniqueFields}", $"\n{notUniqueFields}")); return; }
 
                 if (IsChangePassword())  // если пароль был изменён
                 {
@@ -93,11 +94,10 @@ namespace StoreExam.Views
                         if (CheckNewPassword())  // проверка двух полей для нового пароля
                         {
                             User.Password = PasswordHasher.HashPassword(textBoxNewPassword.Text, origUser.Salt);  // хэшируем новый пароль, на основе соли
-                            //SaveStateUserData(StateData.Save);
                         }
-                        else { ShowErrorMessage("Новые пароли не совпадают!"); return; }
+                        else { ShowMessage(MessageValues.ErrorNewTwoPassMess); return; }
                     }
-                    else { ShowErrorMessage("Пароль подтверждения неверный!"); return; }
+                    else { ShowMessage(MessageValues.ErrorConfrirmPassMess); return; }
                 }
 
                 if (IsChangeEmail())  // если email был изменён
@@ -110,7 +110,7 @@ namespace StoreExam.Views
                     SaveStateUserData(StateData.Save);
                 }
             }
-            catch (Exception) { ShowErrorMessage("Что-то пошло нет так...\nПопробуйте позже!"); }
+            catch (Exception) { ShowMessage(MessageValues.BaseErrorMess); }
             finally { CancelLoadingSaveBtn(); }  // возвращаем состояние кнопки в исходное
         }
 
@@ -121,7 +121,7 @@ namespace StoreExam.Views
 
         private void BtnDelAccount_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Вы действительно хотите удалить аккаунт?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.DelAccQuestMess) == StateWindow.Yes)
             {
                 SaveStateUserData(StateData.Delete);
             }

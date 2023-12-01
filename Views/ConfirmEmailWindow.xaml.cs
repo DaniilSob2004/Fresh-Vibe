@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Net.Mail;
 using StoreExam.CheckData;
 using System.Windows.Input;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
@@ -27,7 +28,7 @@ namespace StoreExam.Views
         {
             if (!await emailWork.SendEmail(_mailMessage))
             {
-                MessageBox.Show("При отправке почты, что-то пошло не так...", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                new MessageWindow(MessageValues.SendEmailErrorMess).ShowDialog();
                 return false;
             }
             return true;
@@ -53,7 +54,7 @@ namespace StoreExam.Views
                     User.ConfirmCode = null;  // код подтверждён
                     if (await Data.DAL.UserDal.Update(User))  // обновление данных в БД
                     {
-                        MessageBox.Show("Почта подтверждена", "Подтверждение почты", MessageBoxButton.OK, MessageBoxImage.Information);
+                        new MessageWindow(MessageValues.ConfirmEmailSuccMess).ShowDialog();
                         Close();
                     }
                 }
@@ -68,7 +69,7 @@ namespace StoreExam.Views
         {
             if (await SendCodeToEmail())  // отправка кода
             {
-                MessageBox.Show("Код отправлен", "Подтверждение почты", MessageBoxButton.OK, MessageBoxImage.Information);
+                new MessageWindow(MessageValues.SendEmailMess).ShowDialog();
             }
         }
     }

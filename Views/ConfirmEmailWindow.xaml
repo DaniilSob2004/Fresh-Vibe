@@ -42,14 +42,14 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="пропустить" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Style="{StaticResource textBlockLinkEventStyle}"/>
-        <TextBlock Grid.Row="1" Text="Подтвердить email" HorizontalAlignment="Center" Style="{StaticResource mediumBigBlackTextBlockStyle}"/>
+        <TextBlock Text="{StaticResource SkipEmailText}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Style="{StaticResource textBlockLinkEventStyle}"/>
+        <TextBlock Grid.Row="1" Text="{StaticResource ConfirmEmailText}" HorizontalAlignment="Center" Style="{StaticResource mediumBigBlackTextBlockStyle}"/>
 
         <StackPanel Grid.Row="2">
-            <TextBlock Text="Код подтверждения выслан на" HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
+            <TextBlock Text="{StaticResource SendEmail1Text}" HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
             <TextBlock Text="{Binding User.Email}" HorizontalAlignment="Center" Margin="0 4" Style="{StaticResource mediumHeaderTextBlockStyle}"/>
-            <TextBlock Text="Если почта не будет подтверждена, доступ к корзине будет ограничен." HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
-            <TextBlock Text="Проверьте свою почту и введите полученный код в это поле." HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
+            <TextBlock Text="{StaticResource SendEmail2Text}" HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
+            <TextBlock Text="{StaticResource SendEmail3Text}" HorizontalAlignment="Center" Style="{StaticResource smallBlackTextBlockStyle}"/>
         </StackPanel>
 
         <Grid Grid.Row="3" MaxWidth="400" Margin="0 5">
@@ -58,8 +58,8 @@
                 <RowDefinition MaxHeight="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="textBoxConfirmCode" Text="{StaticResource DefConfirmCode}" Tag="{StaticResource DefConfirmCode}" Style="{StaticResource baseTextBoxStyle}"
@@ -69,13 +69,13 @@
                 </b:Interaction.Behaviors>
             </TextBox>
 
-            <Button Grid.Column="1" x:Name="btnConfirmCode" Content="Продолжить" Margin="8 0" Style="{StaticResource baseButtonMainStyle}" Click="BtnConfirmCode_Click"/>
+            <Button Grid.Column="1" x:Name="btnConfirmCode" Content="{StaticResource ContinueText}" Margin="8 0" Style="{StaticResource baseButtonMainStyle}" Click="BtnConfirmCode_Click"/>
 
-            <TextBlock x:Name="textBlockShowError" Grid.Row="2" Text="некорректный код" Foreground="{StaticResource DeleteColor}" HorizontalAlignment="Left"
+            <TextBlock x:Name="textBlockShowError" Grid.Row="2" Text="{StaticResource IncorrectCodeText}" Foreground="{StaticResource DeleteColor}" HorizontalAlignment="Left"
                        Margin="15 0" Visibility="Hidden" Style="{StaticResource verySmallHeaderTextBlockStyle}"/>
         </Grid>
 
-        <TextBlock Grid.Row="4" Text="выслать код повторно" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource textBlockLinkAgainEventStyle}"/>
+        <TextBlock Grid.Row="4" Text="{StaticResource SendCodeAgainText}" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource textBlockLinkAgainEventStyle}"/>
     </Grid>
     
 </Window>

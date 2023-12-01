@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using StoreExam.CheckData;
+using StoreExam.Enums;
 using StoreExam.Views;
 
 namespace StoreExam.UI_Settings
@@ -18,6 +20,21 @@ namespace StoreExam.UI_Settings
         public static string DefaultEmail = Application.Current.TryFindResource("DefEmail").ToString()!;
         public static string DefaultPassword = Application.Current.TryFindResource("DefPassword").ToString()!;
         public static string LoadingText = Application.Current.TryFindResource("LoadingText").ToString()!;
+
+        // Работа с метками сообщений (предупреждений)
+        public static void ShowInfoMessage(Border borderMessage)
+        {
+            if (borderMessage.Opacity != 0) { return; }
+
+            var fadeInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5f));  // появление
+            fadeInAnimation.Completed += async (sender, e) =>
+            {
+                await Task.Delay(1000);
+                var fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.5f));  // исчезновение
+                borderMessage.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+            };
+            borderMessage.BeginAnimation(UIElement.OpacityProperty, fadeInAnimation);
+        }
 
 
         // Работа с Button для отображения загрузки и для возвращения в исходное состояние
@@ -152,6 +169,14 @@ namespace StoreExam.UI_Settings
 
 
         // Работа с окнами
+        public static StateWindow ShowQuestionWindow(string message)
+        {
+            // запускается окно с вопросом
+            var mesWindow = new MessageWindow(message, TypeMessWin.Question);
+            mesWindow.ShowDialog();
+            return mesWindow.StateWindow;
+        }
+
         public static bool OpenConfirmEmailWindow(Window window, Data.Entity.User user, string? text = null)
         {
             // запускается окно подтверждения почты
@@ -159,7 +184,7 @@ namespace StoreExam.UI_Settings
 
             if (text is not null)
             {
-                if (MessageBox.Show(text, "Доступ ограничен", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                if (ShowQuestionWindow(text) != StateWindow.Yes)
                 {
                     isShowWindow = false;
                 }

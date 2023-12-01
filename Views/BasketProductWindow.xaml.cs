@@ -5,7 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using StoreExam.Data.DAL;
+using StoreExam.Enums;
+using StoreExam.UI_Settings;
 using StoreExam.ViewModels;
+using static StoreExam.Formatting.ResourceHelper;
 
 namespace StoreExam.Views
 {
@@ -58,22 +61,22 @@ namespace StoreExam.Views
 
         private async void BtnAllDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Вы действительно хотите удалить все товары из корзины?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.DelAllProdMess) == StateWindow.Yes)
             {
                 if (!await BPViewModel.DeleteAllProduct())  // удаляем все товары из корзины
                 {
-                    MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    new MessageWindow(MessageValues.DelErrorMess).ShowDialog();
                 }
             }
         }
 
         private async void BtnChoiceDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Вы действительно хотите удалить выбранные товары из корзины?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.DelProdMess) == StateWindow.Yes)
             {
                 if (!await BPViewModel.DeleteChoiseProduct())  // удаляем выбранные товары из корзины
                 {
-                    MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    new MessageWindow(MessageValues.DelErrorMess).ShowDialog();
                 }
             }
         }
@@ -85,7 +88,7 @@ namespace StoreExam.Views
 
         private void ListBoxItemBPViewModel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is not Border && e.OriginalSource is not TextBlock) return;  // если не был нажат border или TextBlock, то выходим
+            if (e.OriginalSource is not Border && e.OriginalSource is not TextBlock) { return; }  // если не был нажат border или TextBlock, то выходим
             if (sender is ListBoxItem item)
             {
                 if (item.Content is BasketProductModel bpModel)
@@ -100,7 +103,7 @@ namespace StoreExam.Views
         {
             if (!await UpdateAmount(sender, true))  // увеличиваем кол-во
             {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                new MessageWindow(MessageValues.BaseErrorMess).ShowDialog();
             }
         }
 
@@ -108,7 +111,7 @@ namespace StoreExam.Views
         {
             if (!await UpdateAmount(sender, false))  // уменьшаем кол-во
             {
-                MessageBox.Show("Что-то пошло нет так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                new MessageWindow(MessageValues.BaseErrorMess).ShowDialog();
             }
         }
 
@@ -117,15 +120,15 @@ namespace StoreExam.Views
             BasketProductModel? bpModel = GetBasketProductModelFromButton(sender);  // получаем объект BasketProductModel
             if (bpModel is not null)
             {
-                if (MessageBox.Show($"Вы действительно хотите удалить \"{bpModel.BasketProduct.Product.Name}\"?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.DelProdQuestMess.Replace("{ProductName}", bpModel.BasketProduct.Product.Name)) == StateWindow.Yes)
                 {
                     if (!await BPViewModel.DeleteBasketProduct(bpModel))  // удаление из БД и коллекции
                     {
-                        MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        new MessageWindow(MessageValues.DelErrorMess).ShowDialog();
                     }
                 }
             }
-            else { MessageBox.Show("При удалении, что-то пошло не так...\nПопробуйте позже!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            else { new MessageWindow(MessageValues.DelErrorMess).ShowDialog(); }
         }
 
 
@@ -135,24 +138,25 @@ namespace StoreExam.Views
 
             if (BPViewModel.IsHaveProductNotInStock())  // хотя бы один товар из корзины не в наличии
             {
-                if (MessageBox.Show("Некоторые товары не в наличии\nХотите продолжить?", "Нет в наличии", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                    return;
+                if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.NotProdInStockMess) == StateWindow.No) { return; }
             }
 
             List<BasketProductModel> listBuyBPModels = BPViewModel.GetChoiceProducts();  // товары которые выбранны (купленны)
             int lastIndProduct = -1;  // откат кол-ва товаров, которые успели изменится, но была ошибка, и пользователь остановил обработку
             for (int i = 0; i < listBuyBPModels.Count; i++)
             {
-                if (!await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, false))  // уменьшаем кол-во товаров в БД
+                // уменьшаем кол-во товаров в БД
+                if (!await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, false))
                 {
-                    if (MessageBox.Show($"При обработке '{listBuyBPModels[i].BasketProduct.Product.Name}' что-то пошло не так...\nПродолжить?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    if (GuiBaseManipulation.ShowQuestionWindow(MessageValues.ProcProdQuestMess.Replace("{ProductName}", listBuyBPModels[i].BasketProduct.Product.Name)) == StateWindow.Yes)
                     {
                         listBuyBPModels.RemoveAt(i);  // удаляем из коллекции 'купленных' товаров
                         i--;
                     }
-                    else
+                    else  // остановили обработку
                     {
                         lastIndProduct = i;  // сохраняем индекс
+                        break;
                     }
                 }
             }
@@ -160,7 +164,8 @@ namespace StoreExam.Views
             {
                 for (int i = 0; i < lastIndProduct; i++)  // проходимся до того товара, на котором остановился пользователь
                 {
-                    await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, true);  // увеличиваем кол-во товаров в БД
+                    // увеличиваем кол-во товаров в БД
+                    await ProductsDal.UpdateCount(listBuyBPModels[i].BasketProduct.Product, listBuyBPModels[i].BasketProduct.Amounts, true);
                 }
                 return;
             }

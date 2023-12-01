@@ -51,17 +51,20 @@ namespace StoreExam.ViewModels
                 }
             }
         }
+        private readonly object _updateLock = new();
         public async Task UpdateTotalBasketProductsPrice()
         {
             await Task.Run(() =>
             {
                 var listBPModel = BasketProductsModel.Where(bp => bp.IsSelected == true);  // получаем список товаров которые выбранные
+                lock (_updateLock)
+                {
+                    // обновляем сумму корзины
+                    TotalBasketProductsPrice = listBPModel.Sum(bp => bp.BasketProduct.Product.Price * bp.BasketProduct.Amounts);
 
-                // обновляем сумму корзины
-                TotalBasketProductsPrice = listBPModel.Sum(bp => bp.BasketProduct.Product.Price * bp.BasketProduct.Amounts);
-
-                // обновляем кол-во товаров в корзине
-                Count = listBPModel.Count();
+                    // обновляем кол-во товаров в корзине
+                    Count = listBPModel.Count();
+                }
             });
         }
 

@@ -71,17 +71,17 @@
             <StackPanel>
                 <Border Style="{StaticResource borderStyle}">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource headerTBlockStyle}">Основная информация</TextBlock>
+                        <TextBlock Text="{StaticResource MainInfoText}" Style="{StaticResource headerTBlockStyle}"/>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Имя:</TextBlock>
+                            <TextBlock Text="{StaticResource DefName}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefName}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Фамилия:</TextBlock>
+                            <TextBlock Text="{StaticResource DefSurname}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefSurname}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Контактный номер:</TextBlock>
+                            <TextBlock Text="{StaticResource NumTelText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxNumTel" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefNumTel}"/>
                         </StackPanel>
                     </StackPanel>
@@ -89,29 +89,29 @@
                 
                 <Border Style="{StaticResource borderStyle}">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource headerTBlockStyle}">Безопасность</TextBlock>
+                        <TextBlock Text="{StaticResource SecureText}" Style="{StaticResource headerTBlockStyle}"/>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Электрорнная почта:</TextBlock>
+                            <TextBlock Text="{StaticResource EmailText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxEmail" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefEmail}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Старый пароль:</TextBlock>
+                            <TextBlock Text="{StaticResource NowPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxOldPassword"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Новый пароль:</TextBlock>
+                            <TextBlock Text="{StaticResource NewPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxNewPassword" Tag="{StaticResource DefPassword}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Style="{StaticResource textBlockStyle}">Подтвердите пароль:</TextBlock>
+                            <TextBlock Text="{StaticResource ConfirmPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxConfirmNewPassword"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Button x:Name="btnSave" Style="{StaticResource btnStyle}" Click="BtnSave_Click">Сохранить</Button>
-                <Button Style="{StaticResource btnStyle}" Click="BtnExit_Click">Выйти</Button>
-                <Button Style="{StaticResource btnDeleteStyle}" Click="BtnDelAccount_Click">Удалить аккаунт</Button>
+                <Button x:Name="btnSave" Content="{StaticResource SaveText}" Style="{StaticResource btnStyle}" Click="BtnSave_Click"/>
+                <Button Style="{StaticResource btnStyle}" Content="{StaticResource ExitText}" Click="BtnExit_Click"/>
+                <Button Style="{StaticResource btnDeleteStyle}" Content="{StaticResource DelAccText}" Click="BtnDelAccount_Click"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

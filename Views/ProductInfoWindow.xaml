@@ -59,8 +59,8 @@
 
             <StackPanel Grid.Row="1" Grid.Column="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Цена: " Margin="10 0 0 0" Style="{StaticResource mediumBlackTextBlockStyle}"/>
-                    <TextBlock Text="{Binding Product.Price, StringFormat='{}{0} ₴'}" Margin="5 0 0 0" Style="{StaticResource mediumBlackTextBlockStyle}"/>
+                    <TextBlock Text="{StaticResource PriceText}" Margin="10 0 0 0" Style="{StaticResource mediumBlackTextBlockStyle}"/>
+                    <TextBlock Text="{Binding Product.Price, StringFormat='{}{0} ₴'}" Margin="9 0 0 0" Style="{StaticResource mediumBlackTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="10 5 0 0">
@@ -78,12 +78,12 @@
                 </StackPanel>
             </StackPanel>
 
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="Нет в наличии" Margin="10 0 0 15" Style="{StaticResource textBlockNotStockStyle}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{StaticResource NotInStockText}" Margin="10 0 0 15" Style="{StaticResource textBlockNotStockStyle}"/>
 
             <!-- Content передаётся в шаблоне в TextBlock, а Tag это путь к картинке, передаётся в Image -->
-            <Button Grid.Row="3" Grid.Column="1" Content="В корзину" Margin="10 3" Padding="0 3 0 4" Style="{StaticResource btnInBasketStyle}" Click="BtnAddProductToBasket_Click"/>
+            <Button Grid.Row="3" Grid.Column="1" Content="{StaticResource InBasketText}" Margin="10 3" Padding="0 3 0 4" Style="{StaticResource btnInBasketStyle}" Click="BtnAddProductToBasket_Click"/>
 
-            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Описание:" Margin="10 10 0 5" Style="{StaticResource bigTextBlockStyle}"/>
+            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="{StaticResource DescriptionText}" Margin="10 10 0 5" Style="{StaticResource bigTextBlockStyle}"/>
             <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="{Binding Product.Description}" FontWeight="Medium" Margin="10 5 10 10" Style="{StaticResource mediumBlackTextBlockStyle}"/>
         </Grid>
     </ScrollViewer>
