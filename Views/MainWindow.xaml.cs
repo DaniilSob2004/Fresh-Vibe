@@ -31,6 +31,11 @@ namespace StoreExam.Views
             DataContext = ViewModel;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            GuiBaseManipulation.LoadComboBoxLanguages(langComboBox);  // заполняем combobox доступными языками
+        }
+
 
         private ProductViewModel? GetProductFromBorder(object sender)
         {
@@ -48,6 +53,15 @@ namespace StoreExam.Views
             {
                 Show();
             }
+        }
+
+        private void OpenBasketProductWindow()
+        {
+            Hide();
+            var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
+            dialog.ShowDialog();
+            Show();
+            ViewModel.UpdateProductsChoiceCount();  // обновляем кол-во товаров
         }
 
 
@@ -120,15 +134,15 @@ namespace StoreExam.Views
         {
             if (CheckUser.CheckIsConfirmedEmail(ViewModel.User))  // если почта подтверждена
             {
-                Hide();
-                var dialog = new BasketProductWindow(ViewModel.BPViewModel);  // запускаем окно корзины и передаём ViewModel для BasketProduct
-                dialog.ShowDialog();
-                Show();
-                ViewModel.UpdateProductsChoiceCount();  // обновляем кол-во товаров
+                OpenBasketProductWindow();
             }
             else
             {
                 OpenConfirmEmailWindow(MessageValues.ConfirmEmailQuestMess);  // запускаем окно подтверждения почты
+                if (CheckUser.CheckIsConfirmedEmail(ViewModel.User))  // доп. проверка подтверждение почты
+                {
+                    OpenBasketProductWindow();
+                }
             }
         }
 

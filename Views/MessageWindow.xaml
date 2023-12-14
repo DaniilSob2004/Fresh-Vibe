@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Title="{StaticResource StoreName}" Height="150" Width="350" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" ResizeMode="NoResize">
+        Title="{DynamicResource StoreName}" Height="150" Width="350" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" ResizeMode="NoResize">
 
     <Window.Resources>
         <ResourceDictionary>

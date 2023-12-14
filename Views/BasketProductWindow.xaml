@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="{StaticResource StoreName}" Height="400" Width="700" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource StoreName}" Height="400" Width="720" MinHeight="250" MinWidth="650" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -96,10 +96,11 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <CheckBox x:Name="checkBoxChoiceAll" Content="{StaticResource ChoiceAllText}" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource baseCheckBoxStyle}" Click="CheckBoxChoiseAll_Click"/>
+        <CheckBox x:Name="checkBoxChoiceAll" Content="{DynamicResource ChoiceAllText}" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center"
+                  Style="{StaticResource baseCheckBoxStyle}" Click="CheckBoxChoiseAll_Click"/>
 
-        <Button Grid.Column="1" Content="{StaticResource DelChoiceText}" Style="{StaticResource btnDeleteStyle_}" Click="BtnChoiceDelete_Click"/>
-        <Button Grid.Column="2" Content="{StaticResource DelAllText}" Style="{StaticResource btnDeleteStyle_}" Click="BtnAllDelete_Click"/>
+        <Button Grid.Column="1" Content="{DynamicResource DelChoiceText}" Style="{StaticResource btnDeleteStyle_}" Click="BtnChoiceDelete_Click"/>
+        <Button Grid.Column="2" Content="{DynamicResource DelAllText}" Style="{StaticResource btnDeleteStyle_}" Click="BtnAllDelete_Click"/>
         
         <StackPanel x:Name="myStack" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 8 0">
             <Image Width="25" Height="25" Source="/Images/cart.png" Margin="10 0 0 0"/>
@@ -108,9 +109,10 @@
             <TextBlock Text=" ₴" Margin="0 0 10 0" Style="{StaticResource textBlockStyle}"/>
         </StackPanel>
 
-        <ListBox Grid.Row="1" Grid.ColumnSpan="4" x:Name="listBoxProducts" ItemsSource="{Binding BasketProductsModel}" Style="{StaticResource listBoxBS_Style}" ItemContainerStyle="{StaticResource itemListBS_Style}"/>
+        <ListBox Grid.Row="1" Grid.ColumnSpan="4" x:Name="listBoxProducts" ItemsSource="{Binding BasketProductsModel}" Style="{StaticResource listBoxBS_Style}"
+                 ItemContainerStyle="{StaticResource itemListBS_Style}"/>
 
-        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="{StaticResource BuyText}" Style="{StaticResource btnBuyStyle}" Click="BtnBuy_Click"/>
+        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="{DynamicResource BuyText}" Style="{StaticResource btnBuyStyle}" Click="BtnBuy_Click"/>
     </Grid>
 
 </Window>

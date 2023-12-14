@@ -48,6 +48,14 @@ namespace StoreExam.Formatting
             public static string CheckPdfFileText => GetString("CheckPdfFileText");
             public static string SumOrderText => GetString("SumOrderText");
             public static string ThanksBuyText => GetString("ThanksBuyText");
+            public static string CatalogText => GetString("CatalogText");
+        }
+
+        public static class EmailText
+        {
+            public static string ConfirmEmailTextHtml => GetString("ConfirmEmailTextHtml");
+            public static string WarningEmailTextHtml => GetString("WarningEmailTextHtml");
+            public static string PdfEmailTextHtml => GetString("PdfEmailTextHtml");
         }
 
         public static class MessageValues

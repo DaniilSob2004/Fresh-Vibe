@@ -10,13 +10,19 @@ namespace StoreExam.Formatting
         {
             // считываем из ресурсов файл html
             return BaseFileWork.ReadFile("Resources/confirm_code_template.html")
-                        .Replace("{ConfirmCode}", user.ConfirmCode)
-                        .Replace("{StoreName}", Texts.StoreName);
+                .Replace("{ConfirmEmailText}", Texts.ConfirmEmailText)
+                .Replace("{ConfirmEmailTextHtml}", EmailText.ConfirmEmailTextHtml)
+                .Replace("{WarningEmailTextHtml}", EmailText.WarningEmailTextHtml)
+                .Replace("{ConfirmCode}", user.ConfirmCode)
+                .Replace("{StoreName}", Texts.StoreName);
         }
 
         public static string GetStringForSendPdfEmail()
         {
-            return BaseFileWork.ReadFile("Resources/send_receipt_template.html");
+            // считываем из ресурсов файл html
+            return BaseFileWork.ReadFile("Resources/send_receipt_template.html")
+                .Replace("{ThanksBuyText}", Texts.ThanksBuyText)
+                .Replace("{PdfEmailTextHtml}", EmailText.PdfEmailTextHtml);
         }
 
         public static MailMessage GetMailMessageForConfirmEmail(Data.Entity.User user, string emailFrom)
@@ -25,7 +31,7 @@ namespace StoreExam.Formatting
             return new(emailFrom,
                        user.Email!,
                        Texts.ConfirmEmailText,
-                       GetStringForConfirmEmail(user)  // получаем строку для отправки email
+                       GetStringForConfirmEmail(user)  // получаем строку для подтверждение email
                    )
                    {
                        IsBodyHtml = true,
@@ -37,7 +43,7 @@ namespace StoreExam.Formatting
             return new(emailFrom,
                        user.Email!,
                        Texts.CheckPdfFileText,
-                       GetStringForSendPdfEmail()  // получаем строку для отправки email
+                       GetStringForSendPdfEmail()  // получаем строку для отправки pdf на email
                    )
                    {
                        IsBodyHtml = true,

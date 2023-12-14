@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 
 namespace StoreExam
@@ -13,10 +13,70 @@ namespace StoreExam
     public partial class App : Application
     {
         public Data.DataContext dataContext { get; private set; } = null!;
+
+        // какие культуры поддерживает приложение
+        private static List<CultureInfo> languages = new();
+        public static List<CultureInfo> Languages => languages;
+
+
+        public App()
+        {
+            languages.Clear();
+            languages.Add(new CultureInfo("en-US"));  // нейтральная культура для этого проекта
+            languages.Add(new CultureInfo("ru-RU"));
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             dataContext = new();
+        }
+
+        // событие для оповещения всех окон приложения при изменении языка
+        public static event EventHandler LanguageChanged = null!;
+        public static CultureInfo Language
+        {
+            get => Thread.CurrentThread.CurrentUICulture;  // культура UI для текущего потока выполнения
+            set
+            {
+                if (value is null) { throw new ArgumentException("value"); }
+                if (value == Thread.CurrentThread.CurrentUICulture) { return; }
+
+                // 1. меняем язык приложения
+                Thread.CurrentThread.CurrentUICulture = value;
+
+                // 2. создаём ResourceDictionary для новой культуры
+                ResourceDictionary resDict = new();
+                switch (value.Name)
+                {
+                    case "ru-RU":
+                        resDict.Source = new Uri($"Resources/DefaultValue.{value.Name}.xaml", UriKind.Relative);
+                        break;
+                    default:
+                        resDict.Source = new Uri($"Resources/DefaultValue.xaml", UriKind.Relative);
+                        break;
+                }
+
+                // 3. находим старую ResourceDictionary и удаляем его и добавляем новую
+                ResourceDictionary oldResDict = (
+                    from d in Application.Current.Resources.MergedDictionaries
+                    where d.Source != null && d.Source.OriginalString.StartsWith("Resources/DefaultValue.")  // находим словарь в ресурсах у которого название начинается с DefaultValue.
+                    select d
+                ).First();
+                if (oldResDict is not null)
+                {
+                    int ind = Application.Current.Resources.MergedDictionaries.IndexOf(oldResDict);  // находим индекс
+                    Application.Current.Resources.MergedDictionaries.Remove(oldResDict);  // удаляем
+                    Application.Current.Resources.MergedDictionaries.Insert(ind, resDict);  // вставляем новый
+                }
+                else
+                {
+                    Application.Current.Resources.MergedDictionaries.Add(resDict);  // добавляем новый
+                }
+
+                // 4. вызываем событие для оповещения всех окон
+                LanguageChanged?.Invoke(Application.Current, new EventArgs());
+            }
         }
 
         private static string configFilename = "settings.json";

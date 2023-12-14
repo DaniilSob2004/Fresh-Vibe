@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +29,24 @@ namespace StoreExam.UI_Settings
                 borderMessage.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
             };
             borderMessage.BeginAnimation(UIElement.OpacityProperty, fadeInAnimation);
+        }
+
+
+        // Работа с ComboBox для выбора языка
+        public static void LoadComboBoxLanguages(ComboBox combo)
+        {
+            // заполняем combobox доступными языками
+            combo.Items.Clear();
+            foreach (CultureInfo lang in App.Languages)
+            {
+                ComboBoxItem cbItem = new()
+                {
+                    Content = lang.Name.Substring(0, 2).ToUpper(),  // первые два символа
+                    Tag = lang,  // в tag передаём объект CultureInfo
+                    IsSelected = lang.Equals(App.Language)  // для выбора в combobox
+                };
+                combo.Items.Add(cbItem);
+            }
         }
 
 
@@ -132,11 +151,14 @@ namespace StoreExam.UI_Settings
             {
                 bool isUpdate = true;
 
-                // если поле пустое, то устанавливаем значение тэга
-                if (sender is TextBox tb && String.IsNullOrEmpty(tb.Text)) { tb.Text = tb.Tag.ToString(); }
-                else if (sender is PasswordBox pb && String.IsNullOrEmpty(pb.Password)) { pb.Password = pb.Tag.ToString(); }
-                else { isUpdate = false; }
-
+                string? tag = control.Tag?.ToString();
+                if (tag is not null)
+                {
+                    // если поле пустое, то устанавливаем значение тэга
+                    if (control is TextBox tb && String.IsNullOrEmpty(tb.Text)) { tb.SetCurrentValue(TextBox.TextProperty, tag); }
+                    else if (control is PasswordBox pb && String.IsNullOrEmpty(pb.Password)) { pb.Password = tag; }
+                    else { isUpdate = false; }
+                }
                 if (isUpdate)
                 {
                     control.Foreground = Brushes.Gray;

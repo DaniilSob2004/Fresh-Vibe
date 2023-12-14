@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="{StaticResource StoreName}" Height="350" Width="250" MinHeight="250" MinWidth="200" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource StoreName}" Height="350" Width="250" MinHeight="250" MinWidth="200" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -42,8 +42,8 @@
         </StackPanel>
 
         <!-- Content передаётся в шаблоне в TextBlock, а Tag это путь к картинке, передаётся в Image -->
-        <Button Grid.Row="1" Content="{StaticResource SettingsText}" Tag="/Images/settings.png" Click="BtnSettings_Click"/>
-        <Button Grid.Row="2" Content="{StaticResource ExitText}" Tag="/Images/exit.png" Click="BtnExit_Click"/>
+        <Button Grid.Row="1" Content="{DynamicResource SettingsText}" Tag="/Images/settings.png" Click="BtnSettings_Click"/>
+        <Button Grid.Row="2" Content="{DynamicResource ExitText}" Tag="/Images/exit.png" Click="BtnExit_Click"/>
     </Grid>
     
 </Window>

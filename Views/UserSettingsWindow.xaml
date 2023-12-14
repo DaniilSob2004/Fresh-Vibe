@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreExam.Views"
         mc:Ignorable="d"
-        Title="{StaticResource StoreName}" Height="400" Width="320" MinHeight="300" MinWidth="250" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource StoreName}" Height="400" Width="320" MinHeight="300" MinWidth="250" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -63,7 +63,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock Margin="0 10" HorizontalAlignment="Center" Style="{StaticResource mediumBlackTextBlockStyle}">Профиль</TextBlock>
+            <TextBlock Text="{DynamicResource ProfileText}" Margin="0 10" HorizontalAlignment="Center" Style="{StaticResource mediumBlackTextBlockStyle}"/>
             <Image Width="40" Height="40" Margin="0 0 0 10" Source="/Images/account.png"/>
         </StackPanel>
 
@@ -71,17 +71,17 @@
             <StackPanel>
                 <Border Style="{StaticResource borderStyle}">
                     <StackPanel>
-                        <TextBlock Text="{StaticResource MainInfoText}" Style="{StaticResource headerTBlockStyle}"/>
+                        <TextBlock Text="{DynamicResource MainInfoText}" Style="{StaticResource headerTBlockStyle}"/>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource DefName}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource DefName}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefName}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource DefSurname}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource DefSurname}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefSurname}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource NumTelText}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource NumTelText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxNumTel" Text="{Binding User.NumTel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefNumTel}"/>
                         </StackPanel>
                     </StackPanel>
@@ -89,29 +89,29 @@
                 
                 <Border Style="{StaticResource borderStyle}">
                     <StackPanel>
-                        <TextBlock Text="{StaticResource SecureText}" Style="{StaticResource headerTBlockStyle}"/>
+                        <TextBlock Text="{DynamicResource SecureText}" Style="{StaticResource headerTBlockStyle}"/>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource EmailText}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource EmailText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxEmail" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="{StaticResource DefEmail}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource NowPasswordText}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource NowPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxOldPassword"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource NewPasswordText}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource NewPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxNewPassword" Tag="{StaticResource DefPassword}"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="{StaticResource ConfirmPasswordText}" Style="{StaticResource textBlockStyle}"/>
+                            <TextBlock Text="{DynamicResource ConfirmPasswordText}" Style="{StaticResource textBlockStyle}"/>
                             <TextBox x:Name="textBoxConfirmNewPassword"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Button x:Name="btnSave" Content="{StaticResource SaveText}" Style="{StaticResource btnStyle}" Click="BtnSave_Click"/>
-                <Button Style="{StaticResource btnStyle}" Content="{StaticResource ExitText}" Click="BtnExit_Click"/>
-                <Button Style="{StaticResource btnDeleteStyle}" Content="{StaticResource DelAccText}" Click="BtnDelAccount_Click"/>
+                <Button x:Name="btnSave" Content="{DynamicResource SaveText}" Style="{StaticResource btnStyle}" Click="BtnSave_Click"/>
+                <Button Style="{StaticResource btnStyle}" Content="{DynamicResource ExitText}" Click="BtnExit_Click"/>
+                <Button Style="{StaticResource btnDeleteStyle}" Content="{DynamicResource DelAccText}" Click="BtnDelAccount_Click"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

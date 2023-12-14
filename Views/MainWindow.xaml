@@ -7,8 +7,9 @@
         xmlns:myBehaviors="clr-namespace:StoreExam.UI_Settings.Behavior"
         xmlns:local="clr-namespace:StoreExam"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Title="{StaticResource StoreName}" Height="525" Width="900" MinHeight="300" MinWidth="425" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource StoreName}" Height="525" Width="900" MinHeight="300" MinWidth="425" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -81,17 +82,23 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{StaticResource StoreName}" Margin="30 3 0 5" Style="{StaticResource veryBigHeaderTextBlockStyle}"/>
+                <TextBlock Text="{DynamicResource StoreName}" Margin="30 3 0 5" Style="{StaticResource veryBigHeaderTextBlockStyle}"/>
 
                 <Border x:Name="borderMessage" Grid.Column="1" Style="{StaticResource borderMessage}">
-                    <TextBlock Text="{StaticResource AddProductText}" Style="{StaticResource textBlockMessage}"/>
+                    <TextBlock Text="{DynamicResource AddProductText}" Style="{StaticResource textBlockMessage}"/>
                 </Border>
 
                 <Button x:Name="btnUserName" Grid.Column="2" Style="{StaticResource btnUserNameStyle}" Click="BtnUserAccount_Click"/>
                 <Button x:Name="btnUserBasket" Grid.Column="3" Style="{StaticResource btnUserBasketStyle}" Click="BtnUserBasketProduct_Click"/>
-                <Button Grid.Column="4" Style="{StaticResource btnUserExitStyle}" Click="BtnExit_Click"/>
+                <ComboBox Grid.Column="4" x:Name="langComboBox" Width="60">
+                    <b:Interaction.Behaviors>
+                        <myBehaviors:SelectionChangedComboBoxLang/>
+                    </b:Interaction.Behaviors>
+                </ComboBox>
+                <Button Grid.Column="5" Style="{StaticResource btnUserExitStyle}" Click="BtnExit_Click"/>
             </Grid>
         </Border>
 
@@ -100,13 +107,13 @@
         <Border Grid.Row="1" Background="{StaticResource MainColor}" Margin="0 10 0 0">
             <StackPanel Orientation="Horizontal">
                 <Image Width="20" Height="20" Source="/Images/catalog.png" Margin="7 0"/>
-                <TextBlock Text="{StaticResource CatalogText}" Margin="8 2" Style="{StaticResource bigWhiteTextBlockStyle}"/>
+                <TextBlock Text="{DynamicResource CatalogText}" Margin="8 2" Style="{StaticResource bigWhiteTextBlockStyle}"/>
             </StackPanel>
         </Border>
 
         <ListBox Grid.Row="2" Grid.RowSpan="3" ItemsSource="{Binding Categories}" Style="{StaticResource listBoxCatStyle}" ItemContainerStyle="{StaticResource itemListBoxCatStyle}"/>
 
-        <TextBox x:Name="textBoxSearch" Text="{StaticResource DefSearch}" Tag="{StaticResource DefSearch}" Grid.Column="2" Grid.Row="1"
+        <TextBox x:Name="textBoxSearch" Text="{DynamicResource DefSearch}" Tag="{DynamicResource DefSearch}" Grid.Column="2" Grid.Row="1"
                  Style="{StaticResource textBoxStyle}">
             <b:Interaction.Behaviors>
                 <myBehaviors:GotLostFocusTextBoxBehavior/>
@@ -132,7 +139,7 @@
 
                                 <Image Source="{Binding Product.Image}" Width="100" Height="100" Margin="5"/>
                                 <TextBlock Grid.Row="1" Text="{Binding Product.Name}" MaxHeight="40" Padding="8 3 8 0" Style="{StaticResource textBlockStyle}"/>
-                                <TextBlock Grid.Row="2" Text="{StaticResource NotInStockText}" Margin="8 0 0 0" VerticalAlignment="Center" Style="{StaticResource textBlockNotStockStyle}"/>
+                                <TextBlock Grid.Row="2" Text="{DynamicResource NotInStockText}" Margin="8 0 0 0" VerticalAlignment="Center" Style="{StaticResource textBlockNotStockStyle}"/>
 
                                 <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="8 3.5 0 0">
                                     <TextBlock Text="{Binding Product.Price, StringFormat='{}{0} ₴'}" Style="{StaticResource textBlockStyle}"/>
@@ -152,7 +159,7 @@
                                 </StackPanel>
 
                                 <!-- Content передаётся в шаблоне в TextBlock, а Tag это путь к картинке, передаётся в Image -->
-                                <Button Grid.Row="4" Content="{StaticResource InBasketText}" Margin="5" Style="{StaticResource btnInBasketStyle}" Click="BtnAddProductToBasket_Click"/>
+                                <Button Grid.Row="4" Content="{DynamicResource InBasketText}" Margin="5" Style="{StaticResource btnInBasketStyle}" Click="BtnAddProductToBasket_Click"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
