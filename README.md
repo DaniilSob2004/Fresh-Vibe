@@ -1,3 +1,19 @@
+  - Localization of the application (English, Russian)
+  - Authorization/Registration
+  - Sending a code by email for confirmation (to access the cart)
+  - Setting up your account (changing name, phone number, email, password, etc.)
+  - Browsing products by category
+  - Searching for products by category
+  - Adding products to the cart
+  - When you click on a product, you can view additional information
+  - Working with the shopping cart
+  - Creating a receipt in PDF format
+  - Sending a PDF receipt by email and saving the receipt
+
+
+  //////////////////////////////////////
+
+
   - Локализация приложения (Английский, Русский)
   - Авторизация/Регистрация
   - Отправка кода на почту для подтверждения (для доступа к корзине)
@@ -10,17 +26,6 @@
   - Создание чека в PDF-формате
   - Отправка PDF-чека на email и сохранение чека
 
-  - Localization of the application (English, Russian)
-  - Authorization/Registration
-  - Sending a code by email for confirmation (to access the cart)
-  - Setting up your account (changing name, phone number, email, password, etc.)
-  - Browsing products by category
-  - Searching for products by category
-  - Adding products to the cart
-  - When you click on a product, you can view additional information
-  - Working with the shopping cart
-  - Creating a receipt in PDF format
-  - Sending a PDF receipt by email and saving the receipt
 
 ![ExamStore0](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/28a473aa-ea32-47e4-be6f-c06489cac3b8)
 ![ExamStore2_2](https://github.com/DaniilSob2004/Fresh-Vibe/assets/106149184/f8f7894d-d979-4828-ab4e-c151301801b9)
