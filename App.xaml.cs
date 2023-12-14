@@ -21,6 +21,8 @@ namespace StoreExam
 
         public App()
         {
+            App.LanguageChanged += App_LanguageChanged;
+
             languages.Clear();
             languages.Add(new CultureInfo("en-US"));  // нейтральная культура для этого проекта
             languages.Add(new CultureInfo("ru-RU"));
@@ -30,6 +32,19 @@ namespace StoreExam
         {
             base.OnStartup(e);
             dataContext = new();
+        }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            string defLang = StoreExam.Resources.Settings.Default.DefLang;  // узнаём язык который установлен
+            Language = new CultureInfo(defLang);  // создаём объект культуры
+        }
+
+        // обработчик события при изменении культуры
+        private void App_LanguageChanged(object? sender, EventArgs e)
+        {
+            StoreExam.Resources.Settings.Default.DefLang = Language.Name;  // записываем в файл настройки (в свойство DefLang) название новой культуры
+            StoreExam.Resources.Settings.Default.Save();
         }
 
         // событие для оповещения всех окон приложения при изменении языка

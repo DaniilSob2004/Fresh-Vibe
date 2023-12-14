@@ -22,5 +22,17 @@ namespace StoreExam.Resources {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
+        public string DefLang {
+            get {
+                return ((string)(this["DefLang"]));
+            }
+            set {
+                this["DefLang"] = value;
+            }
+        }
     }
 }
