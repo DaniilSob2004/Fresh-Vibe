@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Title="{DynamicResource StoreName}" Height="525" Width="900" MinHeight="300" MinWidth="425" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource StoreName}" Height="525" Width="900" MinHeight="300" MinWidth="500" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -48,6 +48,13 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style x:Key="itemCBContainerStyle" TargetType="ComboBoxItem">
+                
+            </Style>
+            <Style x:Key="comboBoxStyle" TargetType="ComboBox">
+                <Setter Property="Margin" Value="10 10"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -93,7 +100,7 @@
 
                 <Button x:Name="btnUserName" Grid.Column="2" Style="{StaticResource btnUserNameStyle}" Click="BtnUserAccount_Click"/>
                 <Button x:Name="btnUserBasket" Grid.Column="3" Style="{StaticResource btnUserBasketStyle}" Click="BtnUserBasketProduct_Click"/>
-                <ComboBox Grid.Column="4" x:Name="langComboBox" Width="60">
+                <ComboBox Grid.Column="4" x:Name="langComboBox" Width="45" Style="{StaticResource comboBoxStyle}" ItemContainerStyle="{StaticResource itemCBContainerStyle}">
                     <b:Interaction.Behaviors>
                         <myBehaviors:SelectionChangedComboBoxLang/>
                     </b:Interaction.Behaviors>
